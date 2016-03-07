@@ -9,7 +9,7 @@ Double_t fitfunction(Double_t *x, Double_t *par) {
 }
 
 
-void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
+void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1, Float_t Theta_min_cut = 0.0) {
 
   //-------------------------------------------------------------------
   //Set stuff up for reading
@@ -51,7 +51,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
   TH1F *hPrimPdg = new TH1F("PrimPdg","Primary PDG ID", 20, 0, 20);
 
   TH1F *hPhantomNhits = new TH1F("PhantomNhits","Phantom Number of Hits", 100, 0, 400);
-  TH1F *hPhantomPdg = new TH1F("PhantomPdg","Phantom PDG ID", 30, 0, 30);
+  TH1F *hPhantomPdg = new TH1F("PhantomPdg","Phantom PDG ID", 50, -20, 30);
   TH1F *hPhantomID = new TH1F("PhantomID","Phantom ID Number", 5, 0, 5);
   
   TH1F *hFingerX = new TH1F("FingerX","Finger X Position", 100, -120, 120);
@@ -70,6 +70,9 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
   TH2F *hAnaBar_Edep_vs_Y = new TH2F("AnaBarEdepVsY", "AnaBar vs. Y entrant", 100, -30, 30, 100, 0.01, 30);
   TH2F *hE1vsE2 = new TH2F("E1vsE2", "AnaBar Edep vs. Finger Edep", 100, 0.01, 10, 100, 0.01, 30);
 
+  TH2F *hyentran1_vs_xentran1 = new TH2F("Yentrance vs Xentrance", "Yentrance vs Xentrance", 100, -80, 80, 100, -30, 30);
+  TH2F *hyexit1_vs_xexit1 = new TH2F("Yexit vs Xexit", "Yexit vs Xexit", 100, -80, 80, 100, -30, 30);
+  TH2F *htracklength_vs_AnaBar_Edep = new TH2F("Tracklength vs AnaBar Edep", "Tracklength vs AnaBar Edep", 100, -2, 10, 100, 0.01 , 15);
   //-------------------------------------------------------------------
   //Limits and cuts
   //-------------------------------------------------------------------
@@ -87,6 +90,17 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
     float edep1tot = 0.0;
     float yentrant0 = 0.0;
     float yentrant1 = 0.0;
+    float xentrant0 = 0.0;
+    float xentrant1 = 0.0;
+    float zentrant0 = 0.0;	
+    float zentrant1 = 0.0;	
+    float yexit0 = 0.0;
+    float yexit1 = 0.0;
+    float xexit0 = 0.0;
+    float xexit1 = 0.0;
+    float zexit0 = 1000.0;
+    float zexit1 = 1000.0;
+    float tracklength = 0.0;
     tree1->GetEntry(i);
 
     hPrimE->Fill(Prim_E);
@@ -105,6 +119,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
 	if (Phantom_id[j] == 0 && !finger_hit) {
 		finger_hit = true;
 		j_finger = j;
+		//cout<<"hit in finger";
 	}
 	if (Phantom_id[j] == 1 && !anabar_hit) {
 		anabar_hit = true;
@@ -119,7 +134,12 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
 	if (trigger) {
 		counter++;
 		if (Phantom_id[j] == 0 ) {
-			if (j==j_finger) yentrant0 = Phantom_y[j];
+			if (j==j_finger) {
+			   yentrant0 = Phantom_y[j];
+		 	   xentrant0 = Phantom_x[j];
+		 	   zentrant0 = Phantom_z[j];
+			}	
+
         		hPhantomPdg->Fill(Phantom_pdg[j]);
         		hPhantomID->Fill(Phantom_id[j]);
 
@@ -128,12 +148,30 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
         		  hFingerY->Fill(Phantom_y[j]);
         		  hFingerZ->Fill(Phantom_z[j]);
     			  hFingerT->Fill(Phantom_t[j]);
+
+				if(zexit0 > Phantom_z[j]) {
+				    zexit0 = Phantom_z[j];
+				    yexit0 = Phantom_y[j];
+				    xexit0 = Phantom_x[j];
+				}
+			
                         }
-			edep0tot += Phantom_Ed[j];
+			if (Analyse_Secondaries == 1 && Prim_Th > Theta_min_cut) {
+			  edep0tot += Phantom_Ed[j];
+			}else{ if (Phantom_pdg[j] == 13 && Prim_Th > Theta_min_cut) {
+				edep0tot += Phantom_Ed[j];
+			       }
+			} 
 
 		}
 		if (Phantom_id[j] == 1 ) {
-			if (j==j_anabar) yentrant1 = Phantom_y[j];
+			if (j==j_anabar) {
+	                   yentrant1 = Phantom_y[j];
+                           xentrant1 = Phantom_x[j];
+                           zentrant1 = Phantom_z[j];
+
+			}
+
         		hPhantomPdg->Fill(Phantom_pdg[j]);
         		hPhantomID->Fill(Phantom_id[j]);
 
@@ -142,21 +180,38 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
         		  hAnaBarY->Fill(Phantom_y[j]);
         		  hAnaBarZ->Fill(Phantom_z[j]);
     			  hAnaBarT->Fill(Phantom_t[j]);
-                        }
-			edep1tot += Phantom_Ed[j];
+                        
+				if(zexit1 > Phantom_z[j]) {
+				    zexit1 = Phantom_z[j];
+				    yexit1 = Phantom_y[j];
+				    xexit1 = Phantom_x[j];
+				}
+			}
+			if (Analyse_Secondaries == 1 && Prim_Th > Theta_min_cut) {
+			  edep1tot += Phantom_Ed[j];
+			}else{ if (Phantom_pdg[j] == 13 && Prim_Th > Theta_min_cut) {
+				edep1tot += Phantom_Ed[j];
+			       }
+			}
 
 		}
 	}
     }
     //cout << "Energy deposited = " << edep0tot << endl;
-    
+
+	tracklength = sqrt((xexit1-xentrant1)*(xexit1-xentrant1)+(yexit1-yentrant1)*(yexit1-yentrant1)+(zexit1-zentrant1)*(zexit1-zentrant1));
+ 
     if (trigger) {
     	hFingerEd->Fill(edep0tot);
     	hAnaBarEd->Fill(edep1tot);
     	hFinger_Edep_vs_Y->Fill(yentrant0,edep0tot);
     	hAnaBar_Edep_vs_Y->Fill(yentrant1,edep1tot);
     	hE1vsE2->Fill(edep0tot,edep1tot);
-    }
+   	hyentran1_vs_xentran1->Fill(xentrant1,yentrant1);
+ 	htracklength_vs_AnaBar_Edep->Fill(edep1tot,tracklength);
+	hyexit1_vs_xexit1->Fill(xexit1,yexit1);
+  
+     }
   }
   
   //-------------------------------------------------------------------
@@ -180,6 +235,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
   c3->cd(1);
   hPhantomNhits->Draw();
   c3->cd(2);
+  gPad->SetLogy();
   hPhantomPdg->Draw();
   c3->cd(3);
   hPhantomID->Draw();
@@ -191,7 +247,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
   TCanvas *c4 = new TCanvas("c4", "c4", 100,500,600,400);
   c4->Divide(2,2, 0.01, 0.01, 0);
   TCanvas *c6 = new TCanvas("c6", "c6", 1300,500,600,400);
-  //c4->Divide(2,2, 0.01, 0.01, 0);
+  c6->Divide(2,2, 0.01, 0.01, 0);
+ //c4->Divide(2,2, 0.01, 0.01, 0);
  
   c1->cd(1);
   hFingerX->Draw();
@@ -222,8 +279,16 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
   c4->cd(4);
   hAnaBarEd->Draw();
 
-  c6->cd();
+  c6->cd(1);
   gPad->SetLogz();
   hE1vsE2->Draw("COLZ");
- 
+  c6->cd(2);
+ gPad->SetLogz();
+  hyentran1_vs_xentran1->Draw("COLZ");
+  c6->cd(3);
+ gPad->SetLogz();
+  hyexit1_vs_xexit1->Draw("COLZ");
+  c6->cd(4);
+  htracklength_vs_AnaBar_Edep->Draw("COLZ");
+
 }

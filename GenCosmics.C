@@ -140,9 +140,11 @@ void GenerateOneMuon()
   fPDGCode = 13;
 
   // Generate vertex position in cm 
-  fVx = fRand->Uniform( 7.46, 10.0 );
-  fVy = fRand->Uniform( -1.27, 1.27 );
-  fVz = 3.0;
+  fVx = fRand->Uniform(-1.3 , 1.3 );
+  fVy = fRand->Uniform( -2.0, 2.0 );
+  //fVx = fRand->Uniform(-0.01 , 0.01 );
+  //fVy = fRand->Uniform( -.01, 0.01 );
+  fVz = 2.0;
 
   // Sample Momentum Distributions (flat from min to mean, p^-2.7 from mean to max)
   if( fRand->Uniform(0.,1) < fIntRatio ) 
@@ -153,6 +155,8 @@ void GenerateOneMuon()
   // Sample Angular Distributions (cos^2(theta) and flat phi)
   Float_t th = fThetaDist->GetRandom();
   Float_t ph = fPhiDist->GetRandom();
+  //Float_t th = 3.14159265;
+  //Float_t ph = 0.0;
   fPx        = fP * TMath::Sin(th) * TMath::Cos(ph);
   fPy        = fP * TMath::Sin(th) * TMath::Sin(ph);
   fPz        = fP * TMath::Cos(th);

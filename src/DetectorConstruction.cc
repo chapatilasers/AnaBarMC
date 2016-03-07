@@ -38,6 +38,10 @@ DetectorConstruction::DetectorConstruction()
   fDetMessenger = new DetectorMessenger(this);
 
   fNistManager  = G4NistManager::Instance();
+
+  fTumourRadius = 0.5;
+  fTumourHeight = 0.0;
+  fAnaBarXpos   = 0.0;
   
   G4UImanager* UI = G4UImanager::GetUIpointer();
   G4String command = "/control/execute macros/DetectorSetup.mac";
@@ -71,51 +75,49 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Create Experimental Hall
   //---------------------------------------------------------------------------
 
-  G4Material* expHall_mat = fNistManager->FindOrBuildMaterial("G4_AIR");
-
   G4Box* expHall_box           = new G4Box("expHall_box",
 					   1.5 *m, 1.5 *m, 1.5 *m );
   
   G4LogicalVolume* expHall_log = new G4LogicalVolume(expHall_box,
-						     expHall_mat,
+						     fNistManager->FindOrBuildMaterial("G4_AIR"),
 						     "expHall_log", 0, 0, 0);
   
   fExpHall                     = new G4PVPlacement(0, G4ThreeVector(),
 						   expHall_log, "expHall", 0, false, 0);
 
   //---------------------------------------------------------------------------
-  // Create Finger and Analyzer Bar Counters
+  // Create Water Phantom for Radiotherapy
   //---------------------------------------------------------------------------
 
-  G4double anaBar_x = 20.0 *cm;
-  G4double anaBar_y = 4.0 *cm;
-  G4double anaBar_z = 4.0 *cm;
-  G4ThreeVector anaBar_pos = G4ThreeVector(0.0,0.0,0.0);
-  G4Material* anaBar_mat = fNistManager->FindOrBuildMaterial("G4_POLYETHYLENE");
-  
-  G4double finger_x = 2.54 *cm;
-  G4double finger_y = 2.54 *cm;
-  G4double finger_z = 0.75 *cm;
-  G4ThreeVector finger_pos = G4ThreeVector(0.5*anaBar_x-0.5*finger_x,0.0,0.5*anaBar_z+0.5*finger_z);
-  G4Material* finger_mat = fNistManager->FindOrBuildMaterial("G4_POLYETHYLENE");
+   G4Material* scintillator__mat = fNistManager->FindOrBuildMaterial("G4_POLYETHYLENE");
+   G4Box* fingercounter_solid  = new G4Box("fingercounter_solid", 1.3*cm , 2.0*cm , 0.85*cm);
+   G4LogicalVolume* fingercounter_log = new G4LogicalVolume(fingercounter_solid, scintillator__mat, "fingercounter_log");
+   G4ThreeVector fingercounter_pos(0.0*cm , 0.0*cm , 0.0*cm);
+   G4VPhysicalVolume* FingerCounter=  new G4PVPlacement(0, fingercounter_pos , fingercounter_log , "FingerCounter" , expHall_log , false , 0); 
 
-  G4Box* finger_box           = new G4Box("finger_box",
-					   finger_x/2.0, finger_y/2.0, finger_z/2.0);
-  
-  G4LogicalVolume* finger_log = new G4LogicalVolume(finger_box,
-						     finger_mat,
-						     "finger_log", 0, 0, 0);
-  
-  fFinger                     = new G4PVPlacement(0, finger_pos, finger_log, "finger", expHall_log, false, 0);
+ 
+   G4Box* AnaBar_solid  = new G4Box("AnaBar_solid", 11.0*cm , 2.0*cm , 2.0*cm);
+   G4LogicalVolume* AnaBar_log = new G4LogicalVolume(AnaBar_solid, scintillator__mat, "AnaBar_log");
+   G4ThreeVector AnaBar_pos(fAnaBarXpos*cm , 0.0*cm , -2.85*cm);
+   G4VPhysicalVolume* AnaBar =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , 1); 
+ 
 
-  G4Box* anaBar_box           = new G4Box("anaBar_box", anaBar_x/2.0, anaBar_y/2.0, anaBar_z/2.0);
+
+/*
+  G4RotationMatrix* phant_rm  = new G4RotationMatrix();
+  phant_rm->rotateY(90. *deg);
   
-  G4LogicalVolume* anaBar_log = new G4LogicalVolume(anaBar_box,
-						     anaBar_mat,
-						     "anaBar_log", 0, 0, 0);
+  G4Tubs* det_tubs            = new G4Tubs("det_tubs",
+					   0. *mm, 13.0 *cm, 29.34 *cm,
+					   0. *deg, 360. *deg );
   
-  fAnaBar                     = new G4PVPlacement(0, anaBar_pos,anaBar_log, "anaBar", expHall_log, false, 1);
+  G4LogicalVolume* det1_log = new G4LogicalVolume(det_tubs,
+						  fNistManager->FindOrBuildMaterial("G4_WATER"),
+						  "det1_log", 0, 0, 0);
   
+  fDet1Vol                  = new G4PVPlacement(phant_rm, G4ThreeVector(0.,0.,0.),
+					       det1_log, "det1", expHall_log, false, 0);
+*/
   //---------------------------------------------------------------------------
   // Set Step Limits, Sensitive Detector and Visualisation
   //---------------------------------------------------------------------------
@@ -128,21 +130,24 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   fDetSD = new DetectorSD("DetSD", 2);
   SDman->AddNewDetector( fDetSD );
-  anaBar_log->SetSensitiveDetector( fDetSD );
-  finger_log->SetSensitiveDetector( fDetSD );
-  
+//  det1_log->SetSensitiveDetector( fDetSD );
+    fingercounter_log->SetSensitiveDetector( fDetSD );
+    AnaBar_log->SetSensitiveDetector( fDetSD );
+
+
   G4VisAttributes* blue    = new G4VisAttributes( G4Colour(0.0,0.0,1.0)   );
   G4VisAttributes* red     = new G4VisAttributes( G4Colour(1.0,0.0,0.0)   );
   G4VisAttributes* green   = new G4VisAttributes( G4Colour(0.0,1.0,0.0)   );
 
   expHall_log->SetVisAttributes(G4VisAttributes::Invisible);
-  anaBar_log->SetVisAttributes(green);
-  finger_log->SetVisAttributes(blue);
-
+//  det1_log->SetVisAttributes(blue);
+    fingercounter_log->SetVisAttributes(blue);
+    AnaBar_log->SetVisAttributes(green);
   return fExpHall;
 }
 
 //---------------------------------------------------------------------------
+
 
 void DetectorConstruction::UpdateGeometry()
 {
