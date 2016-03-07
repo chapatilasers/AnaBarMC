@@ -51,7 +51,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
   TH1F *hPrimPdg = new TH1F("PrimPdg","Primary PDG ID", 20, 0, 20);
 
   TH1F *hPhantomNhits = new TH1F("PhantomNhits","Phantom Number of Hits", 100, 0, 400);
-  TH1F *hPhantomPdg = new TH1F("PhantomPdg","Phantom PDG ID", 30, 0, 30);
+  TH1F *hPhantomPdg = new TH1F("PhantomPdg","Phantom PDG ID", 80, -40, 40);
   TH1F *hPhantomID = new TH1F("PhantomID","Phantom ID Number", 5, 0, 5);
   
   TH1F *hFingerX = new TH1F("FingerX","Finger X Position", 100, -120, 120);
@@ -225,6 +225,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
   c3->cd(1);
   hPhantomNhits->Draw();
   c3->cd(2);
+  gPad->SetLogy();
   hPhantomPdg->Draw();
   c3->cd(3);
   hPhantomID->Draw();
