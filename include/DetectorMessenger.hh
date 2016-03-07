@@ -31,6 +31,7 @@ private:
   G4UIcmdWithAnInteger*        fTumourOnCmd;
   G4UIcmdWithADouble*          fTumourRadiusCmd;
   G4UIcmdWithADouble*          fTumourHeightCmd;
+  G4UIcmdWithADouble*          fAnaBarXposCmd;
 
   G4UIcommand*                 fUpdateCmd;
 };
