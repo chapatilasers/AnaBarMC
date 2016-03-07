@@ -9,7 +9,7 @@ Double_t fitfunction(Double_t *x, Double_t *par) {
 }
 
 
-void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
+void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1, Float_t Theta_min_cut = 0.0) {
 
   //-------------------------------------------------------------------
   //Set stuff up for reading
@@ -51,7 +51,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
   TH1F *hPrimPdg = new TH1F("PrimPdg","Primary PDG ID", 20, 0, 20);
 
   TH1F *hPhantomNhits = new TH1F("PhantomNhits","Phantom Number of Hits", 100, 0, 400);
-  TH1F *hPhantomPdg = new TH1F("PhantomPdg","Phantom PDG ID", 80, -40, 40);
+  TH1F *hPhantomPdg = new TH1F("PhantomPdg","Phantom PDG ID", 50, -20, 30);
   TH1F *hPhantomID = new TH1F("PhantomID","Phantom ID Number", 5, 0, 5);
   
   TH1F *hFingerX = new TH1F("FingerX","Finger X Position", 100, -120, 120);
@@ -156,7 +156,12 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
 				}
 			
                         }
+			if (Analyse_Secondaries == 1 && Prim_Th > Theta_min_cut) {
 			  edep0tot += Phantom_Ed[j];
+			}else{ if (Phantom_pdg[j] == 13 && Prim_Th > Theta_min_cut) {
+				edep0tot += Phantom_Ed[j];
+			       }
+			} 
 
 		}
 		if (Phantom_id[j] == 1 ) {
@@ -182,7 +187,12 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1) {
 				    xexit1 = Phantom_x[j];
 				}
 			}
+			if (Analyse_Secondaries == 1 && Prim_Th > Theta_min_cut) {
 			  edep1tot += Phantom_Ed[j];
+			}else{ if (Phantom_pdg[j] == 13 && Prim_Th > Theta_min_cut) {
+				edep1tot += Phantom_Ed[j];
+			       }
+			}
 
 		}
 	}
