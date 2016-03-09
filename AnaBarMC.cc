@@ -11,7 +11,9 @@
 #include "PhysicsList.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "EventAction.hh"
+#include "SteppingAction.hh"
 #include "AnalysisManager.hh"
+#include "G4TrajectoryDrawByParticleID.hh"
 
 #ifdef G4VIS_USE
 #include "G4VisExecutive.hh"
@@ -25,14 +27,16 @@ int main(int argc, char** argv)
   G4RunManager* runManager = new G4RunManager;
   PhysicsList*  phys       = new PhysicsList();
   runManager->SetUserInitialization(phys);
-
-  PrimaryGeneratorAction* pga        = new PrimaryGeneratorAction();
+  
   AnalysisManager*        anaManager = new AnalysisManager();
-  EventAction*            event      = new EventAction( anaManager, pga );
   DetectorConstruction*   detCon     = new DetectorConstruction();
   runManager->SetUserInitialization(detCon);
-
+  
+  PrimaryGeneratorAction* pga        = new PrimaryGeneratorAction();
   runManager->SetUserAction(pga);
+  SteppingAction*         step       = new SteppingAction();
+  runManager->SetUserAction(step);
+  EventAction*            event      = new EventAction( anaManager, pga );
   runManager->SetUserAction(event);
 
   G4UImanager * UI         = G4UImanager::GetUIpointer();
@@ -43,6 +47,7 @@ int main(int argc, char** argv)
 #ifdef G4VIS_USE
       visManager = new G4VisExecutive;
       visManager->Initialize();
+
 #endif
       G4UIsession * session = 0;
 #ifdef G4UI_USE_TCSH

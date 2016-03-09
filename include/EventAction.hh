@@ -27,6 +27,8 @@ class EventAction : public G4UserEventAction
   AnalysisManager*        fAnaManager;
   PrimaryGeneratorAction* fPGA;
 
+  G4int fDetCollID;
+  G4int fPMTCollID;
 };
 #endif
 

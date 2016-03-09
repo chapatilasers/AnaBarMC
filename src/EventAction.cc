@@ -10,13 +10,14 @@
 
 #include "EventAction.hh"
 #include "DetectorHit.hh"
+#include "PMTHit.hh"
 #include "AnalysisManager.hh"
 #include "PrimaryGeneratorAction.hh"
 
 //---------------------------------------------------------------------------
 
 EventAction::EventAction( AnalysisManager* ana, PrimaryGeneratorAction* pga )
-  :fAnaManager(ana), fPGA(pga)
+  :fAnaManager(ana), fPGA(pga), fDetCollID(-1), fPMTCollID(-1)
 {;}
 
 //---------------------------------------------------------------------------
@@ -30,6 +31,13 @@ void EventAction::BeginOfEventAction(const G4Event* evt)
 { 
   if( evt->GetEventID() == 0 )
     fAnaManager->InitOutput();
+  
+  G4SDManager* SDman = G4SDManager::GetSDMpointer();
+  if(fDetCollID < 0 ) 
+    fDetCollID = SDman->GetCollectionID("DetSDCollection");
+  if(fPMTCollID < 0 ) 
+    fPMTCollID = SDman->GetCollectionID("PMTSDCollection");
+
 }
 
 //---------------------------------------------------------------------------
@@ -41,50 +49,57 @@ void EventAction::EndOfEventAction(const G4Event* evt)
   if ( event_id%1000 == 0 ) 
     G4cout <<"Event " << event_id << G4endl;
 
+  fAnaManager->ZeroArray(); 
+
   G4HCofThisEvent* HCE = evt->GetHCofThisEvent();
-  DetectorHit* hit;
-  G4int nfpd_phys = 0;
+  DetectorHitsCollection *DHC = NULL;
+  PMTHitsCollection      *PHC = NULL;
+  G4int det_hits = 0;
+  G4int pmt_hits = 0;
 
   if(HCE) {
-    G4int CollSize = HCE->GetNumberOfCollections();
-    G4int hci      = 0;
-    
-    fAnaManager->ZeroArray(); 
+    if( fDetCollID >= 0 ) DHC = (DetectorHitsCollection*)(HCE->GetHC(fDetCollID));       
+    if( fPMTCollID >= 0 ) PHC = (PMTHitsCollection*)(HCE->GetHC(fPMTCollID));
+  }
 
-    for(G4int i = 0; i < CollSize; i++) {
-      DetectorHitsCollection* hc;
-      while(!(hc = static_cast<DetectorHitsCollection*>(HCE->GetHC(hci++))));
-      G4int hc_nhits = hc->entries();
-      
-      if( hc_nhits == 0 ) continue;
-      
-      // Fill output hit arrays for Phantom
-      else if( hc->GetName().contains("Det")  ) 
-	{
-	  for(G4int j = 0; j < hc_nhits; j++) {
-	    hit = static_cast<DetectorHit*>( hc->GetHit(j) );
-	    fAnaManager->SetStepPDef( (G4ParticleDefinition*) hit->GetPDef() );
-	    fAnaManager->SetStepP3( (G4ThreeVector) hit->GetMom() );
-	    fAnaManager->SetStepPosPre( (G4ThreeVector) hit->GetPosPre() );
-	    fAnaManager->SetStepPosPost( (G4ThreeVector) hit->GetPosPost() );
-	    fAnaManager->SetStepTime( (G4double) hit->GetTime() );
-	    fAnaManager->SetStepEdep( (G4double) hit->GetEdep() );
-	    fAnaManager->SetStepID( (G4int) hit->GetID() );
-	    fAnaManager->FillArray( nfpd_phys ); 
-	    nfpd_phys++;
-	  }
-	}
+  // Detector
+  if(DHC) {
+    det_hits = DHC->entries();
+    if( det_hits != 0 ) {
+      for( G4int i = 0; i < det_hits; i++) {
+	DetectorHit* hit1 = static_cast<DetectorHit*>( DHC->GetHit(i) );
+	fAnaManager->SetStepPDef( (G4ParticleDefinition*) hit1->GetPDef() );
+	fAnaManager->SetStepP3( (G4ThreeVector) hit1->GetMom() );
+	fAnaManager->SetStepPosPre( (G4ThreeVector) hit1->GetPosPre() );
+	fAnaManager->SetStepPosPost( (G4ThreeVector) hit1->GetPosPost() );
+	fAnaManager->SetStepTime( (G4double) hit1->GetTime() );
+	fAnaManager->SetStepEdep( (G4double) hit1->GetEdep() );
+	fAnaManager->SetStepID( (G4int) hit1->GetID() );
+	fAnaManager->FillArray( i ); 
+      }
     }
+  }
+
+  // PMT
+  if(PHC) {
+    pmt_hits = PHC->entries();
+    if( pmt_hits != 0 ) {
+      for( G4int j = 0; j < pmt_hits; j++) {
+	PMTHit* hit2 = static_cast<PMTHit*>( PHC->GetHit(j) );
+	fAnaManager->SetPhotonCount( (G4int) hit2->GetPhotonCount() );
+	fAnaManager->SetPMTNumber( (G4int) hit2->GetPMTNumber() );
+      }
+    }
+  }
+  
+  // Primary
+  if( det_hits != 0 ) {
+    fAnaManager->SetPrimaryDirection ( (G4ThreeVector)fPGA->GetDirection() );
+    fAnaManager->SetPrimaryEnergy    ( (G4double)fPGA->GetEnergy() );
+    fAnaManager->SetPrimaryTime      ( (G4double)fPGA->GetTime() );
+    fAnaManager->SetPrimaryPDef      ( (G4ParticleDefinition*)fPGA->GetPrimPDef() );
     
-    if( nfpd_phys != 0 ) {
-      // Fill output data from PrimaryGeneratorAction
-      fAnaManager->SetPrimaryDirection ( (G4ThreeVector)fPGA->GetDirection() );
-      fAnaManager->SetPrimaryEnergy    ( (G4double)fPGA->GetEnergy() );
-      fAnaManager->SetPrimaryTime      ( (G4double)fPGA->GetTime() );
-      fAnaManager->SetPrimaryPDef      ( (G4ParticleDefinition*)fPGA->GetPrimPDef() );
-      
-      fAnaManager->FillTree(); 
-    }
+    fAnaManager->FillTree(); 
   }
 
 }

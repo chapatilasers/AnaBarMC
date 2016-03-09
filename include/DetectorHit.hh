@@ -54,6 +54,7 @@ public:
   inline G4ThreeVector         GetPosPre()           { return fPosPre; };
   inline G4ThreeVector         GetPosPost()          { return fPosPost; };
   inline G4double              GetEdep()             { return fEdep; };  
+
 };
 
 //---------------------------------------------------------------------------

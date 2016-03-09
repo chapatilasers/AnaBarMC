@@ -10,6 +10,7 @@ class PhysicsList;
 class G4UIdirectory;
 class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWithAString;
+class G4UIcmdWithAnInteger;
 
 //---------------------------------------------------------------------------
 
@@ -32,6 +33,7 @@ private:
   G4UIcmdWithADoubleAndUnit* fProtoCutCmd;    
   G4UIcmdWithADoubleAndUnit* fAllCutCmd;    
   G4UIcmdWithAString*        fPListCmd;
+  G4UIcmdWithAnInteger*        fOpticalCmd;
     
 };
 

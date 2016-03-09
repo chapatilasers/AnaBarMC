@@ -28,6 +28,24 @@
 #include "G4IonFluctuations.hh"
 #include "G4IonParametrisedLossModel.hh"
 #include "G4EmProcessOptions.hh"
+#include "G4OpticalPhysics.hh"
+#include "G4Threading.hh"
+#include "G4BosonConstructor.hh"
+#include "G4LeptonConstructor.hh"
+#include "G4MesonConstructor.hh"
+#include "G4BaryonConstructor.hh"
+#include "G4IonConstructor.hh"
+#include "G4ShortLivedConstructor.hh"
+
+#include "G4Cerenkov.hh"
+#include "G4Scintillation.hh"
+#include "G4OpAbsorption.hh"
+#include "G4OpRayleigh.hh"
+#include "G4OpMieHG.hh"
+#include "G4OpBoundaryProcess.hh"
+
+#include "G4LossTableManager.hh"
+#include "G4EmSaturation.hh"
 
 #include "G4PhotoNuclearProcess.hh"
 #include "G4CascadeInterface.hh"
@@ -36,6 +54,11 @@
 
 PhysicsList::PhysicsList() : G4VModularPhysicsList()
 {
+
+  fOptical = 0;
+  fMaxNumPhotonStep = 50;
+
+  pMessenger     = new PhysicsListMessenger(this);
 
   G4LossTableManager::Instance();
 
@@ -56,13 +79,9 @@ PhysicsList::PhysicsList() : G4VModularPhysicsList()
   emPhysicsList  = new G4EmStandardPhysics_option3(1);
   emName         = G4String("emstandard_opt3");
 
-  //  ConstructPhotoNuclear();
-
   // Decay physics and all particles
   decPhysicsList = new G4DecayPhysics();
   raddecayList   = new G4RadioactiveDecayPhysics();
-
-  pMessenger     = new PhysicsListMessenger(this);
 
 }
 
@@ -104,6 +123,10 @@ void PhysicsList::ConstructProcess()
   for(size_t i=0; i<hadronPhys.size(); i++) {
     hadronPhys[i] -> ConstructProcess();
   }
+  
+  // optical
+  if( fOptical == 1 )
+    ConstructOptical();
 }
 
 //---------------------------------------------------------------------------
@@ -140,14 +163,15 @@ void PhysicsList::AddPhysicsList(const G4String& name)
   } else if (name == "QGSP_BIC_EMY") {
     AddPhysicsList("emstandard_opt3");
     hadronPhys.push_back( new G4HadronPhysicsQGSP_BIC());
+
     //hadronPhys.push_back( new HadronPhysicsQGSP_BIC());
     hadronPhys.push_back( new G4EmExtraPhysics());
     hadronPhys.push_back( new G4HadronElasticPhysics());
     hadronPhys.push_back( new G4StoppingPhysics());
     hadronPhys.push_back( new G4IonBinaryCascadePhysics());
     hadronPhys.push_back( new G4NeutronTrackingCut());
-
-  } else { 
+  } 
+ else { 
     G4cout << "PhysicsList::AddPhysicsList: <" << name << ">"
 	   << " is not defined"
 	   << G4endl;
@@ -208,6 +232,54 @@ void PhysicsList::ConstructPhotoNuclear()
   bertini->SetMaxEnergy(10*GeV);
   process->RegisterMe(bertini);
   pManager->AddDiscreteProcess(process);
+}
+
+//---------------------------------------------------------------------------
+
+void PhysicsList::ConstructOptical()
+{
+  G4Cerenkov* cerenkovProcess = new G4Cerenkov("Cerenkov");
+  cerenkovProcess->SetMaxNumPhotonsPerStep(fMaxNumPhotonStep);
+  cerenkovProcess->SetMaxBetaChangePerStep(10.0);
+  cerenkovProcess->SetTrackSecondariesFirst(true);
+  G4Scintillation* scintillationProcess = new G4Scintillation("Scintillation");
+  scintillationProcess->SetScintillationYieldFactor(1.);
+  scintillationProcess->SetTrackSecondariesFirst(true);
+  G4OpAbsorption* absorptionProcess = new G4OpAbsorption();
+  G4OpRayleigh* rayleighScatteringProcess = new G4OpRayleigh();
+  G4OpMieHG* mieHGScatteringProcess = new G4OpMieHG();
+  G4OpBoundaryProcess* boundaryProcess = new G4OpBoundaryProcess();
+
+  // Use Birks Correction in the Scintillation process
+  if(!G4Threading::IsWorkerThread())
+  {
+    G4EmSaturation* emSaturation =
+              G4LossTableManager::Instance()->EmSaturation();
+      scintillationProcess->AddSaturation(emSaturation);
+  }
+
+  theParticleIterator->reset();
+  while( (*theParticleIterator)() ){
+    G4ParticleDefinition* particle = theParticleIterator->value();
+    G4ProcessManager* pmanager = particle->GetProcessManager();
+    G4String particleName = particle->GetParticleName();
+    if (cerenkovProcess->IsApplicable(*particle)) {
+      pmanager->AddProcess(cerenkovProcess);
+      pmanager->SetProcessOrdering(cerenkovProcess,idxPostStep);
+    }
+    if (scintillationProcess->IsApplicable(*particle)) {
+      pmanager->AddProcess(scintillationProcess);
+      pmanager->SetProcessOrderingToLast(scintillationProcess, idxAtRest);
+      pmanager->SetProcessOrderingToLast(scintillationProcess, idxPostStep);
+    }
+    if (particleName == "opticalphoton") {
+      G4cout << " AddDiscreteProcess to OpticalPhoton " << G4endl;
+      pmanager->AddDiscreteProcess(absorptionProcess);
+      pmanager->AddDiscreteProcess(rayleighScatteringProcess);
+      pmanager->AddDiscreteProcess(mieHGScatteringProcess);
+      pmanager->AddDiscreteProcess(boundaryProcess);
+    }
+  }
 }
 
 //---------------------------------------------------------------------------

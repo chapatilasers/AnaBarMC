@@ -8,6 +8,7 @@
 
 class G4VPhysicalVolume;
 class DetectorSD;
+class PMTSD;
 class DetectorMessenger;
 
 //---------------------------------------------------------------------------
@@ -26,11 +27,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline G4VPhysicalVolume* GetDet1Vol()    { return fDet1Vol;  };
   inline G4VPhysicalVolume* GetDet2Vol()    { return fDet2Vol;  };
   inline DetectorSD*        GetDetSD()      { return fDetSD;    };
+  inline PMTSD*             GetPMTSD()      { return fPMTSD;    };
 
   inline void SetTumourOn     ( G4int    tumon )   { fTumourOn     = tumon; }
   inline void SetTumourRadius ( G4double radius )  { fTumourRadius = radius; }
   inline void SetTumourHeight ( G4double height )  { fTumourHeight = height; }
-  inline void SetAnaBarXpos   ( G4double Xpos )    { fAnaBarXpos   = Xpos; }
 
   private:
 
@@ -42,11 +43,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4VPhysicalVolume* fDet2Vol;
 
   DetectorSD*        fDetSD;
+  PMTSD*             fPMTSD;
 
   G4int              fTumourOn;
   G4double           fTumourRadius;
   G4double           fTumourHeight;
-  G4double           fAnaBarXpos;
 
 };
 #endif

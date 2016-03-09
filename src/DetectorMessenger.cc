@@ -24,10 +24,6 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Detect)
   fTumourHeightCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/TumourHeight",this);
   fTumourHeightCmd->SetGuidance("Set the radius of the tumour in cm.");
 
-  fAnaBarXposCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarXpos",this);
-  fAnaBarXposCmd->SetGuidance("Set Anabar x position in cm.");
-
-
   fUpdateCmd          = new G4UIcommand("/AnaBarMC/detector/update",this);
   fUpdateCmd->SetGuidance("Update the detector geometry with changed values.");
   fUpdateCmd->SetGuidance("Must be run before beamOn if detector has been changed.");  
@@ -42,7 +38,6 @@ DetectorMessenger::~DetectorMessenger()
   delete fTumourOnCmd;
   delete fTumourRadiusCmd;
   delete fTumourHeightCmd;
-  delete fAnaBarXposCmd;
 
   delete fUpdateCmd;
 }
@@ -59,8 +54,6 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     fDetector->SetTumourRadius(fTumourRadiusCmd->GetNewDoubleValue(newValue));
   if (command == fTumourHeightCmd)
     fDetector->SetTumourHeight(fTumourHeightCmd->GetNewDoubleValue(newValue));
-  if (command == fAnaBarXposCmd)
-    fDetector->SetAnaBarXpos(fAnaBarXposCmd->GetNewDoubleValue(newValue));
 }
 
 //---------------------------------------------------------------------------

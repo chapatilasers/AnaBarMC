@@ -29,20 +29,23 @@ public:
   void FillArray( Int_t );
   void FillTree();
 
-  void SetOutFileName  ( TString fname )           { fOutFileName  = fname; }
+  inline void SetOutFileName     ( TString fname )             { fOutFileName  = fname; }
 
-  void SetPrimaryEnergy   (G4double       ene  )       { fPEne  = ene;  }
-  void SetPrimaryTime     (G4double       time )       { fPTime = time; }
-  void SetPrimaryPDef     (G4ParticleDefinition* pdef) { fPPDef = pdef; }
-  void SetPrimaryDirection(G4ThreeVector  dir  )       { fPdir  = dir;  }
+  inline void SetPrimaryEnergy   ( G4double       ene  )       { fPEne  = ene;  }
+  inline void SetPrimaryTime     ( G4double       time )       { fPTime = time; }
+  inline void SetPrimaryPDef     ( G4ParticleDefinition* pdef) { fPPDef = pdef; }
+  inline void SetPrimaryDirection( G4ThreeVector  dir  )       { fPdir  = dir;  }
 
-  void SetStepPDef      ( G4ParticleDefinition* sp ) { fSteppdef = sp;    }
-  void SetStepPosPre    ( G4ThreeVector  spos )      { fSteppospre  = spos;  }
-  void SetStepPosPost   ( G4ThreeVector  spos )      { fSteppospost  = spos;  }
-  void SetStepP3        ( G4ThreeVector  smom )      { fStepp3   = smom;  }
-  void SetStepTime      ( G4double       stime )     { fSteptime = stime; }
-  void SetStepID        ( G4int          sid )       { fStepid   = sid;   }
-  void SetStepEdep      ( G4double       sedep)      { fStepedep = sedep; }
+  inline void SetPhotonCount     ( G4int          snp )        { fNphotons = snp; }
+  inline void SetPMTNumber       ( G4int          pno )        { fPMTNo    = pno; }
+
+  inline void SetStepPDef        ( G4ParticleDefinition* sp )  { fSteppdef = sp;       }
+  inline void SetStepPosPre      ( G4ThreeVector  spos )       { fSteppospre  = spos;  }
+  inline void SetStepPosPost     ( G4ThreeVector  spos )       { fSteppospost  = spos; }
+  inline void SetStepP3          ( G4ThreeVector  smom )       { fStepp3   = smom;     }
+  inline void SetStepTime        ( G4double       stime )      { fSteptime = stime;    }
+  inline void SetStepID          ( G4int          sid )        { fStepid   = sid;      }
+  inline void SetStepEdep        ( G4double       sedep)       { fStepedep = sedep;    }
 
 private:
   
@@ -60,7 +63,11 @@ private:
   Int_t                 fPpdg;
   G4ThreeVector         fPdir;
 
-  // Step raw
+  // PMT
+  Int_t                 fNphotons;
+  Int_t                 fPMTNo;
+
+  // Detector (step information) 
   G4ParticleDefinition* fSteppdef;
   G4ThreeVector         fStepp3;
   G4ThreeVector         fSteppospre;

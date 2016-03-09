@@ -17,7 +17,7 @@ using namespace CLHEP;
 DetectorSD::DetectorSD(G4String name, G4int)
   :G4VSensitiveDetector(name)
 {
-  collectionName.insert(G4String("SDHits")+name);
+  collectionName.insert(name+G4String("Collection"));
   fCollection = NULL;
   fNelements  = 10000;
   fNhits      = 0;
@@ -60,24 +60,26 @@ G4bool DetectorSD::ProcessHits( G4Step* aStep,G4TouchableHistory* )
   G4String              ParticleName = aTrack->GetDefinition()->GetParticleName();
   G4double              edep         = aStep->GetTotalEnergyDeposit();
   
-  DetectorHit* Hit = new DetectorHit;
-  Hit->SetEnergy(edep);
-  Hit->SetMomentum(aTrack->GetMomentum());
-  Hit->SetPrePosition(aStep->GetPreStepPoint()->GetPosition());
-  Hit->SetPostPosition(aStep->GetPostStepPoint()->GetPosition());
-  Hit->SetPDef(aTrack->GetDefinition());
-  Hit->SetID(id);
-  Hit->SetTime(aStep->GetPostStepPoint()->GetGlobalTime());
-  fhitID[id] = fCollection->insert(Hit) -1;
+  if (ParticleName == "opticalphoton") return false;
+  
+  DetectorHit* DetHit = new DetectorHit;
+  DetHit->SetEnergy(edep);
+  DetHit->SetMomentum(aTrack->GetMomentum());
+  DetHit->SetPrePosition(aStep->GetPreStepPoint()->GetPosition());
+  DetHit->SetPostPosition(aStep->GetPostStepPoint()->GetPosition());
+  DetHit->SetPDef(aTrack->GetDefinition());
+  DetHit->SetID(id);
+  DetHit->SetTime(aStep->GetPostStepPoint()->GetGlobalTime());
+  fhitID[id] = fCollection->insert(DetHit) -1;
   fHits[fNhits++]=id;
   return true;
 }
 
 //---------------------------------------------------------------------------
 
-G4bool DetectorSD::ProcessHits_constStep(G4Step*,G4TouchableHistory*)
+G4bool DetectorSD::ProcessHits_constStep(const G4Step*,G4TouchableHistory*)
 {
-    return false;
+     return false;
 }
 
 //---------------------------------------------------------------------------
