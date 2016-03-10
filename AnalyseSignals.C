@@ -22,24 +22,28 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   const int MaxHits = 10000;
   Float_t Prim_E, Prim_Th, Prim_Ph;
   Int_t Prim_pdg;
-  Int_t Phantom_Nhits;
-  Int_t Phantom_pdg[MaxHits];
-  Int_t Phantom_id[MaxHits];
-  Float_t Phantom_x[MaxHits], Phantom_y[MaxHits], Phantom_z[MaxHits], Phantom_t[MaxHits];
-  Float_t Phantom_Ed[MaxHits];  
+  Int_t Detector_Nhits;
+  Int_t Detector_pdg[MaxHits];
+  Int_t Detector_id[MaxHits];
+  Float_t Detector_x[MaxHits], Detector_y[MaxHits], Detector_z[MaxHits], Detector_t[MaxHits];
+  Float_t Detector_Ed[MaxHits];  
+  Int_t PMT_id;
+  Int_t PMT_Nphot;
 
   tree1->SetBranchAddress("Prim_E", &Prim_E);
   tree1->SetBranchAddress("Prim_Th", &Prim_Th);
   tree1->SetBranchAddress("Prim_Ph", &Prim_Ph);
   tree1->SetBranchAddress("Prim_pdg", &Prim_pdg);
-  tree1->SetBranchAddress("Phantom_Nhits", &Phantom_Nhits);
-  tree1->SetBranchAddress("Phantom_pdg", &Phantom_pdg);
-  tree1->SetBranchAddress("Phantom_id", &Phantom_id);
-  tree1->SetBranchAddress("Phantom_x", &Phantom_x);
-  tree1->SetBranchAddress("Phantom_y", &Phantom_y);
-  tree1->SetBranchAddress("Phantom_z", &Phantom_z);
-  tree1->SetBranchAddress("Phantom_t", &Phantom_t);
-  tree1->SetBranchAddress("Phantom_Ed", &Phantom_Ed);
+  tree1->SetBranchAddress("PMT_Nphot", &PMT_Nphot);
+  tree1->SetBranchAddress("PMT_id", &PMT_id);
+  tree1->SetBranchAddress("Detector_Nhits", &Detector_Nhits);
+  tree1->SetBranchAddress("Detector_pdg", &Detector_pdg);
+  tree1->SetBranchAddress("Detector_id", &Detector_id);
+  tree1->SetBranchAddress("Detector_x", &Detector_x);
+  tree1->SetBranchAddress("Detector_y", &Detector_y);
+  tree1->SetBranchAddress("Detector_z", &Detector_z);
+  tree1->SetBranchAddress("Detector_t", &Detector_t);
+  tree1->SetBranchAddress("Detector_Ed", &Detector_Ed);
 
   //-------------------------------------------------------------------
   //Create histograms
@@ -50,9 +54,12 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TH1F *hPrimPh = new TH1F("PrimPh","Primary Phi", 100, -TMath::Pi(), TMath::Pi());
   TH1F *hPrimPdg = new TH1F("PrimPdg","Primary PDG ID", 20, 0, 20);
 
-  TH1F *hPhantomNhits = new TH1F("PhantomNhits","Phantom Number of Hits", 100, 0, 400);
-  TH1F *hPhantomPdg = new TH1F("PhantomPdg","Phantom PDG ID", 50, -20, 30);
-  TH1F *hPhantomID = new TH1F("PhantomID","Phantom ID Number", 5, 0, 5);
+  TH1F *hDetectorNhits = new TH1F("DetectorNhits","Detector Number of Hits", 100, 0, 400);
+  TH1F *hDetectorPdg = new TH1F("DetectorPdg","Detector PDG ID", 50, -20, 30);
+  TH1F *hDetectorID = new TH1F("DetectorID","Detector ID Number", 5, 0, 5);
+  TH1F *hPMTID = new TH1F("PMTID","PMT ID Number", 5, 0, 5);
+  TH1F *hFingerPMTNphot = new TH1F("FingerPMTNphot","Finger PMT Number of Photons", 200, 0, 200);
+  TH1F *hAnaBarPMTNphot = new TH1F("AnaBarPMTNphot","AnaBar PMT Number of Photons", 200, 0, 200);
   
   TH1F *hFingerX = new TH1F("FingerX","Finger X Position", 100, -120, 120);
   TH1F *hFingerY = new TH1F("FingerY","Finger Y Position", 100, -30, 30);
@@ -107,90 +114,101 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
     hPrimTh->Fill(Prim_Th);
     hPrimPh->Fill(Prim_Ph);
     hPrimPdg->Fill(Prim_pdg);
-
-    hPhantomNhits->Fill(Phantom_Nhits);
+    hPMTID->Fill(PMT_id);
+    
+    hDetectorNhits->Fill(Detector_Nhits);
 
     bool trigger = false;
     bool finger_hit = false;
     bool anabar_hit = false;
     int j_finger = 0;
     int j_anabar = 0;
-    for (Int_t j=0; j < Phantom_Nhits ; j++) {
-	if (Phantom_id[j] == 0 && !finger_hit) {
+    for (Int_t j=0; j < Detector_Nhits ; j++) {
+	if (Detector_id[j] == 0 && !finger_hit) {
 		finger_hit = true;
 		j_finger = j;
 		//cout<<"hit in finger";
 	}
-	if (Phantom_id[j] == 1 && !anabar_hit) {
+	if (Detector_id[j] == 1 && !anabar_hit) {
 		anabar_hit = true;
 		j_anabar = j;
 	}
     }
 
     if (finger_hit && anabar_hit) trigger = true; 
+    if (trigger) {
+        	if (PMT_id == 0) {
+	  		hAnaBarPMTNphot->Fill(PMT_Nphot);
+        	}else{
+	  		if(PMT_id == 1){
+            			hFingerPMTNphot->Fill(PMT_Nphot);
+	  		}
+        	}
+    }
 
-    for (Int_t j=0; j < Phantom_Nhits ; j++) {
+    for (Int_t j=0; j < Detector_Nhits ; j++) {
 
 	if (trigger) {
+		
 		counter++;
-		if (Phantom_id[j] == 0 ) {
+		if (Detector_id[j] == 0 ) {
 			if (j==j_finger) {
-			   yentrant0 = Phantom_y[j];
-		 	   xentrant0 = Phantom_x[j];
-		 	   zentrant0 = Phantom_z[j];
+			   yentrant0 = Detector_y[j];
+		 	   xentrant0 = Detector_x[j];
+		 	   zentrant0 = Detector_z[j];
 			}	
 
-        		hPhantomPdg->Fill(Phantom_pdg[j]);
-        		hPhantomID->Fill(Phantom_id[j]);
+        		hDetectorPdg->Fill(Detector_pdg[j]);
+        		hDetectorID->Fill(Detector_id[j]);
 
-        		if (Phantom_pdg[j] == 13) {
-			  hFingerX->Fill(Phantom_x[j]);
-        		  hFingerY->Fill(Phantom_y[j]);
-        		  hFingerZ->Fill(Phantom_z[j]);
-    			  hFingerT->Fill(Phantom_t[j]);
+        		if (Detector_pdg[j] == 13) {
+			  hFingerX->Fill(Detector_x[j]);
+        		  hFingerY->Fill(Detector_y[j]);
+        		  hFingerZ->Fill(Detector_z[j]);
+    			  hFingerT->Fill(Detector_t[j]);
 
-				if(zexit0 > Phantom_z[j]) {
-				    zexit0 = Phantom_z[j];
-				    yexit0 = Phantom_y[j];
-				    xexit0 = Phantom_x[j];
+				if(zexit0 > Detector_z[j]) {
+				    zexit0 = Detector_z[j];
+				    yexit0 = Detector_y[j];
+				    xexit0 = Detector_x[j];
 				}
 			
                         }
 			if (Analyse_Secondaries == 1 && Prim_Th > Theta_min_cut) {
-			  edep0tot += Phantom_Ed[j];
-			}else{ if (Phantom_pdg[j] == 13 && Prim_Th > Theta_min_cut) {
-				edep0tot += Phantom_Ed[j];
+			  edep0tot += Detector_Ed[j];
+			}else{ if (Detector_pdg[j] == 13 && Prim_Th > Theta_min_cut) {
+				edep0tot += Detector_Ed[j];
 			       }
 			} 
 
 		}
-		if (Phantom_id[j] == 1 ) {
+		if (Detector_id[j] == 1 ) {
 			if (j==j_anabar) {
-	                   yentrant1 = Phantom_y[j];
-                           xentrant1 = Phantom_x[j];
-                           zentrant1 = Phantom_z[j];
+	                   yentrant1 = Detector_y[j];
+                           xentrant1 = Detector_x[j];
+                           zentrant1 = Detector_z[j];
 
 			}
 
-        		hPhantomPdg->Fill(Phantom_pdg[j]);
-        		hPhantomID->Fill(Phantom_id[j]);
+        		hDetectorPdg->Fill(Detector_pdg[j]);
+        		hDetectorID->Fill(Detector_id[j]);
 
-        		if (Phantom_pdg[j] == 13) {
-        		  hAnaBarX->Fill(Phantom_x[j]);
-        		  hAnaBarY->Fill(Phantom_y[j]);
-        		  hAnaBarZ->Fill(Phantom_z[j]);
-    			  hAnaBarT->Fill(Phantom_t[j]);
+        		if (Detector_pdg[j] == 13) {
+        		  hAnaBarX->Fill(Detector_x[j]);
+        		  hAnaBarY->Fill(Detector_y[j]);
+        		  hAnaBarZ->Fill(Detector_z[j]);
+    			  hAnaBarT->Fill(Detector_t[j]);
                         
-				if(zexit1 > Phantom_z[j]) {
-				    zexit1 = Phantom_z[j];
-				    yexit1 = Phantom_y[j];
-				    xexit1 = Phantom_x[j];
+				if(zexit1 > Detector_z[j]) {
+				    zexit1 = Detector_z[j];
+				    yexit1 = Detector_y[j];
+				    xexit1 = Detector_x[j];
 				}
 			}
 			if (Analyse_Secondaries == 1 && Prim_Th > Theta_min_cut) {
-			  edep1tot += Phantom_Ed[j];
-			}else{ if (Phantom_pdg[j] == 13 && Prim_Th > Theta_min_cut) {
-				edep1tot += Phantom_Ed[j];
+			  edep1tot += Detector_Ed[j];
+			}else{ if (Detector_pdg[j] == 13 && Prim_Th > Theta_min_cut) {
+				edep1tot += Detector_Ed[j];
 			       }
 			}
 
@@ -233,19 +251,21 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   hPrimPdg->Draw();
   
   c3->cd(1);
-  hPhantomNhits->Draw();
+  hDetectorNhits->Draw();
   c3->cd(2);
   gPad->SetLogy();
-  hPhantomPdg->Draw();
+  hDetectorPdg->Draw();
   c3->cd(3);
-  hPhantomID->Draw();
+  hDetectorID->Draw();
+  c3->cd(4);
+  hPMTID->Draw();
 
   TCanvas *c1 = new TCanvas("c1", "c1", 1300,100,600,400);
   c1->Divide(2,2, 0.01, 0.01, 0);
   TCanvas *c5 = new TCanvas("c5", "c5", 700,500,600,400);
   c5->Divide(2,2, 0.01, 0.01, 0);
   TCanvas *c4 = new TCanvas("c4", "c4", 100,500,600,400);
-  c4->Divide(2,2, 0.01, 0.01, 0);
+  c4->Divide(3,2, 0.01, 0.01, 0);
   TCanvas *c6 = new TCanvas("c6", "c6", 1300,500,600,400);
   c6->Divide(2,2, 0.01, 0.01, 0);
  //c4->Divide(2,2, 0.01, 0.01, 0);
@@ -272,12 +292,16 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   gPad->SetLogz();
   hFinger_Edep_vs_Y->Draw("COLZ");
   c4->cd(2);
+  hFingerEd->Draw();
+  c4->cd(3);
+  hFingerPMTNphot->Draw();
+  c4->cd(4);
   gPad->SetLogz();
   hAnaBar_Edep_vs_Y->Draw("COLZ");
-  c4->cd(3);
-  hFingerEd->Draw();
-  c4->cd(4);
+  c4->cd(5);
   hAnaBarEd->Draw();
+  c4->cd(6);
+  hAnaBarPMTNphot->Draw();
 
   c6->cd(1);
   gPad->SetLogz();

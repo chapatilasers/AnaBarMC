@@ -80,7 +80,7 @@ void AnalysisManager::ZeroArray()
 
   // PMT
   fNphotons = 0;
-  fPMTNo    = 9999;
+  fPMTNo    = -1;
 
   // Raw Hits
   fRAW_Nhits  = 0;
