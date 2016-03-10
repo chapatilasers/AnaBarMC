@@ -26,13 +26,16 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline G4VPhysicalVolume* GetExpHall()    { return fExpHall;  };
   inline G4VPhysicalVolume* GetDet1Vol()    { return fDet1Vol;  };
   inline G4VPhysicalVolume* GetDet2Vol()    { return fDet2Vol;  };
+  inline G4VPhysicalVolume* GetFingerVol()    { return FingerCounter;  };
+  inline G4VPhysicalVolume* GetAnaBarVol()    { return AnaBar;  };
   inline DetectorSD*        GetDetSD()      { return fDetSD;    };
   inline PMTSD*             GetPMTSD()      { return fPMTSD;    };
 
   inline void SetTumourOn     ( G4int    tumon )   { fTumourOn     = tumon; }
   inline void SetTumourRadius ( G4double radius )  { fTumourRadius = radius; }
   inline void SetTumourHeight ( G4double height )  { fTumourHeight = height; }
-
+  inline void SetAnaBarXpos   ( G4double Xpos )    { fAnaBarXpos   = Xpos; }
+ 
   private:
 
   G4NistManager*     fNistManager;
@@ -41,6 +44,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4VPhysicalVolume* fExpHall;
   G4VPhysicalVolume* fDet1Vol;
   G4VPhysicalVolume* fDet2Vol;
+  G4VPhysicalVolume* FingerCounter;
+  G4VPhysicalVolume* AnaBar;
 
   DetectorSD*        fDetSD;
   PMTSD*             fPMTSD;
@@ -48,6 +53,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4int              fTumourOn;
   G4double           fTumourRadius;
   G4double           fTumourHeight;
+  G4double           fAnaBarXpos;
 
 };
 #endif

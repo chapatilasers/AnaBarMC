@@ -1,3 +1,13 @@
+// Initial version from David Hamilton
+//
+// Initial Modifications from Kerver and Brash for geometry of finger
+// counter + AnaBar
+//
+// Addition modifications by Hamilton and Brash in order to add 
+// optical photon capabilities, need to include:
+// G4OpticalSurface, G4LogicalBorderSurface, and G4LogicalSkinSurface
+// In order to record PMT hits, also include PMTSD.hh
+
 #include "DetectorConstruction.hh"
 #include "DetectorMessenger.hh"
 #include "DetectorSD.hh"
@@ -45,6 +55,7 @@ DetectorConstruction::DetectorConstruction()
 
   fTumourRadius = 0.5;
   fTumourHeight = 0.0;
+  fAnaBarXpos	= 0.0;
   
   G4UImanager* UI = G4UImanager::GetUIpointer();
   G4String command = "/control/execute macros/DetectorSetup.mac";
@@ -156,37 +167,58 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 						   expHall_log, "expHall", 0, false, 0);
 
   //---------------------------------------------------------------------------
-  // Create Detector
+  // Create Detectors
   //---------------------------------------------------------------------------
 
-  G4RotationMatrix* phant_rm  = new G4RotationMatrix();
-  phant_rm->rotateY(90. *deg);
+   G4Material* scintillator_mat = fNistManager->FindOrBuildMaterial("G4_POLYETHYLENE");
+
+   G4Box* fingercounter_solid  = new G4Box("fingercounter_solid", 1.3*cm , 2.0*cm , 0.85*cm);
+   G4LogicalVolume* fingercounter_log = new G4LogicalVolume(fingercounter_solid, Pscint, "fingercounter_log");
+   G4ThreeVector fingercounter_pos(0.0*cm , 0.0*cm , 0.0*cm);
+   FingerCounter=  new G4PVPlacement(0, fingercounter_pos , fingercounter_log , "FingerCounter" , expHall_log , false , 0);
+
+   G4Box* AnaBar_solid  = new G4Box("AnaBar_solid", 11.0*cm , 2.0*cm , 2.0*cm);
+   G4LogicalVolume* AnaBar_log = new G4LogicalVolume(AnaBar_solid, Pscint, "AnaBar_log");
+   G4ThreeVector AnaBar_pos(fAnaBarXpos*cm , 0.0*cm , -2.85*cm);
+   AnaBar =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , 1);
+
+
+
+  //---------------------------------------------------------------------------
+  // Create AnaBar PMT
+  //---------------------------------------------------------------------------
+
+  G4RotationMatrix* anabar_rm  = new G4RotationMatrix();
+  anabar_rm->rotateY(90. *deg);
   
-  G4Tubs* det_tubs            = new G4Tubs("det_tubs",
-					   0. *mm, 1.0 *cm, 29.34 *cm,
-					   0. *deg, 360. *deg );
+  G4Tubs* det1_tubs            = new G4Tubs("det1_tubs",
+					    0. *mm, 1.27 *cm, 0.15 *cm,
+					    0. *deg, 360. *deg );
   
-  G4LogicalVolume* det1_log = new G4LogicalVolume(det_tubs,
-						  Pscint,
+  G4LogicalVolume* det1_log = new G4LogicalVolume(det1_tubs,
+						  Glass,
 						  "det1_log", 0, 0, 0);
   
-  fDet1Vol                  = new G4PVPlacement(phant_rm, G4ThreeVector(0.,0.,0.),
-					       det1_log, "det1", expHall_log, false, 0);
+  fDet1Vol                  = new G4PVPlacement(anabar_rm, G4ThreeVector(11.0*cm+fAnaBarXpos*cm+0.15*cm, 0., -2.85*cm),
+						det1_log, "det1", expHall_log, false, 0);
 
   //---------------------------------------------------------------------------
-  // Create PMT
+  // Create Finger PMT
   //---------------------------------------------------------------------------
+
+  G4RotationMatrix* finger_rm  = new G4RotationMatrix();
+  finger_rm->rotateX(90. *deg);
   
   G4Tubs* det2_tubs            = new G4Tubs("det2_tubs",
-					    0. *mm, 1.0 *cm, 1. *cm,
+					    0. *mm, 1.27 *cm, 0.15 *cm,
 					    0. *deg, 360. *deg );
   
   G4LogicalVolume* det2_log = new G4LogicalVolume(det2_tubs,
 						  Glass,
 						  "det2_log", 0, 0, 0);
   
-  fDet2Vol                  = new G4PVPlacement(phant_rm, G4ThreeVector(30.34 *cm, 0., 0.),
-						det2_log, "det2", expHall_log, false, 0);
+  fDet2Vol                  = new G4PVPlacement(finger_rm, G4ThreeVector(0., -2.0*cm-0.15*cm, 0.0),
+						det2_log, "det2", expHall_log, false, 1);
 
   //---------------------------------------------------------------------------
   // Create Optical Surface
@@ -203,7 +235,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 							    glisur, polished, dielectric_metal );
   PhotoCath_opsurf->SetMaterialPropertiesTable(PhotoCath_mt);
   
-  new G4LogicalSkinSurface("PhotoCath_surf", det2_log, PhotoCath_opsurf );
+  new G4LogicalSkinSurface("PhotoCathAnaBar_surf", det1_log, PhotoCath_opsurf );
+  new G4LogicalSkinSurface("PhotoCathFinger_surf", det2_log, PhotoCath_opsurf );
 
   //---------------------------------------------------------------------------
   // Set Step Limits, Sensitive Detector and Visualisation
@@ -211,17 +244,24 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   G4SDManager* SDman = G4SDManager::GetSDMpointer();
 
-  fDetSD = new DetectorSD("DetSD", 1);
+  fDetSD = new DetectorSD("DetSD", 2);
   SDman->AddNewDetector( fDetSD );
-  det1_log->SetSensitiveDetector( fDetSD );
+  fingercounter_log->SetSensitiveDetector( fDetSD );
+  AnaBar_log->SetSensitiveDetector( fDetSD );
 
-  fPMTSD = new PMTSD("PMTSD", 1);
+  fPMTSD = new PMTSD("PMTSD", 2);
   SDman->AddNewDetector( fPMTSD );
+  det1_log->SetSensitiveDetector( fPMTSD );
   det2_log->SetSensitiveDetector( fPMTSD );
   
   G4VisAttributes* blue    = new G4VisAttributes( G4Colour(0.0,0.0,1.0)   );
+  G4VisAttributes* yellow  = new G4VisAttributes( G4Colour(0.0,0.5,0.5)   );
+  G4VisAttributes* green   = new G4VisAttributes( G4Colour(0.0,1.0,0.0)   );
   expHall_log->SetVisAttributes(G4VisAttributes::Invisible);
-  det1_log->SetVisAttributes(blue);
+  fingercounter_log->SetVisAttributes(blue);
+  AnaBar_log->SetVisAttributes(green);
+  det1_log->SetVisAttributes(yellow);
+  det2_log->SetVisAttributes(yellow);
 
   return fExpHall;
 }
