@@ -86,7 +86,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 						   expHall_log, "expHall", 0, false, 0);
 
   //---------------------------------------------------------------------------
-  // Create Water Phantom for Radiotherapy
+  // Create Detectors 
   //---------------------------------------------------------------------------
 
    G4Material* scintillator__mat = fNistManager->FindOrBuildMaterial("G4_POLYETHYLENE");
@@ -103,21 +103,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
  
 
 
-/*
-  G4RotationMatrix* phant_rm  = new G4RotationMatrix();
-  phant_rm->rotateY(90. *deg);
-  
-  G4Tubs* det_tubs            = new G4Tubs("det_tubs",
-					   0. *mm, 13.0 *cm, 29.34 *cm,
-					   0. *deg, 360. *deg );
-  
-  G4LogicalVolume* det1_log = new G4LogicalVolume(det_tubs,
-						  fNistManager->FindOrBuildMaterial("G4_WATER"),
-						  "det1_log", 0, 0, 0);
-  
-  fDet1Vol                  = new G4PVPlacement(phant_rm, G4ThreeVector(0.,0.,0.),
-					       det1_log, "det1", expHall_log, false, 0);
-*/
   //---------------------------------------------------------------------------
   // Set Step Limits, Sensitive Detector and Visualisation
   //---------------------------------------------------------------------------
