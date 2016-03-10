@@ -170,8 +170,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Create Detectors
   //---------------------------------------------------------------------------
 
-   G4Material* scintillator_mat = fNistManager->FindOrBuildMaterial("G4_POLYETHYLENE");
-
    G4Box* fingercounter_solid  = new G4Box("fingercounter_solid", 1.3*cm , 2.0*cm , 0.85*cm);
    G4LogicalVolume* fingercounter_log = new G4LogicalVolume(fingercounter_solid, Pscint, "fingercounter_log");
    G4ThreeVector fingercounter_pos(0.0*cm , 0.0*cm , 0.0*cm);
