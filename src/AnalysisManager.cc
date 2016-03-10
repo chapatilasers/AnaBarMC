@@ -70,13 +70,13 @@ void AnalysisManager::ZeroArray()
 {
   // Primary
   G4ThreeVector zero(0.,0.,0.);
-  fPEne     = 9999;
-  fPdir     = (zero);
-  fPth      = 9999;
-  fPph      = 9999;
-  fPTime    = 9999;
-  fPPDef    = NULL;
-  fPpdg     = 9999;
+  fPEne   = 9999;
+  fPdir   = (zero);
+  fPth    = 9999;
+  fPph    = 9999;
+  fPTime  = 9999;
+  fPPDef  = NULL;
+  fPpdg   = 9999;
 
   // PMT
   fNphotons = 0;
