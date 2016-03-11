@@ -65,6 +65,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   
   TH2F *hFinger_Edep_vs_Nphot = new TH2F("FingerEdepVsNphot", "Finger Edep vs. Number of Photons", 200, 0, 200, 100, 0.01, 10);
   TH2F *hAnaBar_Edep_vs_Nphot = new TH2F("AnaBarEdepVsNphot", "AnaBar Edep vs. Number of Photons", 200, 0, 200, 100, 0.01, 30);
+  TH2F *hNphot0_vs_Nphot1 = new TH2F("AnaBarVsFingerNphot", "AnaBar vs. Finger Number of Photons", 200, 0, 200, 200, 0, 200);
   
   TH1F *hFingerX = new TH1F("FingerX","Finger X Position", 100, -120, 120);
   TH1F *hFingerY = new TH1F("FingerY","Finger Y Position", 100, -30, 30);
@@ -226,6 +227,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
     	hAnaBar_Edep_vs_Y->Fill(yentrant1,edep1tot);
     	hFinger_Edep_vs_Nphot->Fill(PMT_Nphotons_One,edep0tot);
     	hAnaBar_Edep_vs_Nphot->Fill(PMT_Nphotons_Zero,edep1tot);
+    	hNphot0_vs_Nphot1->Fill(PMT_Nphotons_One,PMT_Nphotons_Zero);
     	hE1vsE2->Fill(edep0tot,edep1tot);
    	hyentran1_vs_xentran1->Fill(xentrant1,yentrant1);
  	htracklength_vs_AnaBar_Edep->Fill(edep1tot,tracklength);
@@ -271,7 +273,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TCanvas *c6 = new TCanvas("c6", "c6", 1300,500,600,400);
   c6->Divide(2,2, 0.01, 0.01, 0);
   TCanvas *c7 = new TCanvas("c7", "c7", 200,500,600,400);
-  c7->Divide(2,1, 0.01, 0.01, 0);
+  c7->Divide(2,2, 0.01, 0.01, 0);
  
   c1->cd(1);
   hFingerX->Draw();
@@ -310,6 +312,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   hFinger_Edep_vs_Nphot->Draw("COLZ");
   c7->cd(2);
   hAnaBar_Edep_vs_Nphot->Draw("COLZ");
+  c7->cd(3);
+  hNphot0_vs_Nphot1->Draw("COLZ");
 
   c6->cd(1);
   gPad->SetLogz();
