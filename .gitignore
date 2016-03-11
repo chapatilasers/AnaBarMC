@@ -1,4 +1,4 @@
 GenCosmics_C.d
 GenCosmics_C.so
-data/*
+data/*.root
 *.wrl
