@@ -46,7 +46,7 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 {
 
   G4int event_id   = evt->GetEventID();  
-  if ( event_id%1000 == 0 ) 
+  if ( event_id%1 == 0 ) 
     G4cout <<"Event " << event_id << G4endl;
 
   fAnaManager->ZeroArray(); 
@@ -83,11 +83,19 @@ void EventAction::EndOfEventAction(const G4Event* evt)
   // PMT
   if(PHC) {
     pmt_hits = PHC->entries();
+    //std::cout << "Number of PMT Hits at end of event = " << pmt_hits << std::endl;
     if( pmt_hits != 0 ) {
       for( G4int j = 0; j < pmt_hits; j++) {
 	PMTHit* hit2 = static_cast<PMTHit*>( PHC->GetHit(j) );
-	fAnaManager->SetPhotonCount( (G4int) hit2->GetPhotonCount() );
+	if (hit2->GetPMTNumber() == 0) {
+		fAnaManager->SetPhotonCountZero( (G4int) hit2->GetPhotonCount() );
+	}else{
+		if (hit2->GetPMTNumber() == 1) {
+			fAnaManager->SetPhotonCountOne( (G4int) hit2->GetPhotonCount() );
+		}
+	}
 	fAnaManager->SetPMTNumber( (G4int) hit2->GetPMTNumber() );
+	//std::cout << "hit " << j << " pmt number " << hit2->GetPMTNumber() << " number of photons = " << hit2->GetPhotonCount() << std::endl;
       }
     }
   }

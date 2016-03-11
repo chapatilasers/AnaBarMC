@@ -28,13 +28,15 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   Float_t Detector_x[MaxHits], Detector_y[MaxHits], Detector_z[MaxHits], Detector_t[MaxHits];
   Float_t Detector_Ed[MaxHits];  
   Int_t PMT_id;
-  Int_t PMT_Nphot;
+  Int_t PMT_Nphotons_Zero;
+  Int_t PMT_Nphotons_One;
 
   tree1->SetBranchAddress("Prim_E", &Prim_E);
   tree1->SetBranchAddress("Prim_Th", &Prim_Th);
   tree1->SetBranchAddress("Prim_Ph", &Prim_Ph);
   tree1->SetBranchAddress("Prim_pdg", &Prim_pdg);
-  tree1->SetBranchAddress("PMT_Nphot", &PMT_Nphot);
+  tree1->SetBranchAddress("PMT_Nphotons_Zero", &PMT_Nphotons_Zero);
+  tree1->SetBranchAddress("PMT_Nphotons_One", &PMT_Nphotons_One);
   tree1->SetBranchAddress("PMT_id", &PMT_id);
   tree1->SetBranchAddress("Detector_Nhits", &Detector_Nhits);
   tree1->SetBranchAddress("Detector_pdg", &Detector_pdg);
@@ -137,13 +139,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
 
     if (finger_hit && anabar_hit) trigger = true; 
     if (trigger) {
-        	if (PMT_id == 0) {
-	  		hAnaBarPMTNphot->Fill(PMT_Nphot);
-        	}else{
-	  		if(PMT_id == 1){
-            			hFingerPMTNphot->Fill(PMT_Nphot);
-	  		}
-        	}
+  	hAnaBarPMTNphot->Fill(PMT_Nphotons_Zero);
+        hFingerPMTNphot->Fill(PMT_Nphotons_One);
     }
 
     for (Int_t j=0; j < Detector_Nhits ; j++) {

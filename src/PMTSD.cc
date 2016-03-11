@@ -68,6 +68,7 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
 
     fhitID[pmtNumber] = fCollection->insert(OpHit) - 1;
     fHits[fNhits++] = pmtNumber;
+    //std::cout << "First PMT hit ... pmtNumber = " << pmtNumber << std::endl; 
   }
   else // this is not a new hit
     (*fCollection)[fhitID[pmtNumber]]->IncPhotonCount();

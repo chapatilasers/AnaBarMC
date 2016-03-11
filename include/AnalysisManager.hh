@@ -36,7 +36,8 @@ public:
   inline void SetPrimaryPDef     ( G4ParticleDefinition* pdef) { fPPDef = pdef; }
   inline void SetPrimaryDirection( G4ThreeVector  dir  )       { fPdir  = dir;  }
 
-  inline void SetPhotonCount     ( G4int          snp )        { fNphotons = snp; }
+  inline void SetPhotonCountZero     ( G4int          snp )        { fNphotonsZero = snp; }
+  inline void SetPhotonCountOne     ( G4int          snp )        { fNphotonsOne = snp; }
   inline void SetPMTNumber       ( G4int          pno )        { fPMTNo    = pno; }
 
   inline void SetStepPDef        ( G4ParticleDefinition* sp )  { fSteppdef = sp;       }
@@ -64,7 +65,8 @@ private:
   G4ThreeVector         fPdir;
 
   // PMT
-  Int_t                 fNphotons;
+  Int_t                 fNphotonsZero;
+  Int_t                 fNphotonsOne;
   Int_t                 fPMTNo;
 
   // Detector (step information) 
