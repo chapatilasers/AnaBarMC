@@ -9,7 +9,7 @@ Double_t fitfunction(Double_t *x, Double_t *par) {
 }
 
 
-void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1, Float_t Theta_min_cut = 0.0) {
+void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1, Float_t Theta_min_cut = 0.0, bool displayall = false) {
 
   //-------------------------------------------------------------------
   //Set stuff up for reading
@@ -240,10 +240,20 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   //Plotting and writing out
   //-------------------------------------------------------------------
   
+  
+  if (displayall) {
+  TCanvas *c1 = new TCanvas("c1", "c1", 1300,100,600,400);
+  c1->Divide(2,2, 0.01, 0.01, 0);
   TCanvas *c2 = new TCanvas("c2", "c2", 100,100,600,400);
   c2->Divide(2,2, 0.01, 0.01, 0);
   TCanvas *c3 = new TCanvas("c3", "c3", 700,100,600,400);
   c3->Divide(2,2, 0.01, 0.01, 0);
+  TCanvas *c5 = new TCanvas("c5", "c5", 700,500,600,400);
+  c5->Divide(2,2, 0.01, 0.01, 0);
+  TCanvas *c6 = new TCanvas("c6", "c6", 1300,500,600,400);
+  c6->Divide(2,2, 0.01, 0.01, 0);
+  TCanvas *c7 = new TCanvas("c7", "c7", 200,500,600,400);
+  c7->Divide(2,2, 0.01, 0.01, 0);
   
   c2->cd(1);
   hPrimE->Draw();
@@ -264,16 +274,6 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   c3->cd(4);
   hPMTID->Draw();
 
-  TCanvas *c1 = new TCanvas("c1", "c1", 1300,100,600,400);
-  c1->Divide(2,2, 0.01, 0.01, 0);
-  TCanvas *c5 = new TCanvas("c5", "c5", 700,500,600,400);
-  c5->Divide(2,2, 0.01, 0.01, 0);
-  TCanvas *c4 = new TCanvas("c4", "c4", 100,500,600,400);
-  c4->Divide(3,2, 0.01, 0.01, 0);
-  TCanvas *c6 = new TCanvas("c6", "c6", 1300,500,600,400);
-  c6->Divide(2,2, 0.01, 0.01, 0);
-  TCanvas *c7 = new TCanvas("c7", "c7", 200,500,600,400);
-  c7->Divide(2,2, 0.01, 0.01, 0);
  
   c1->cd(1);
   hFingerX->Draw();
@@ -293,20 +293,6 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   c5->cd(4);
   hAnaBarT->Draw();
 
-  c4->cd(1);
-  gPad->SetLogz();
-  hFinger_Edep_vs_Y->Draw("COLZ");
-  c4->cd(2);
-  hFingerEd->Draw();
-  c4->cd(3);
-  hFingerPMTNphot->Draw();
-  c4->cd(4);
-  gPad->SetLogz();
-  hAnaBar_Edep_vs_Y->Draw("COLZ");
-  c4->cd(5);
-  hAnaBarEd->Draw();
-  c4->cd(6);
-  hAnaBarPMTNphot->Draw();
 
   c7->cd(1);
   hFinger_Edep_vs_Nphot->Draw("COLZ");
@@ -326,5 +312,24 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   hyexit1_vs_xexit1->Draw("COLZ");
   c6->cd(4);
   htracklength_vs_AnaBar_Edep->Draw("COLZ");
+  }
+
+  TCanvas *c4 = new TCanvas("c4", "c4", 100,500,600,400);
+  c4->Divide(3,2, 0.01, 0.01, 0);
+  
+  c4->cd(1);
+  gPad->SetLogz();
+  hFinger_Edep_vs_Y->Draw("COLZ");
+  c4->cd(2);
+  hFingerEd->Draw();
+  c4->cd(3);
+  hFingerPMTNphot->Draw();
+  c4->cd(4);
+  gPad->SetLogz();
+  hAnaBar_Edep_vs_Y->Draw("COLZ");
+  c4->cd(5);
+  hAnaBarEd->Draw();
+  c4->cd(6);
+  hAnaBarPMTNphot->Draw();
 
 }
