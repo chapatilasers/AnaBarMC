@@ -50,7 +50,7 @@ Float_t         fIntRatio;
 
 // ------------------------------------------------------------------------------------------------
 
-void GenCosmics( ULong64_t nevents = 10000, 
+void GenCosmics( ULong64_t nevents = 8000, 
 		 TString fname = "data/Gen_test1.root" ) 
 {
   
@@ -96,7 +96,7 @@ void GenCosmics( ULong64_t nevents = 10000,
       GenerateOneMuon();
       fROOTTree->Fill();
       
-      if( i % 100000 == 0 )
+      if( i % 10000 == 0 )
 	cout << i << endl;
     }
   
@@ -137,26 +137,28 @@ void InitOutput()
 
 void GenerateOneMuon()
 {
-  fPDGCode = 13;
+  //fPDGCode = 2212; // proton
+  fPDGCode = 2112; // neutron
 
   // Generate vertex position in cm 
-  fVx = fRand->Uniform(-1.3 , 1.3 );
+  fVx = fRand->Uniform(-0.1 , 0.1 );
   fVy = fRand->Uniform( -2.0, 2.0 );
   //fVx = fRand->Uniform(-0.01 , 0.01 );
   //fVy = fRand->Uniform( -.01, 0.01 );
-  fVz = 2.0;
+  fVz = 3.0;
 
   // Sample Momentum Distributions (flat from min to mean, p^-2.7 from mean to max)
-  if( fRand->Uniform(0.,1) < fIntRatio ) 
-    fP = 1000. * fMomFlatDist->GetRandom();
-  else 
-    fP = 1000. * fMomPowDist->GetRandom();
+  //if( fRand->Uniform(0.,1) < fIntRatio ) 
+  //  fP = 1000. * fMomFlatDist->GetRandom();
+  //else 
+  //  fP = 1000. * fMomPowDist->GetRandom();
+  fP = 1000.0*fRand->Uniform(0.00,10.00);
 
   // Sample Angular Distributions (cos^2(theta) and flat phi)
-  Float_t th = fThetaDist->GetRandom();
-  Float_t ph = fPhiDist->GetRandom();
-  //Float_t th = 3.14159265;
-  //Float_t ph = 0.0;
+  //Float_t th = fThetaDist->GetRandom();
+  //Float_t ph = fPhiDist->GetRandom();
+  Float_t th = 3.14159265*(1+fRand->Uniform(-0.05,0.0));
+  Float_t ph = fRand->Uniform(0.0,2.0*3.14159265);
   fPx        = fP * TMath::Sin(th) * TMath::Cos(ph);
   fPy        = fP * TMath::Sin(th) * TMath::Sin(ph);
   fPz        = fP * TMath::Cos(th);
