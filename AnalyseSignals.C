@@ -181,6 +181,11 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   //Plotting and writing out
   //-------------------------------------------------------------------
   
+  Double_t n_primaries = (Double_t) hPrimE->GetEntries();
+  Double_t n_photons = (Double_t) hAnaBarPMTNphot->GetEntries();
+  Double_t efficiency = n_photons/n_primaries*100.0;
+  Double_t defficiency = 1.0/sqrt(n_photons)*efficiency;
+  std::cout << "Efficiency = " << efficiency << " +/- " << defficiency << " %" << std::endl;
   
   if (displayall) {
   TCanvas *c2 = new TCanvas("c2", "c2", 100,100,600,400);
@@ -196,7 +201,6 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   
   c2->cd(1);
   hPrimE->Draw();
-  Double_t n_primaries = (Double_t) hPrimE->GetEntries();
   c2->cd(2);
   hPrimTh->Draw();
   c2->cd(3);
@@ -224,7 +228,6 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   c5->cd(4);
   hAnaBarT->Draw();
 
-
   c7->cd(1);
   hAnaBar_Edep_vs_Nphot->Draw("COLZ");
   c7->cd(2);
@@ -250,9 +253,6 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   hAnaBarEd->Draw();
   c4->cd(3);
   hAnaBarPMTNphot->Draw();
-  Double_t n_photons = (Double_t) hAnaBarPMTNphot->GetEntries();
-
-  std::cout << "Efficiency = " << n_photons/n_primaries*100 << "%" << std::endl;
 
 
 }
