@@ -50,7 +50,7 @@ Float_t         fIntRatio;
 
 // ------------------------------------------------------------------------------------------------
 
-void GenCosmics( ULong64_t nevents = 8000, 
+void GenCosmics( ULong64_t nevents = 6000, 
 		 TString fname = "data/Gen_test1.root" ) 
 {
   

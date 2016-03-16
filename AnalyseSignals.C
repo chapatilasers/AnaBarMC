@@ -56,7 +56,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TH1F *hPrimPh = new TH1F("PrimPh","Primary Phi", 100, -TMath::Pi(), TMath::Pi());
   TH1F *hPrimPdg = new TH1F("PrimPdg","Primary PDG ID", 100, 0, 100);
 
-  TH1F *hDetectorNhits = new TH1F("DetectorNhits","Detector Number of Hits", 10, 0, 10);
+  TH1F *hDetectorNhits = new TH1F("DetectorNhits","Detector Number of Hits", 400, 0, 400);
   TH1F *hDetectorPdg = new TH1F("DetectorPdg","Detector PDG ID", 200, -100, 100);
   TH1F *hDetectorID = new TH1F("DetectorID","Detector ID Number", 5, 0, 5);
   TH1F *hPMTID = new TH1F("PMTID","PMT ID Number", 5, 0, 5);
@@ -205,6 +205,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   hPrimPdg->Draw();
   
   c3->cd(1);
+  gPad->SetLogy();
   hDetectorNhits->Draw();
   c3->cd(2);
   gPad->SetLogy();
