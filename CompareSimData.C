@@ -193,8 +193,10 @@ void CompareSimData(Int_t Data_Run_Number = 157, Int_t Simulation_Run_Number = 1
   //Double_t anabar_nscaling = npoints10/simnpoints10;
   Double_t finger_nscaling = counter00_data/counter_sim;
   Double_t anabar_nscaling = counter10_data/counter_sim;
-  Double_t finger_xscaling = mean00/simmean00*1.00;
-  Double_t anabar_xscaling = mean10/simmean10*1.00;
+  //Double_t finger_xscaling = mean00/simmean00*1.00;
+  //Double_t anabar_xscaling = mean10/simmean10*1.00;
+  Double_t finger_xscaling = 3.33;
+  Double_t anabar_xscaling = 3.03;
   std::cout << "Finger Counter ... nscaling = " << finger_nscaling << "  xscaling = " << finger_xscaling << std::endl;
   std::cout << "AnaBar Counter ... nscaling = " << anabar_nscaling << "  xscaling = " << anabar_xscaling << std::endl;
   
