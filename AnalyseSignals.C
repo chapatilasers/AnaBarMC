@@ -28,15 +28,13 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   Float_t Detector_x[MaxHits], Detector_y[MaxHits], Detector_z[MaxHits], Detector_t[MaxHits];
   Float_t Detector_Ed[MaxHits];  
   Int_t PMT_id;
-  Int_t PMT_Nphotons_Zero;
-  Int_t PMT_Nphotons_One;
+  Int_t PMT_Nphotons;
 
   tree1->SetBranchAddress("Prim_E", &Prim_E);
   tree1->SetBranchAddress("Prim_Th", &Prim_Th);
   tree1->SetBranchAddress("Prim_Ph", &Prim_Ph);
   tree1->SetBranchAddress("Prim_pdg", &Prim_pdg);
-  tree1->SetBranchAddress("PMT_Nphotons_Zero", &PMT_Nphotons_Zero);
-  tree1->SetBranchAddress("PMT_Nphotons_One", &PMT_Nphotons_One);
+  tree1->SetBranchAddress("PMT_Nphotons", &PMT_Nphotons);
   tree1->SetBranchAddress("PMT_id", &PMT_id);
   tree1->SetBranchAddress("Detector_Nhits", &Detector_Nhits);
   tree1->SetBranchAddress("Detector_pdg", &Detector_pdg);
@@ -120,7 +118,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
 
     if (anabar_hit) trigger = true; 
     if (trigger) {
-  	if (PMT_Nphotons_Zero > 0) hAnaBarPMTNphot->Fill(PMT_Nphotons_Zero);
+  	if (PMT_Nphotons > 0) hAnaBarPMTNphot->Fill(PMT_Nphotons);
     }
 
     for (Int_t j=0; j < Detector_Nhits ; j++) {
@@ -166,11 +164,11 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
  
     if (trigger) {
         //std::cout << "Track Length = " << tracklength << std::endl;
-        //std::cout << "Edep = " << edep1tot << "  Number of photons = " << PMT_Nphotons_Zero << std::endl;
+        //std::cout << "Edep = " << edep1tot << "  Number of photons = " << PMT_Nphotons << std::endl;
     	hAnaBarEd->Fill(edep1tot);
     	hAnaBar_Edep_vs_Y->Fill(yentrant1,edep1tot);
-    	if (PMT_Nphotons_Zero > 0) hAnaBar_Edep_vs_Nphot->Fill(PMT_Nphotons_Zero,edep1tot);
-    	if (PMT_Nphotons_Zero > 0) hAnaBar_Nphot_vs_Eprimary->Fill(Prim_E,PMT_Nphotons_Zero);
+    	if (PMT_Nphotons > 0) hAnaBar_Edep_vs_Nphot->Fill(PMT_Nphotons,edep1tot);
+    	if (PMT_Nphotons > 0) hAnaBar_Nphot_vs_Eprimary->Fill(Prim_E,PMT_Nphotons);
    	hyentran1_vs_xentran1->Fill(xentrant1,yentrant1);
  	htracklength_vs_AnaBar_Edep->Fill(edep1tot,tracklength);
 	hyexit1_vs_xexit1->Fill(xexit1,yexit1);
@@ -183,9 +181,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   
   Double_t n_primaries = (Double_t) hPrimE->GetEntries();
   Double_t n_photons = (Double_t) hAnaBarPMTNphot->GetEntries();
-  Double_t efficiency = n_photons/n_primaries*100.0;
-  Double_t defficiency = 1.0/sqrt(n_photons)*efficiency;
-  std::cout << "Efficiency = " << efficiency << " +/- " << defficiency << " %" << std::endl;
+  std::cout << "Efficiency = " << n_photons/n_primaries*100 << "%" << std::endl;
   
   if (displayall) {
   TCanvas *c2 = new TCanvas("c2", "c2", 100,100,600,400);
@@ -228,6 +224,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   c5->cd(4);
   hAnaBarT->Draw();
 
+
   c7->cd(1);
   hAnaBar_Edep_vs_Nphot->Draw("COLZ");
   c7->cd(2);
@@ -253,6 +250,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   hAnaBarEd->Draw();
   c4->cd(3);
   hAnaBarPMTNphot->Draw();
+
 
 
 }
