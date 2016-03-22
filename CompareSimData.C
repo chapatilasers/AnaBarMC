@@ -77,17 +77,17 @@ void CompareSimData(Int_t Data_Run_Number = 157, Int_t Simulation_Run_Number = 1
   TH1F *hTDC0 = new TH1F("TDC0", "Finger TDC 1st Hit", 499, 1, 500);
   TH1F *hTDC2 = new TH1F("TDC2", "AnaBar TDC 1st Hit", 499, 1, 500);
   
-  TH1F *hFingerPMTNphot = new TH1F("FingerPMTNphot","Finger PMT Number of Photons", 100, 0, 200);
-  TH1F *hAnaBarPMTNphot = new TH1F("AnaBarPMTNphot","AnaBar PMT Number of Photons", 100, 0, 200);
-  TH1F *hFingerPMTNphotScaled = new TH1F("FingerPMTNphotScaled","Finger PMT Number of Photons Scaled", 100, 0, 1000);
-  TH1F *hAnaBarPMTNphotScaled = new TH1F("AnaBarPMTNphotScaled","AnaBar PMT Number of Photons Scaled", 100, 0, 1000);
+  TH1F *hFingerPMTNphot = new TH1F("FingerPMTNphot","Finger PMT Number of Photoelectrons", 100, 0, 200);
+  TH1F *hAnaBarPMTNphot = new TH1F("AnaBarPMTNphot","AnaBar PMT Number of Photoelectrons", 100, 0, 200);
+  TH1F *hFingerPMTNphotScaled = new TH1F("FingerPMTNphotScaled","Finger PMT Number of Photoelectrons Scaled", 100, 0, 1000);
+  TH1F *hAnaBarPMTNphotScaled = new TH1F("AnaBarPMTNphotScaled","AnaBar PMT Number of Photoelectrons Scaled", 100, 0, 1000);
   TH1F *hElement00 = new TH1F("Element00","Finger ADC (Good TDCs)", 100, 0, 1000);
   TH1F *hElement10 = new TH1F("Element10","AnaBar ADC (Good TDCs)", 100, 0, 1000); 
 
   //Limits and cuts
   //-------------------------------------------------------------------
 
-   Float_t Peds[2] = {180, 200}; // mean + 1sigma of the pedestal gaussian
+   Float_t Peds[2] = {240, 195}; // mean + 1sigma of the pedestal gaussian
   
   //-------------------------------------------------------------------
   //Data Event loop
@@ -101,8 +101,8 @@ void CompareSimData(Int_t Data_Run_Number = 157, Int_t Simulation_Run_Number = 1
   for (Int_t i = 0; i < nentries_data; i++) {
     tree2->GetEntry(i);
 
-    if ((Element0-Peds[0])>100.0 && (Element0-Peds[0]) < 1000.0 &&
-	(Element1-Peds[1])>100.0 && (Element1-Peds[1]) < 1000.00 ) {
+    if ((Element0-Peds[0])>0.0 && (Element0-Peds[0]) < 1000.0 &&
+	(Element1-Peds[1])>0.0 && (Element1-Peds[1]) < 1000.00 ) {
 
 	hTDC0->Fill( fRawTDC312_0 );
     	hTDC2->Fill( fRawTDC314_0 );
@@ -195,8 +195,8 @@ void CompareSimData(Int_t Data_Run_Number = 157, Int_t Simulation_Run_Number = 1
   Double_t anabar_nscaling = counter10_data/counter_sim;
   //Double_t finger_xscaling = mean00/simmean00*1.00;
   //Double_t anabar_xscaling = mean10/simmean10*1.00;
-  Double_t finger_xscaling = 3.33;
-  Double_t anabar_xscaling = 3.03;
+  Double_t finger_xscaling = 2.72;
+  Double_t anabar_xscaling = 3.09;
   std::cout << "Finger Counter ... nscaling = " << finger_nscaling << "  xscaling = " << finger_xscaling << std::endl;
   std::cout << "AnaBar Counter ... nscaling = " << anabar_nscaling << "  xscaling = " << anabar_xscaling << std::endl;
   
@@ -235,21 +235,21 @@ void CompareSimData(Int_t Data_Run_Number = 157, Int_t Simulation_Run_Number = 1
   
   
   TCanvas *c4 = new TCanvas("c4", "c4", 100,500,600,400);
-  c4->Divide(2,3, 0.01, 0.01, 0);
+  c4->Divide(2,1, 0.01, 0.01, 0);
   
+  //c4->cd(1);
+  //hFingerPMTNphot->Draw();
+  //c4->cd(2);
+  //hAnaBarPMTNphot->Draw();
+  //c4->cd(3);
+  //hElement00->Draw();
+  //c4->cd(4);
+  //hElement10->Draw();
   c4->cd(1);
-  hFingerPMTNphot->Draw();
-  c4->cd(2);
-  hAnaBarPMTNphot->Draw();
-  c4->cd(3);
-  hElement00->Draw();
-  c4->cd(4);
-  hElement10->Draw();
-  c4->cd(5);
   hFingerPMTNphotScaled->SetLineColor(kRed);
   hFingerPMTNphotScaled->Draw();
   hElement00->Draw("SAME");
-  c4->cd(6);
+  c4->cd(2);
   hAnaBarPMTNphotScaled->SetLineColor(kRed);
   hAnaBarPMTNphotScaled->Draw();
   hElement10->Draw("SAME");
