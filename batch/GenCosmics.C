@@ -50,12 +50,12 @@ Float_t         fIntRatio;
 
 // ------------------------------------------------------------------------------------------------
 
-void GenCosmics( ULong64_t nevents = 1000, 
-		 TString fname = "data/Gen_test1.root" ) 
+void GenCosmics( ULong64_t nevents = 100000, 
+		 ULong64_t run_number = 1000 ) 
 {
   
   // Initialise random number generator
-  fRand = new TRandom3( -1 );
+  fRand = new TRandom3( run_number );
   
   // Set up PDG Table
   fPDG             = new TDatabasePDG();
@@ -64,6 +64,8 @@ void GenCosmics( ULong64_t nevents = 1000,
   fPDG->ReadPDGTable( pdgtable );
 
   // Initialise output
+  TString fname;
+  fname.Form("/home/brash/AnaBarMCNeutron/batch/data/AnaBarMC_Gen_%d.root",run_number);
   fOutFileName = fname;
   InitOutput();
 

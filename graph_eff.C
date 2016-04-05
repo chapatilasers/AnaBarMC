@@ -32,6 +32,8 @@ void graph_eff() {
    gr->SetTitle("AnaBar Neutron Efficiency");
    gr->GetXaxis()->SetTitle("X Position");
    gr->GetYaxis()->SetTitle("Efficiency (%)");
+   gr->GetHistogram()->SetMaximum(8.0);
+   gr->GetHistogram()->SetMinimum(5.0);
 //
    gr->Draw("AP");
 

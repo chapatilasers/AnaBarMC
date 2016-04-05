@@ -1,4 +1,8 @@
 GenCosmics_C.d
 GenCosmics_C.so
 data/*.root
+batch/data/*.root
+batch/AnaBarMC*.o*
+batch/AnaBarMCNeutron*.e*
 *.wrl
+nohup.out

@@ -57,8 +57,10 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
   if(aStep->GetTrack()->GetDefinition() 
      != G4OpticalPhoton::OpticalPhotonDefinition()) return false;
  
-  G4int pmtNumber= aStep->GetPostStepPoint()->GetTouchable()
+  G4int pmtNumberPost= aStep->GetPostStepPoint()->GetTouchable()
     ->GetVolume()->GetCopyNo();
+  G4int pmtNumber = pmtNumberPost;
+  if (pmtNumber == 1) pmtNumber--;
  
   // if this PMT hasn't been hit in this event
   if ( fhitID[pmtNumber] == -1 ) {
@@ -71,7 +73,11 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
     //std::cout << "First PMT hit ... pmtNumber = " << pmtNumber << std::endl; 
   }
   else // this is not a new hit
-    (*fCollection)[fhitID[pmtNumber]]->IncPhotonCount();
+    if (pmtNumber == 0) {
+    	(*fCollection)[fhitID[pmtNumber]]->IncPhotonCount();
+    }else{
+    	std::cout << "Danger Will Robinson!!! Additional PMT hit on pmtNumber = " << pmtNumber << std::endl; 
+    }
   
   return true;
 }

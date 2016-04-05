@@ -9,13 +9,13 @@ Double_t fitfunction(Double_t *x, Double_t *par) {
 }
 
 
-void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1, Float_t Theta_min_cut = 0.0, bool displayall = false) {
+void AnalyseSignals(Int_t Analysis_Run_Number = 1001, Int_t Analyse_Secondaries = 1, Float_t Theta_min_cut = 0.0, bool displayall = false) {
 
   //-------------------------------------------------------------------
   //Set stuff up for reading
   //-------------------------------------------------------------------
   TString filename;
-  filename.Form("data/G4_test%d.root",Analysis_Run_Number);
+  filename.Form("data/AnaBarMC_%d.root",Analysis_Run_Number);
   TFile *f1 = new TFile(filename,"READ");
   TTree *tree1 = (TTree*)f1->Get("T");
 
@@ -181,7 +181,9 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   
   Double_t n_primaries = (Double_t) hPrimE->GetEntries();
   Double_t n_photons = (Double_t) hAnaBarPMTNphot->GetEntries();
-  std::cout << "Efficiency = " << n_photons/n_primaries*100 << "%" << std::endl;
+  Double_t eff = n_photons/n_primaries*100.0;
+  Double_t deff = 1.0/sqrt(n_photons)*eff;
+  std::cout << "Efficiency = " << eff << " +/- " << deff << " %" << std::endl;
   
   if (displayall) {
   TCanvas *c2 = new TCanvas("c2", "c2", 100,100,600,400);
