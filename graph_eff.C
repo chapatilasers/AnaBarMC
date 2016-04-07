@@ -36,6 +36,7 @@ void graph_eff() {
    gr->GetHistogram()->SetMinimum(5.0);
 //
    gr->Draw("AP");
+   gr->Fit("pol0");
 
    // TCanvas::Update() draws the frame, after which one can change it
    c1->Update();

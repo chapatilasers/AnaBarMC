@@ -108,6 +108,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       fEp          = fParticleGun->GetParticleEnergy()/MeV;
       fTp          = fParticleGun->GetParticleTime();
       fPDefinition = fParticleGun->GetParticleDefinition();
+      
+      std::cout << "Primary Energy = " << fEp << std::endl;
 
     break;
     }

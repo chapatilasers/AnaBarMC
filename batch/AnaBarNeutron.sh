@@ -5,7 +5,7 @@
 #PBS -l walltime=40:00:00
 #PBS -V
 
-export nevents=100000
+export nevents=1000
 export tempdir=/home/brash/AnaBarMCNeutron/batch
 
 export MACRO_PATH=/home/brash/AnaBarMCNeutron/macros/
@@ -18,7 +18,6 @@ echo "/run/initialize"                                                   >>  $MC
 echo "/AnaBarMC/generator/Mode 1"                              >>  $MCMACRO
 echo "/AnaBarMC/generator/InputFile $tempdir/data/AnaBarMC_Gen_$RUN_NUMBER.root" >>  $MCMACRO
 echo "/AnaBarMC/analysis/setOutputFile $tempdir/rootfiles/AnaBarMC_$RUN_NUMBER.root" >>  $MCMACRO
-echo "/run/beamOn $nevents"                                              >>  $MCMACRO
 
 cd $tempdir
 source /home/brash/geant4/G4setup.sh
