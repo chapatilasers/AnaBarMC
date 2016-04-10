@@ -9,7 +9,7 @@ Double_t fitfunction(Double_t *x, Double_t *par) {
 }
 
 
-void AnalyseSignals(Int_t Analysis_Run_Number = 1001, Int_t Analyse_Secondaries = 1, Float_t Theta_min_cut = 0.0, bool displayall = false) {
+void AnalyseSignalsEff(Int_t Analysis_Run_Number = 3001, Int_t Analyse_Secondaries = 1, Float_t Theta_min_cut = 0.0, bool displayall = true) {
 
   //-------------------------------------------------------------------
   //Set stuff up for reading
@@ -29,6 +29,12 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1001, Int_t Analyse_Secondaries 
   Float_t Detector_Ed[MaxHits];  
   Int_t PMT_id;
   Int_t PMT_Nphotons;
+  Double_t xPos[22];
+  Double_t exPos[22];
+  Double_t nEntrant[22];
+  Double_t nPhotonHits[22];
+  Double_t nEff[22];
+  Double_t dEff[22];
 
   tree1->SetBranchAddress("Prim_E", &Prim_E);
   tree1->SetBranchAddress("Prim_Th", &Prim_Th);
@@ -78,6 +84,13 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1001, Int_t Analyse_Secondaries 
   //-------------------------------------------------------------------
   //Limits and cuts
   //-------------------------------------------------------------------
+  
+  for (Int_t i=0; i < 22; i++){
+	xPos[i]=-10.5+i*1.0;
+	exPos[i]=0.5;
+ 	nEntrant[i]=0;
+	nPhotonHits[i]=0;
+  }
 
   //-------------------------------------------------------------------
   //Event loop
@@ -162,6 +175,9 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1001, Int_t Analyse_Secondaries 
 
 	tracklength = sqrt((xexit1-xentrant1)*(xexit1-xentrant1)+(yexit1-yentrant1)*(yexit1-yentrant1)+(zexit1-zentrant1)*(zexit1-zentrant1));
  
+    Int_t index = xentrant1/10+11;
+    nEntrant[index]++;
+    
     if (trigger) {
         //std::cout << "Track Length = " << tracklength << std::endl;
         //std::cout << "Edep = " << edep1tot << "  Number of photons = " << PMT_Nphotons << std::endl;
@@ -170,6 +186,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1001, Int_t Analyse_Secondaries 
     	if (PMT_Nphotons > 0) hAnaBar_Edep_vs_Nphot->Fill(PMT_Nphotons,edep1tot);
     	if (PMT_Nphotons > 0) hAnaBar_Nphot_vs_Eprimary->Fill(Prim_E,PMT_Nphotons);
    	hyentran1_vs_xentran1->Fill(xentrant1,yentrant1);
+ 	if (PMT_Nphotons > 0) nPhotonHits[index]++;
  	htracklength_vs_AnaBar_Edep->Fill(edep1tot,tracklength);
 	hyexit1_vs_xexit1->Fill(xexit1,yexit1);
      }
@@ -178,6 +195,15 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1001, Int_t Analyse_Secondaries 
   //-------------------------------------------------------------------
   //Plotting and writing out
   //-------------------------------------------------------------------
+  
+  for (Int_t i=0; i < 22; i++) {
+	if (nEntrant[i]>0) {
+		nEff[i]=(Double_t)(nPhotonHits[i]/nEntrant[i]*100.0);
+	}else{
+		nEff[i]=0.0;
+	}
+	dEff[i]=1.0/sqrt(nPhotonHits[i])*nEff[i];
+  }
   
   Double_t n_primaries = (Double_t) hPrimE->GetEntries();
   Double_t n_photons = (Double_t) hAnaBarPMTNphot->GetEntries();
@@ -253,6 +279,21 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1001, Int_t Analyse_Secondaries 
   c4->cd(3);
   hAnaBarPMTNphot->Draw();
 
+  TCanvas *c8 = new TCanvas("c8","AnaBar Neutron Efficiency",200,10,700,500);
+  c8->SetFillColor(42);
+  c8->SetGrid();
+  c8->cd();
 
+  const Int_t n = 22;
+  gr = new TGraphErrors(n,xPos,nEff,exPos,dEff);
+  gr->SetMarkerStyle(21);
+  gr->SetTitle("AnaBar Neutron Efficiency");
+  gr->GetXaxis()->SetTitle("X Position");
+  gr->GetYaxis()->SetTitle("Efficiency (%)");
+  gr->GetHistogram()->SetMaximum(7.0);
+  gr->GetHistogram()->SetMinimum(6.0);
+
+  gr->Draw("AP");
+  gr->Fit("pol0");
 
 }

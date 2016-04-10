@@ -5,7 +5,7 @@
 #PBS -l walltime=40:00:00
 #PBS -V
 
-export nevents=1000
+export nevents=400000
 export tempdir=/home/brash/AnaBarMCNeutron/batch
 
 export MACRO_PATH=/home/brash/AnaBarMCNeutron/macros/

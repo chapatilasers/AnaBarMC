@@ -50,8 +50,8 @@ Float_t         fIntRatio;
 
 // ------------------------------------------------------------------------------------------------
 
-void GenCosmics( ULong64_t nevents = 100000, 
-		 ULong64_t run_number = 1000 ) 
+void GenCosmics( ULong64_t nevents = 400000, 
+		 ULong64_t run_number = 2000 ) 
 {
   
   // Initialise random number generator
@@ -143,8 +143,8 @@ void GenerateOneMuon()
   fPDGCode = 2112; // neutron
 
   // Generate vertex position in cm 
-  fVx = fRand->Uniform(-0.1 , 0.1 );
-  fVy = fRand->Uniform( -1.0, 1.0 );
+  fVx = fRand->Uniform(-10.9 , 10.9 );
+  fVy = fRand->Uniform( -1.9, 1.9 );
   //fVx = fRand->Uniform(-0.01 , 0.01 );
   //fVy = fRand->Uniform( -.01, 0.01 );
   fVz = 3.0;
@@ -154,7 +154,7 @@ void GenerateOneMuon()
   //  fP = 1000. * fMomFlatDist->GetRandom();
   //else 
   //  fP = 1000. * fMomPowDist->GetRandom();
-  fP = 1000.0*fRand->Uniform(0.00,5.00);
+  fP = 1000.0*fRand->Uniform(0.50,5.00);
 
   // Sample Angular Distributions (cos^2(theta) and flat phi)
   //Float_t th = fThetaDist->GetRandom();
