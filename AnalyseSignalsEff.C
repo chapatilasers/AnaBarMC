@@ -290,8 +290,8 @@ void AnalyseSignalsEff(Int_t Analysis_Run_Number = 3001, Int_t Analyse_Secondari
   gr->SetTitle("AnaBar Neutron Efficiency");
   gr->GetXaxis()->SetTitle("X Position");
   gr->GetYaxis()->SetTitle("Efficiency (%)");
-  gr->GetHistogram()->SetMaximum(7.0);
-  gr->GetHistogram()->SetMinimum(6.0);
+  gr->GetHistogram()->SetMaximum(9.0);
+  gr->GetHistogram()->SetMinimum(4.0);
 
   gr->Draw("AP");
   gr->Fit("pol0");

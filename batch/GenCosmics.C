@@ -163,7 +163,7 @@ void GenerateOneMuon()
   Float_t ph = fRand->Uniform(0.0,2.0*3.14159265);
   fPz        = fP * TMath::Sin(th) * TMath::Cos(ph);
   fPy        = fP * TMath::Sin(th) * TMath::Sin(ph);
-  fPx        = fP * TMath::Cos(th);
+  fPx        = -1.0*(fP * TMath::Cos(th));
   fM         = fPDG->GetParticle( fPDGCode )->Mass() * 1000;
   fE         = TMath::Sqrt( (fP*fP + fM*fM) );
   
