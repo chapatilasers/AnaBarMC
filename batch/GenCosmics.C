@@ -143,11 +143,11 @@ void GenerateOneMuon()
   fPDGCode = 2112; // neutron
 
   // Generate vertex position in cm 
-  fVx = fRand->Uniform(-10.9 , 10.9 );
+  fVx = -14.0;
   fVy = fRand->Uniform( -1.9, 1.9 );
   //fVx = fRand->Uniform(-0.01 , 0.01 );
   //fVy = fRand->Uniform( -.01, 0.01 );
-  fVz = 3.0;
+  fVz = fRand->Uniform( -1.9, 1.9);
 
   // Sample Momentum Distributions (flat from min to mean, p^-2.7 from mean to max)
   //if( fRand->Uniform(0.,1) < fIntRatio ) 
@@ -161,9 +161,9 @@ void GenerateOneMuon()
   //Float_t ph = fPhiDist->GetRandom();
   Float_t th = 3.14159265*(1+fRand->Uniform(-0.05,0.0));
   Float_t ph = fRand->Uniform(0.0,2.0*3.14159265);
-  fPx        = fP * TMath::Sin(th) * TMath::Cos(ph);
+  fPz        = fP * TMath::Sin(th) * TMath::Cos(ph);
   fPy        = fP * TMath::Sin(th) * TMath::Sin(ph);
-  fPz        = fP * TMath::Cos(th);
+  fPx        = fP * TMath::Cos(th);
   fM         = fPDG->GetParticle( fPDGCode )->Mass() * 1000;
   fE         = TMath::Sqrt( (fP*fP + fM*fM) );
   
