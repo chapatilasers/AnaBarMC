@@ -176,7 +176,23 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    G4Box* AnaBar_solid  = new G4Box("AnaBar_solid", 11.0*cm , 2.0*cm , 2.0*cm);
    G4LogicalVolume* AnaBar_log = new G4LogicalVolume(AnaBar_solid, Pscint, "AnaBar_log");
    G4ThreeVector AnaBar_pos(fAnaBarXpos*cm , 0.0*cm , 0.0*cm);
-   AnaBar =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , 1);
+   G4ThreeVector AnaBar_pos_rm(fAnaBarXpos*cm , 4.0*cm , 0.0*cm);
+   G4ThreeVector AnaBar_pos_lm(fAnaBarXpos*cm , -4.0*cm , 0.0*cm);
+   G4ThreeVector AnaBar_pos_ml(fAnaBarXpos*cm , 0.0*cm , 4.0*cm);
+   G4ThreeVector AnaBar_pos_mu(fAnaBarXpos*cm , 0.0*cm , -4.0*cm);
+   G4ThreeVector AnaBar_pos_ru(fAnaBarXpos*cm , 4.0*cm , 4.0*cm);
+   G4ThreeVector AnaBar_pos_lu(fAnaBarXpos*cm , -4.0*cm , 4.0*cm);
+   G4ThreeVector AnaBar_pos_rl(fAnaBarXpos*cm , 4.0*cm , -4.0*cm);
+   G4ThreeVector AnaBar_pos_ll(fAnaBarXpos*cm , -4.0*cm , -4.0*cm);
+   AnaBar    =  new G4PVPlacement(0, AnaBar_pos    , AnaBar_log , "AnaBar"    , expHall_log , false , 1);
+   AnaBar_rm =  new G4PVPlacement(0, AnaBar_pos_rm , AnaBar_log , "AnaBar_rm" , expHall_log , false , 2);
+   AnaBar_lm =  new G4PVPlacement(0, AnaBar_pos_lm , AnaBar_log , "AnaBar_lm" , expHall_log , false , 3);
+   AnaBar_ml =  new G4PVPlacement(0, AnaBar_pos_ml , AnaBar_log , "AnaBar_ml" , expHall_log , false , 4);
+   AnaBar_mu =  new G4PVPlacement(0, AnaBar_pos_mu , AnaBar_log , "AnaBar_mu" , expHall_log , false , 5);
+   AnaBar_ru =  new G4PVPlacement(0, AnaBar_pos_ru , AnaBar_log , "AnaBar_ru" , expHall_log , false , 6);
+   AnaBar_lu =  new G4PVPlacement(0, AnaBar_pos_lu , AnaBar_log , "AnaBar_lu" , expHall_log , false , 7);
+   AnaBar_rl =  new G4PVPlacement(0, AnaBar_pos_rl , AnaBar_log , "AnaBar_rl" , expHall_log , false , 8);
+   AnaBar_ll =  new G4PVPlacement(0, AnaBar_pos_ll , AnaBar_log , "AnaBar_ll" , expHall_log , false , 9);
 
   //---------------------------------------------------------------------------
   // Create AnaBar PMT
@@ -193,9 +209,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 						  Glass,
 						  "det1_log", 0, 0, 0);
   
-  fDet1Vol                  = new G4PVPlacement(anabar_rm, G4ThreeVector(11.0*cm+fAnaBarXpos*cm+0.15*cm, 0., 0.),
-						det1_log, "det1", expHall_log, false, 0);
-
   //---------------------------------------------------------------------------
   // Create Optical Surface
   //---------------------------------------------------------------------------
@@ -213,6 +226,27 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   
   new G4LogicalSkinSurface("PhotoCathAnaBar_surf", det1_log, PhotoCath_opsurf );
 
+  // Place all phototube cathodes
+
+  fDet1Vol                     = new G4PVPlacement(anabar_rm, G4ThreeVector(11.0*cm+fAnaBarXpos*cm+0.15*cm, 0.0, 0.0),
+						det1_log, "det1",    expHall_log, false, 11);
+  fDet1Vol_rm                  = new G4PVPlacement(anabar_rm, G4ThreeVector(11.0*cm+fAnaBarXpos*cm+0.15*cm, 4.0*cm, 0.),
+						det1_log, "det1_rm", expHall_log, false, 12);
+  fDet1Vol_lm                  = new G4PVPlacement(anabar_rm, G4ThreeVector(11.0*cm+fAnaBarXpos*cm+0.15*cm, -4.0*cm, 0.),
+						det1_log, "det1_lm", expHall_log, false, 13);
+  fDet1Vol_mu                  = new G4PVPlacement(anabar_rm, G4ThreeVector(11.0*cm+fAnaBarXpos*cm+0.15*cm, 0.0, 4.0*cm),
+						det1_log, "det1_mu", expHall_log, false, 14);
+  fDet1Vol_ml                  = new G4PVPlacement(anabar_rm, G4ThreeVector(11.0*cm+fAnaBarXpos*cm+0.15*cm, 0.0, -4.0*cm),
+						det1_log, "det1_ml", expHall_log, false, 15);
+  fDet1Vol_ru                  = new G4PVPlacement(anabar_rm, G4ThreeVector(11.0*cm+fAnaBarXpos*cm+0.15*cm, 4.0*cm, 4.0*cm),
+						det1_log, "det1_ru", expHall_log, false, 16);
+  fDet1Vol_lu                  = new G4PVPlacement(anabar_rm, G4ThreeVector(11.0*cm+fAnaBarXpos*cm+0.15*cm, -4.0*cm, 4.0*cm),
+						det1_log, "det1_lu", expHall_log, false, 17);
+  fDet1Vol_rl                  = new G4PVPlacement(anabar_rm, G4ThreeVector(11.0*cm+fAnaBarXpos*cm+0.15*cm, 4.0*cm, -4.0*cm),
+						det1_log, "det1_rl", expHall_log, false, 18);
+  fDet1Vol_ll                  = new G4PVPlacement(anabar_rm, G4ThreeVector(11.0*cm+fAnaBarXpos*cm+0.15*cm, -4.0*cm, -4.0*cm),
+						det1_log, "det1_ll", expHall_log, false, 19);
+
   //---------------------------------------------------------------------------
   // Set Step Limits, Sensitive Detector and Visualisation
   //---------------------------------------------------------------------------
@@ -227,11 +261,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   SDman->AddNewDetector( fPMTSD );
   det1_log->SetSensitiveDetector( fPMTSD );
   
-  G4VisAttributes* yellow  = new G4VisAttributes( G4Colour(0.0,0.5,0.5)   );
+  //G4VisAttributes* yellow  = new G4VisAttributes( G4Colour(0.0,0.5,0.5)   );
+  G4VisAttributes* magenta  = new G4VisAttributes( G4Colour(0.5,0.5,0.0)   );
   G4VisAttributes* green   = new G4VisAttributes( G4Colour(0.0,1.0,0.0)   );
   expHall_log->SetVisAttributes(G4VisAttributes::Invisible);
   AnaBar_log->SetVisAttributes(green);
-  det1_log->SetVisAttributes(yellow);
+  det1_log->SetVisAttributes(magenta);
 
   return fExpHall;
 }

@@ -97,7 +97,7 @@ void GenCosmics( ULong64_t nevents = 1000,
       fROOTTree->Fill();
       
       if( i % 10000 == 0 )
-	cout << i << endl;
+      std::cout << i << std::endl;
     }
   
   // Write output and close file
@@ -106,7 +106,7 @@ void GenCosmics( ULong64_t nevents = 1000,
   
   // Print stats
   bench->Stop("Statistics");
-  cout << "\t" <<  nTotal << " total events" << endl;
+  std::cout << "\t" <<  nTotal << " total events" << std::endl;
   bench->Print("Statistics");
   
 }
@@ -142,10 +142,11 @@ void GenerateOneMuon()
 
   // Generate vertex position in cm 
   fVx = -14.0;
-  fVy = fRand->Uniform( -2.0, 2.0 );
+  //fVy = fRand->Uniform( -2.0, 2.0 );
   //fVx = fRand->Uniform(-0.01 , 0.01 );
-  //fVy = fRand->Uniform( -.01, 0.01 );
-  fVz = fRand->Uniform(-2.0,2.0);
+  fVy = 0.0+fRand->Uniform(-.1, 0.1 );
+  //fVz = fRand->Uniform(-2.0,2.0);
+  fVz = 1.8+fRand->Uniform(-0.1,0.1);
 
   // Sample Momentum Distributions (flat from min to mean, p^-2.7 from mean to max)
   //if( fRand->Uniform(0.,1) < fIntRatio ) 
@@ -157,7 +158,8 @@ void GenerateOneMuon()
   // Sample Angular Distributions (cos^2(theta) and flat phi)
   //Float_t th = fThetaDist->GetRandom();
   //Float_t ph = fPhiDist->GetRandom();
-  Float_t th = 3.14159265*(1+fRand->Uniform(-0.05,0.0));
+  //Float_t th = 3.14159265*(1+fRand->Uniform(-0.05,0.0));
+  Float_t th = 3.14159265*(1.0+fRand->Uniform(-0.01,0.0));
   Float_t ph = fRand->Uniform(0.0,2.0*3.14159265);
   fPz        = fP * TMath::Sin(th) * TMath::Cos(ph);
   fPy        = fP * TMath::Sin(th) * TMath::Sin(ph);
