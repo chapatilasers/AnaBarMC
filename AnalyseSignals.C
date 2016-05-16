@@ -227,8 +227,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1001, Int_t Analyse_Secondaries 
 	xposoffset=0.0;
 	yposcorr=1.0;
 	yposoffset=0.0;
-	sigmaxa=1.7;
-	sigmaya=1.7;
+	sigmaxa=1.0;
+	sigmaya=1.0;
 	sigmaxb=1.0;
 	sigmayb=1.0;
 
@@ -247,6 +247,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1001, Int_t Analyse_Secondaries 
                 holdxpos=0.0;
         }
 
+	//std::cout << "Elower = " << elower << "  Emid = " << emid << "  Eupper = " << eupper << std::endl;
         if(elower < pedthresh && eupper > pedthresh && emid > pedthresh) {
                 eupdown->Fill((block_size/2.0-sigmaya*log(0.5*(emid/eupper)+1.0)));
                 holdypos=((block_size/2.0-sigmaya*log(0.5*(emid/eupper)+1.0))*yposcorr+yposoffset  );
@@ -304,7 +305,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1001, Int_t Analyse_Secondaries 
   gPad->SetLogy();
   yposition->Draw();
   c8->cd(3);
-  xyposition->Draw("COLZ");
+  gPad->SetLogz();
+  xyposition->Draw("SURF4");
   c8->cd(4);
   gPad->SetLogy();
   eupdown->Draw();
