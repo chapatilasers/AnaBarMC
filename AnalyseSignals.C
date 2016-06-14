@@ -254,6 +254,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   c6->Divide(2,2, 0.01, 0.01, 0);
   TCanvas *c7 = new TCanvas("c7", "c7", 200,500,600,400);
   c7->Divide(2,2, 0.01, 0.01, 0);
+  TCanvas *c8 = new TCanvas("c8", "c8", 200,500,600,400);
+  c8->Divide(2,2, 0.01, 0.01, 0);
   
   c2->cd(1);
   hPrimE->Draw();
@@ -312,6 +314,16 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   hyexit1_vs_xexit1->Draw("COLZ");
   c6->cd(4);
   htracklength_vs_AnaBar_Edep->Draw("COLZ");
+
+  c8->cd(1);
+  hAnaBarEd->Draw();
+  c8->cd(2);
+  hAnaBarPMTNphot->Draw();
+  c8->cd(3);
+  hAnaBar_Edep_vs_Nphot->Draw("COLZ");
+  c8->cd(4);
+  htracklength_vs_AnaBar_Edep->Draw("COLZ");
+  
   }
 
   TCanvas *c4 = new TCanvas("c4", "c4", 100,500,600,400);
