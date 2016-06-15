@@ -56,6 +56,26 @@ DetectorConstruction::DetectorConstruction()
   fTumourRadius = 0.5;
   fTumourHeight = 0.0;
   fAnaBarXpos	= 0.0;
+
+  fAnaBarLength = 50.0;
+  fAnaBarWidth = 4.0;
+  fAnaBarThickness = 0.50;
+
+  fFingerLength = 2.6;
+  fFingerWidth = 4.0;
+  fFingerThickness = 1.7;
+
+  fHoleDiameter = 0.16;
+  fHoleLength = 50.0;
+
+  fCladdingDiameter = 0.18;
+  fCladdingLength = 50.0;
+  
+  fFibreDiameter = 0.16;
+  fFibreLength = 50.0;
+
+  fPhotoCathodeDiameter = 2.54;
+  fPhotoCathodeThickness = 0.30;
   
   G4UImanager* UI = G4UImanager::GetUIpointer();
   G4String command = "/control/execute macros/DetectorSetup.mac";
@@ -170,14 +190,25 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Create Detectors
   //---------------------------------------------------------------------------
 
-   G4Box* fingercounter_solid  = new G4Box("fingercounter_solid", 1.3*cm , 2.0*cm , 0.85*cm);
+   G4Box* fingercounter_solid  = new G4Box("fingercounter_solid", fFingerLength/2.0*cm , fFingerWidth/2.0*cm , fFingerThickness/2.0*cm);
    G4LogicalVolume* fingercounter_log = new G4LogicalVolume(fingercounter_solid, Pscint, "fingercounter_log");
    G4ThreeVector fingercounter_pos(0.0*cm , 0.0*cm , 0.0*cm);
    FingerCounter=  new G4PVPlacement(0, fingercounter_pos , fingercounter_log , "FingerCounter" , expHall_log , false , 0);
 
-   G4Box* AnaBar_solid  = new G4Box("AnaBar_solid", 11.0*cm , 2.0*cm , 2.0*cm);
+   
+   G4VSolid* AnaBar_outer  = new G4Box("AnaBar_solid_outer", fAnaBarLength/2.0*cm , fAnaBarWidth/2.0*cm , fAnaBarThickness/2.0*cm);
+   G4VSolid* AnaBar_inner = new G4Tubs("AnaBar_solid_inner", 0.*cm,fHoleDiameter/2.0*cm, fAnaBarLength/2.0*cm, 0.*deg, 360.0*deg);
+   
+   G4ThreeVector fibre_pos(0.0*cm , 0.0*cm , 0.0*cm);
+   G4RotationMatrix* anabar_rm  = new G4RotationMatrix();
+   anabar_rm->rotateY(90. *deg);
+  
+   G4VSolid* AnaBar_solid  = new G4SubtractionSolid("AnaBar_solid", AnaBar_outer, AnaBar_inner, anabar_rm,fibre_pos);
+
    G4LogicalVolume* AnaBar_log = new G4LogicalVolume(AnaBar_solid, Pscint, "AnaBar_log");
-   G4ThreeVector AnaBar_pos(fAnaBarXpos*cm , 0.0*cm , -2.85*cm);
+   
+   
+   G4ThreeVector AnaBar_pos(fAnaBarXpos*cm , 0.0*cm , -1.0*(fFingerThickness/2.0+fAnaBarThickness/2.0)*cm);
    AnaBar =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , 1);
 
 
@@ -186,18 +217,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Create AnaBar PMT
   //---------------------------------------------------------------------------
 
-  G4RotationMatrix* anabar_rm  = new G4RotationMatrix();
-  anabar_rm->rotateY(90. *deg);
   
   G4Tubs* det1_tubs            = new G4Tubs("det1_tubs",
-					    0. *mm, 1.27 *cm, 0.15 *cm,
+					    0. *mm, fCladdingDiameter/2.0*cm, fPhotoCathodeThickness/2.0*cm,
 					    0. *deg, 360. *deg );
   
   G4LogicalVolume* det1_log = new G4LogicalVolume(det1_tubs,
 						  Glass,
 						  "det1_log", 0, 0, 0);
   
-  fDet1Vol                  = new G4PVPlacement(anabar_rm, G4ThreeVector(11.0*cm+fAnaBarXpos*cm+0.15*cm, 0., -2.85*cm),
+  fDet1Vol                  = new G4PVPlacement(anabar_rm, G4ThreeVector(fAnaBarLength/2.0*cm+fAnaBarXpos*cm+fPhotoCathodeThickness/2.0*cm, 0., -1.0*(fFingerThickness/2.0+fAnaBarThickness/2.0)*cm),
 						det1_log, "det1", expHall_log, false, 0);
 
   //---------------------------------------------------------------------------
@@ -208,14 +237,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   finger_rm->rotateX(90. *deg);
   
   G4Tubs* det2_tubs            = new G4Tubs("det2_tubs",
-					    0. *mm, 1.27 *cm, 0.15 *cm,
+					    0. *mm, fPhotoCathodeDiameter/2.0*cm, fPhotoCathodeThickness/2.0*cm,
 					    0. *deg, 360. *deg );
   
   G4LogicalVolume* det2_log = new G4LogicalVolume(det2_tubs,
 						  Glass,
 						  "det2_log", 0, 0, 0);
   
-  fDet2Vol                  = new G4PVPlacement(finger_rm, G4ThreeVector(0., -2.0*cm-0.15*cm, 0.0),
+  fDet2Vol                  = new G4PVPlacement(finger_rm, G4ThreeVector(0., -1.0*(fFingerWidth/2.0+fPhotoCathodeThickness/2.0)*cm, 0.0),
 						det2_log, "det2", expHall_log, false, 1);
 
   //---------------------------------------------------------------------------

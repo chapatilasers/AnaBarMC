@@ -26,6 +26,34 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Detect)
 
   fAnaBarXposCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarXpos",this);
   fAnaBarXposCmd->SetGuidance("Set Anabar x position in cm.");
+  fAnaBarLengthCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarLength",this);
+  fAnaBarLengthCmd->SetGuidance("Set Anabar Length in cm.");
+  fAnaBarWidthCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarWidth",this);
+  fAnaBarWidthCmd->SetGuidance("Set Anabar Width in cm.");
+  fAnaBarThicknessCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarThickness",this);
+  fAnaBarThicknessCmd->SetGuidance("Set Anabar Thickness in cm.");
+  fFingerLengthCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/FingerLength",this);
+  fFingerLengthCmd->SetGuidance("Set Finger Length in cm.");
+  fFingerWidthCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/FingerWidth",this);
+  fFingerWidthCmd->SetGuidance("Set Finger Width in cm.");
+  fFingerThicknessCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/FingerThickness",this);
+  fFingerThicknessCmd->SetGuidance("Set Finger Thickness in cm.");
+  fFibreDiameterCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/FibreDiameter",this);
+  fFibreDiameterCmd->SetGuidance("Set Fibre Diameter in cm.");
+  fFibreLengthCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/FibreLength",this);
+  fFibreLengthCmd->SetGuidance("Set Fibre Length in cm.");
+  fHoleDiameterCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/HoleDiameter",this);
+  fHoleDiameterCmd->SetGuidance("Set Hole Diameter in cm.");
+  fHoleLengthCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/HoleLength",this);
+  fHoleLengthCmd->SetGuidance("Set Hole Length in cm.");
+  fCladdingDiameterCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/CladdingDiameter",this);
+  fCladdingDiameterCmd->SetGuidance("Set Cladding Diameter in cm.");
+  fCladdingLengthCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/CladdingLength",this);
+  fCladdingLengthCmd->SetGuidance("Set Cladding Length in cm.");
+  fPhotoCathodeDiameterCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/PhotoCathodeDiameter",this);
+  fPhotoCathodeDiameterCmd->SetGuidance("Set PhotoCathode Diameter in cm.");
+  fPhotoCathodeThicknessCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/PhotoCathodeThickness",this);
+  fPhotoCathodeThicknessCmd->SetGuidance("Set PhotoCathode Thickness in cm.");
 
   fUpdateCmd          = new G4UIcommand("/AnaBarMC/detector/update",this);
   fUpdateCmd->SetGuidance("Update the detector geometry with changed values.");
@@ -42,6 +70,20 @@ DetectorMessenger::~DetectorMessenger()
   delete fTumourRadiusCmd;
   delete fTumourHeightCmd;
   delete fAnaBarXposCmd;
+  delete fAnaBarLengthCmd;
+  delete fAnaBarWidthCmd;
+  delete fAnaBarThicknessCmd;
+  delete fFingerLengthCmd;
+  delete fFingerWidthCmd;
+  delete fFingerThicknessCmd;
+  delete fFibreDiameterCmd;
+  delete fFibreLengthCmd;
+  delete fHoleDiameterCmd;
+  delete fHoleLengthCmd;
+  delete fCladdingDiameterCmd;
+  delete fCladdingLengthCmd;
+  delete fPhotoCathodeDiameterCmd;
+  delete fPhotoCathodeThicknessCmd;
 
   delete fUpdateCmd;
 }
@@ -60,6 +102,40 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     fDetector->SetTumourHeight(fTumourHeightCmd->GetNewDoubleValue(newValue));
   if (command == fAnaBarXposCmd)
     fDetector->SetAnaBarXpos(fAnaBarXposCmd->GetNewDoubleValue(newValue));
+  
+  if (command == fAnaBarLengthCmd)
+    fDetector->SetAnaBarLength(fAnaBarLengthCmd->GetNewDoubleValue(newValue));
+  if (command == fAnaBarWidthCmd)
+    fDetector->SetAnaBarWidth(fAnaBarWidthCmd->GetNewDoubleValue(newValue));
+  if (command == fAnaBarThicknessCmd)
+    fDetector->SetAnaBarThickness(fAnaBarThicknessCmd->GetNewDoubleValue(newValue));
+  
+  if (command == fFingerLengthCmd)
+    fDetector->SetFingerLength(fFingerLengthCmd->GetNewDoubleValue(newValue));
+  if (command == fFingerWidthCmd)
+    fDetector->SetFingerWidth(fFingerWidthCmd->GetNewDoubleValue(newValue));
+  if (command == fFingerThicknessCmd)
+    fDetector->SetFingerThickness(fFingerThicknessCmd->GetNewDoubleValue(newValue));
+  
+  if (command == fFibreDiameterCmd)
+    fDetector->SetFibreDiameter(fFibreDiameterCmd->GetNewDoubleValue(newValue));
+  if (command == fFibreLengthCmd)
+    fDetector->SetFibreLength(fFibreLengthCmd->GetNewDoubleValue(newValue));
+  
+  if (command == fHoleDiameterCmd)
+    fDetector->SetHoleDiameter(fHoleDiameterCmd->GetNewDoubleValue(newValue));
+  if (command == fHoleLengthCmd)
+    fDetector->SetHoleLength(fHoleLengthCmd->GetNewDoubleValue(newValue));
+  
+  if (command == fCladdingDiameterCmd)
+    fDetector->SetCladdingDiameter(fCladdingDiameterCmd->GetNewDoubleValue(newValue));
+  if (command == fCladdingLengthCmd)
+    fDetector->SetCladdingLength(fCladdingLengthCmd->GetNewDoubleValue(newValue));
+  
+  if (command == fPhotoCathodeThicknessCmd)
+    fDetector->SetPhotoCathodeThickness(fPhotoCathodeThicknessCmd->GetNewDoubleValue(newValue));
+  if (command == fPhotoCathodeDiameterCmd)
+    fDetector->SetPhotoCathodeDiameter(fPhotoCathodeDiameterCmd->GetNewDoubleValue(newValue));
 }
 
 //---------------------------------------------------------------------------

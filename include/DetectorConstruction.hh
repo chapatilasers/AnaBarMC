@@ -34,7 +34,21 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline void SetTumourOn     ( G4int    tumon )   { fTumourOn     = tumon; }
   inline void SetTumourRadius ( G4double radius )  { fTumourRadius = radius; }
   inline void SetTumourHeight ( G4double height )  { fTumourHeight = height; }
-  inline void SetAnaBarXpos   ( G4double Xpos )    { fAnaBarXpos   = Xpos; }
+  inline void SetAnaBarXpos   ( G4double AnaBarXpos )    { fAnaBarXpos   = AnaBarXpos; }
+  inline void SetAnaBarLength   ( G4double AnaBarLength )    { fAnaBarLength   = AnaBarLength; }
+  inline void SetAnaBarWidth   ( G4double AnaBarWidth )    { fAnaBarWidth   = AnaBarWidth; }
+  inline void SetAnaBarThickness   ( G4double AnaBarThickness )    { fAnaBarThickness   = AnaBarThickness; }
+  inline void SetFingerLength   ( G4double FingerLength )    { fFingerLength   = FingerLength; }
+  inline void SetFingerWidth   ( G4double FingerWidth )    { fFingerWidth   = FingerWidth; }
+  inline void SetFingerThickness   ( G4double FingerThickness )    { fFingerThickness   = FingerThickness; }
+  inline void SetFibreDiameter   ( G4double FibreDiameter )    { fFibreDiameter  = FibreDiameter; }
+  inline void SetFibreLength   ( G4double FibreLength )    { fFibreLength  = FibreLength; }
+  inline void SetHoleDiameter   ( G4double HoleDiameter )    { fHoleDiameter  = HoleDiameter; }
+  inline void SetHoleLength   ( G4double HoleLength )    { fHoleLength  = HoleLength; }
+  inline void SetCladdingDiameter   ( G4double CladdingDiameter )    { fCladdingDiameter  = CladdingDiameter; }
+  inline void SetCladdingLength   ( G4double CladdingLength )    { fCladdingLength  = CladdingLength; }
+  inline void SetPhotoCathodeDiameter   ( G4double PhotoCathodeDiameter )    { fPhotoCathodeDiameter  = PhotoCathodeDiameter; }
+  inline void SetPhotoCathodeThickness   ( G4double PhotoCathodeThickness)    { fPhotoCathodeThickness  = PhotoCathodeThickness; }
  
   private:
 
@@ -54,6 +68,21 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4double           fTumourRadius;
   G4double           fTumourHeight;
   G4double           fAnaBarXpos;
+
+  G4double           fAnaBarLength;
+  G4double           fAnaBarWidth;
+  G4double           fAnaBarThickness;
+  G4double           fFingerLength;
+  G4double           fFingerWidth;
+  G4double           fFingerThickness;
+  G4double           fFibreDiameter;
+  G4double           fFibreLength;
+  G4double           fHoleDiameter;
+  G4double           fHoleLength;
+  G4double           fCladdingDiameter;
+  G4double           fCladdingLength;
+  G4double           fPhotoCathodeDiameter;
+  G4double           fPhotoCathodeThickness;
 
 };
 #endif

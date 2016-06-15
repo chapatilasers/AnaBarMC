@@ -32,6 +32,20 @@ private:
   G4UIcmdWithADouble*          fTumourRadiusCmd;
   G4UIcmdWithADouble*          fTumourHeightCmd;
   G4UIcmdWithADouble*          fAnaBarXposCmd;
+  G4UIcmdWithADouble*          fAnaBarLengthCmd;
+  G4UIcmdWithADouble*          fAnaBarWidthCmd;
+  G4UIcmdWithADouble*          fAnaBarThicknessCmd;
+  G4UIcmdWithADouble*          fFingerLengthCmd;
+  G4UIcmdWithADouble*          fFingerWidthCmd;
+  G4UIcmdWithADouble*          fFingerThicknessCmd;
+  G4UIcmdWithADouble*          fFibreDiameterCmd;
+  G4UIcmdWithADouble*          fFibreLengthCmd;
+  G4UIcmdWithADouble*          fHoleDiameterCmd;
+  G4UIcmdWithADouble*          fHoleLengthCmd;
+  G4UIcmdWithADouble*          fCladdingDiameterCmd;
+  G4UIcmdWithADouble*          fCladdingLengthCmd;
+  G4UIcmdWithADouble*          fPhotoCathodeDiameterCmd;
+  G4UIcmdWithADouble*          fPhotoCathodeThicknessCmd;
 
   G4UIcommand*                 fUpdateCmd;
 };
