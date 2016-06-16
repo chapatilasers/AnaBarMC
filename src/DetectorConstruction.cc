@@ -12,6 +12,7 @@
 #include "DetectorMessenger.hh"
 #include "DetectorSD.hh"
 #include "PMTSD.hh"
+#include "WLSMaterials.hh"
 
 #include "G4Material.hh"
 #include "G4BooleanSolid.hh"
@@ -48,6 +49,7 @@ using namespace CLHEP;
 //---------------------------------------------------------------------------
 
 DetectorConstruction::DetectorConstruction()
+  : fMaterials(NULL)
 {
   fDetMessenger = new DetectorMessenger(this);
 
@@ -60,19 +62,23 @@ DetectorConstruction::DetectorConstruction()
   fAnaBarLength = 50.0;
   fAnaBarWidth = 4.0;
   fAnaBarThickness = 0.50;
+  //fAnaBarThickness = 5.0;
 
   fFingerLength = 2.6;
   fFingerWidth = 4.0;
   fFingerThickness = 1.7;
 
   fHoleDiameter = 0.16;
-  fHoleLength = 50.0;
+  //fHoleDiameter = 1.6;
+  fHoleLength = fAnaBarLength;
 
   fCladdingDiameter = 0.18;
-  fCladdingLength = 50.0;
+  //fCladdingDiameter = 1.8;
+  fCladdingLength = 60.0;
   
   fFibreDiameter = 0.16;
-  fFibreLength = 50.0;
+  //fFibreDiameter = 1.6;
+  fFibreLength = fCladdingLength;
 
   fPhotoCathodeDiameter = 2.54;
   fPhotoCathodeThickness = 0.30;
@@ -87,6 +93,7 @@ DetectorConstruction::DetectorConstruction()
 
 DetectorConstruction::~DetectorConstruction() 
 {
+  if (fMaterials)	delete fMaterials;
 }
 
 //---------------------------------------------------------------------------
@@ -101,6 +108,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //---------------------------------------------------------------------------
   // Define Materials and Optical Properties
   //---------------------------------------------------------------------------
+
+  fMaterials = WLSMaterials::GetInstance();
 
   G4Element* H  = new G4Element("H",  "H",  1.,  1.01*g/mole);
   G4Element* B  = new G4Element("B",  "B",  5.,  10.8110*g/mole);
@@ -180,7 +189,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 					   1.5 *m, 1.5 *m, 1.5 *m );
   
   G4LogicalVolume* expHall_log = new G4LogicalVolume(expHall_box,
-						     Air,
+						     FindMaterial("G4_AIR"),
 						     "expHall_log", 0, 0, 0);
   
   fExpHall                     = new G4PVPlacement(0, G4ThreeVector(),
@@ -191,7 +200,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //---------------------------------------------------------------------------
 
    G4Box* fingercounter_solid  = new G4Box("fingercounter_solid", fFingerLength/2.0*cm , fFingerWidth/2.0*cm , fFingerThickness/2.0*cm);
-   G4LogicalVolume* fingercounter_log = new G4LogicalVolume(fingercounter_solid, Pscint, "fingercounter_log");
+   G4LogicalVolume* fingercounter_log = new G4LogicalVolume(fingercounter_solid, FindMaterial("Polystyrene"), "fingercounter_log");
    G4ThreeVector fingercounter_pos(0.0*cm , 0.0*cm , 0.0*cm);
    FingerCounter=  new G4PVPlacement(0, fingercounter_pos , fingercounter_log , "FingerCounter" , expHall_log , false , 0);
 
@@ -205,13 +214,43 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   
    G4VSolid* AnaBar_solid  = new G4SubtractionSolid("AnaBar_solid", AnaBar_outer, AnaBar_inner, anabar_rm,fibre_pos);
 
-   G4LogicalVolume* AnaBar_log = new G4LogicalVolume(AnaBar_solid, Pscint, "AnaBar_log");
+   G4LogicalVolume* AnaBar_log = new G4LogicalVolume(AnaBar_solid, FindMaterial("Polystyrene"), "AnaBar_log");
    
    
    G4ThreeVector AnaBar_pos(fAnaBarXpos*cm , 0.0*cm , -1.0*(fFingerThickness/2.0+fAnaBarThickness/2.0)*cm);
    AnaBar =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , 1);
 
+  //---------------------------------------------------------------------------
+  // Create Fibre ... first cladding, and then WLS fibre itself.
+  //---------------------------------------------------------------------------
+   
+  G4ThreeVector Global_fibre_pos(fAnaBarXpos*cm + (fFibreLength-fAnaBarLength)/2.0*cm , 0.0*cm , -1.0*(fFingerThickness/2.0+fAnaBarThickness/2.0)*cm);
+  
+  G4VSolid* solidClad1;
+  
+  solidClad1 = new G4Tubs("Clad1",fFibreDiameter/2.0*cm,fCladdingDiameter/2.0*cm,fFibreLength/2.0*cm,0.0*deg,360.0*deg);
+  
+  G4LogicalVolume* logicClad1 = new G4LogicalVolume(solidClad1, FindMaterial("Pethylene"),"Clad1");
+ 
+  physiClad1 = new G4PVPlacement(anabar_rm,Global_fibre_pos,logicClad1,"Clad1",expHall_log,false,2);
 
+  G4VSolid* solidWLSfiber;
+
+  solidWLSfiber = new G4Tubs("WLSFiber",0.*cm,fFibreDiameter/2.0*cm,fFibreLength/2.0*cm,0.0*deg,360.0*deg);
+
+  G4LogicalVolume* logicWLSfiber = new G4LogicalVolume(solidWLSfiber,
+                                                         FindMaterial("PMMA"),
+                                                         "WLSFiber");
+
+  logicWLSfiber->SetUserLimits(new G4UserLimits(DBL_MAX,DBL_MAX,10*ms));
+
+  physiWLSfiber = new G4PVPlacement(anabar_rm,
+                                       Global_fibre_pos,
+                                       logicWLSfiber,
+                                       "WLSFiber",
+                                       expHall_log,
+                                       false,
+                                       3);
 
   //---------------------------------------------------------------------------
   // Create AnaBar PMT
@@ -226,7 +265,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 						  Glass,
 						  "det1_log", 0, 0, 0);
   
-  fDet1Vol                  = new G4PVPlacement(anabar_rm, G4ThreeVector(fAnaBarLength/2.0*cm+fAnaBarXpos*cm+fPhotoCathodeThickness/2.0*cm, 0., -1.0*(fFingerThickness/2.0+fAnaBarThickness/2.0)*cm),
+  fDet1Vol                  = new G4PVPlacement(anabar_rm, G4ThreeVector(fFibreLength/2.0*cm+fAnaBarXpos*cm+fPhotoCathodeThickness/2.0*cm+(fFibreLength/2.0-fAnaBarLength/2.0)*cm, 0., -1.0*(fFingerThickness/2.0+fAnaBarThickness/2.0)*cm),
 						det1_log, "det1", expHall_log, false, 0);
 
   //---------------------------------------------------------------------------
@@ -301,3 +340,11 @@ void DetectorConstruction::UpdateGeometry()
 }
 
 //---------------------------------------------------------------------------
+
+G4Material* DetectorConstruction::FindMaterial(G4String name) {
+    std::cout << "Here I am ... rock me like a hurricane! " << name << std::endl;
+    G4Material* material = G4Material::GetMaterial(name,true);
+    return material;
+}
+
+

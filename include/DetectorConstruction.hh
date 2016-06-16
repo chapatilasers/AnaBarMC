@@ -6,6 +6,9 @@
 
 //---------------------------------------------------------------------------
 
+class WLSMaterials;
+class G4Material;
+
 class G4VPhysicalVolume;
 class DetectorSD;
 class PMTSD;
@@ -28,6 +31,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline G4VPhysicalVolume* GetDet2Vol()    { return fDet2Vol;  };
   inline G4VPhysicalVolume* GetFingerVol()    { return FingerCounter;  };
   inline G4VPhysicalVolume* GetAnaBarVol()    { return AnaBar;  };
+  inline G4VPhysicalVolume* GetClad1Vol()    { return physiClad1;  };
+  inline G4VPhysicalVolume* GetWLSfiberVol()    { return physiWLSfiber;  };
   inline DetectorSD*        GetDetSD()      { return fDetSD;    };
   inline PMTSD*             GetPMTSD()      { return fPMTSD;    };
 
@@ -49,8 +54,12 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline void SetCladdingLength   ( G4double CladdingLength )    { fCladdingLength  = CladdingLength; }
   inline void SetPhotoCathodeDiameter   ( G4double PhotoCathodeDiameter )    { fPhotoCathodeDiameter  = PhotoCathodeDiameter; }
   inline void SetPhotoCathodeThickness   ( G4double PhotoCathodeThickness)    { fPhotoCathodeThickness  = PhotoCathodeThickness; }
- 
+
+  G4Material* FindMaterial(G4String);
+  
   private:
+
+  WLSMaterials* fMaterials;
 
   G4NistManager*     fNistManager;
   DetectorMessenger* fDetMessenger;
@@ -60,6 +69,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4VPhysicalVolume* fDet2Vol;
   G4VPhysicalVolume* FingerCounter;
   G4VPhysicalVolume* AnaBar;
+  G4VPhysicalVolume* physiClad1;
+  G4VPhysicalVolume* physiWLSfiber;
 
   DetectorSD*        fDetSD;
   PMTSD*             fPMTSD;
