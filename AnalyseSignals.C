@@ -61,11 +61,11 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TH1F *hDetectorID = new TH1F("DetectorID","Detector ID Number", 5, 0, 5);
   TH1F *hPMTID = new TH1F("PMTID","PMT ID Number", 5, 0, 5);
   TH1F *hFingerPMTNphot = new TH1F("FingerPMTNphot","Finger PMT Number of Photons", 200, 0, 200);
-  TH1F *hAnaBarPMTNphot = new TH1F("AnaBarPMTNphot","AnaBar PMT Number of Photons", 200, 0, 200);
+  TH1F *hAnaBarPMTNphot = new TH1F("AnaBarPMTNphot","AnaBar PMT Number of Photons", 100, 0, 100);
   
   TH2F *hFinger_Edep_vs_Nphot = new TH2F("FingerEdepVsNphot", "Finger Edep vs. Number of Photons", 200, 0, 200, 100, 0.01, 10);
-  TH2F *hAnaBar_Edep_vs_Nphot = new TH2F("AnaBarEdepVsNphot", "AnaBar Edep vs. Number of Photons", 200, 0, 200, 100, 0.01, 30);
-  TH2F *hNphot0_vs_Nphot1 = new TH2F("AnaBarVsFingerNphot", "AnaBar vs. Finger Number of Photons", 200, 0, 200, 200, 0, 200);
+  TH2F *hAnaBar_Edep_vs_Nphot = new TH2F("AnaBarEdepVsNphot", "AnaBar Edep vs. Number of Photons", 100, 0, 100, 100, 0.01, 10);
+  TH2F *hNphot0_vs_Nphot1 = new TH2F("AnaBarVsFingerNphot", "AnaBar vs. Finger Number of Photons", 200, 0, 200, 100, 0, 100);
   
   TH1F *hFingerX = new TH1F("FingerX","Finger X Position", 100, -120, 120);
   TH1F *hFingerY = new TH1F("FingerY","Finger Y Position", 100, -30, 30);
@@ -77,15 +77,15 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TH1F *hAnaBarT = new TH1F("AnaBarT","AnaBar Time", 100, 0, 5);
   
   TH1F *hFingerEd = new TH1F("FingerEd","Finger Energy Deposited", 100, 0.01, 10);
-  TH1F *hAnaBarEd = new TH1F("AnaBarEd","AnaBar Energy Deposited", 100, 0.01, 30);
+  TH1F *hAnaBarEd = new TH1F("AnaBarEd","AnaBar Energy Deposited", 100, 0.01, 10);
 
   TH2F *hFinger_Edep_vs_Y = new TH2F("FingerEdepVsY", "Finger Edep vs. Y entrant", 100, -30, 30, 100, 0.01, 10);
-  TH2F *hAnaBar_Edep_vs_Y = new TH2F("AnaBarEdepVsY", "AnaBar vs. Y entrant", 100, -30, 30, 100, 0.01, 30);
-  TH2F *hE1vsE2 = new TH2F("E1vsE2", "AnaBar Edep vs. Finger Edep", 100, 0.01, 10, 100, 0.01, 30);
+  TH2F *hAnaBar_Edep_vs_Y = new TH2F("AnaBarEdepVsY", "AnaBar vs. Y entrant", 100, -30, 30, 100, 0.01, 10);
+  TH2F *hE1vsE2 = new TH2F("E1vsE2", "AnaBar Edep vs. Finger Edep", 100, 0.01, 10, 100, 0.01, 10);
 
   TH2F *hyentran1_vs_xentran1 = new TH2F("Yentrance vs Xentrance", "Yentrance vs Xentrance", 100, -80, 80, 100, -30, 30);
   TH2F *hyexit1_vs_xexit1 = new TH2F("Yexit vs Xexit", "Yexit vs Xexit", 100, -80, 80, 100, -30, 30);
-  TH2F *htracklength_vs_AnaBar_Edep = new TH2F("Tracklength vs AnaBar Edep", "Tracklength vs AnaBar Edep", 100, -2, 10, 100, 0.01 , 15);
+  TH2F *htracklength_vs_AnaBar_Edep = new TH2F("Tracklength vs AnaBar Edep", "Tracklength vs AnaBar Edep", 100, -2, 10, 100, 0.01 , 10);
   //-------------------------------------------------------------------
   //Limits and cuts
   //-------------------------------------------------------------------

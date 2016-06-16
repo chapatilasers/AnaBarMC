@@ -1,12 +1,14 @@
 // Initial version from David Hamilton
 //
-// Initial Modifications from Kerver and Brash for geometry of finger
+// Initial modifications from Kerver and Brash for geometry of finger
 // counter + AnaBar
 //
-// Addition modifications by Hamilton and Brash in order to add 
+// Additional modifications by Hamilton and Brash in order to add 
 // optical photon capabilities, need to include:
 // G4OpticalSurface, G4LogicalBorderSurface, and G4LogicalSkinSurface
 // In order to record PMT hits, also include PMTSD.hh
+//
+// Additional mods by Brash to add WLS fibre + cladding for CDet simulation
 
 #include "DetectorConstruction.hh"
 #include "DetectorMessenger.hh"
@@ -188,8 +190,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Box* expHall_box           = new G4Box("expHall_box",
 					   1.5 *m, 1.5 *m, 1.5 *m );
   
+  //G4LogicalVolume* expHall_log = new G4LogicalVolume(expHall_box,
+  //						     FindMaterial("G4_AIR"),
+  //						     "expHall_log", 0, 0, 0);
   G4LogicalVolume* expHall_log = new G4LogicalVolume(expHall_box,
-						     FindMaterial("G4_AIR"),
+						     Air,
 						     "expHall_log", 0, 0, 0);
   
   fExpHall                     = new G4PVPlacement(0, G4ThreeVector(),
@@ -200,7 +205,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //---------------------------------------------------------------------------
 
    G4Box* fingercounter_solid  = new G4Box("fingercounter_solid", fFingerLength/2.0*cm , fFingerWidth/2.0*cm , fFingerThickness/2.0*cm);
-   G4LogicalVolume* fingercounter_log = new G4LogicalVolume(fingercounter_solid, FindMaterial("Polystyrene"), "fingercounter_log");
+   //G4LogicalVolume* fingercounter_log = new G4LogicalVolume(fingercounter_solid, FindMaterial("Polystyrene"), "fingercounter_log");
+   G4LogicalVolume* fingercounter_log = new G4LogicalVolume(fingercounter_solid, Pscint, "fingercounter_log");
    G4ThreeVector fingercounter_pos(0.0*cm , 0.0*cm , 0.0*cm);
    FingerCounter=  new G4PVPlacement(0, fingercounter_pos , fingercounter_log , "FingerCounter" , expHall_log , false , 0);
 
@@ -214,7 +220,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   
    G4VSolid* AnaBar_solid  = new G4SubtractionSolid("AnaBar_solid", AnaBar_outer, AnaBar_inner, anabar_rm,fibre_pos);
 
-   G4LogicalVolume* AnaBar_log = new G4LogicalVolume(AnaBar_solid, FindMaterial("Polystyrene"), "AnaBar_log");
+   G4LogicalVolume* AnaBar_log = new G4LogicalVolume(AnaBar_solid, Pscint, "AnaBar_log");
    
    
    G4ThreeVector AnaBar_pos(fAnaBarXpos*cm , 0.0*cm , -1.0*(fFingerThickness/2.0+fAnaBarThickness/2.0)*cm);
