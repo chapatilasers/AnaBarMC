@@ -155,7 +155,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   Pscint_mt->AddProperty("FASTCOMPONENT", Energy, Pscint_SCINT,     Num );
   Pscint_mt->AddProperty("SLOWCOMPONENT", Energy, Pscint_SCINT,     Num );
 
-  Pscint_mt->AddConstProperty("SCINTILLATIONYIELD", 40.0/MeV ); 
+  Pscint_mt->AddConstProperty("SCINTILLATIONYIELD", 80.0/MeV ); 
   Pscint_mt->AddConstProperty("RESOLUTIONSCALE" ,   1.0        ); 
   Pscint_mt->AddConstProperty("FASTTIMECONSTANT",   2.7 *ns    );  
   Pscint_mt->AddConstProperty("SLOWTIMECONSTANT",   2.7 *ns    );  

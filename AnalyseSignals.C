@@ -63,6 +63,17 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TH1F *hAnaBarPMTNphotA1 = new TH1F("AnaBarPMTNphotA1","AnaBar PMT Number of Photons A1", 100, 0, 100);
   TH1F *hAnaBarPMTNphotA2 = new TH1F("AnaBarPMTNphotA2","AnaBar PMT Number of Photons A2", 100, 0, 100);
   TH1F *hAnaBarPMTNphotA3 = new TH1F("AnaBarPMTNphotA3","AnaBar PMT Number of Photons A3", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA4 = new TH1F("AnaBarPMTNphotA4","AnaBar PMT Number of Photons A4", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA5 = new TH1F("AnaBarPMTNphotA5","AnaBar PMT Number of Photons A5", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA6 = new TH1F("AnaBarPMTNphotA6","AnaBar PMT Number of Photons A6", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA7 = new TH1F("AnaBarPMTNphotA7","AnaBar PMT Number of Photons A7", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA8 = new TH1F("AnaBarPMTNphotA8","AnaBar PMT Number of Photons A8", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA9 = new TH1F("AnaBarPMTNphotA9","AnaBar PMT Number of Photons A9", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA10 = new TH1F("AnaBarPMTNphotA10","AnaBar PMT Number of Photons A10", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA11 = new TH1F("AnaBarPMTNphotA11","AnaBar PMT Number of Photons A11", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA12 = new TH1F("AnaBarPMTNphotA12","AnaBar PMT Number of Photons A12", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA13 = new TH1F("AnaBarPMTNphotA13","AnaBar PMT Number of Photons A13", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA14 = new TH1F("AnaBarPMTNphotA14","AnaBar PMT Number of Photons A14", 100, 0, 100);
   
   TH2F *hFinger_Edep_vs_Nphot = new TH2F("FingerEdepVsNphot", "Finger Edep vs. Number of Photons", 200, 0, 200, 100, 0.01, 10);
   TH2F *hAnaBar_Edep_vs_Nphot = new TH2F("AnaBarEdepVsNphot", "AnaBar Edep vs. Number of Photons", 100, 0, 100, 100, 0.01, 10);
@@ -149,6 +160,17 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   	hAnaBarPMTNphotA1->Fill(PMT_Nphotons[0]);
   	hAnaBarPMTNphotA2->Fill(PMT_Nphotons[1]);
   	hAnaBarPMTNphotA3->Fill(PMT_Nphotons[2]);
+  	hAnaBarPMTNphotA4->Fill(PMT_Nphotons[3]);
+  	hAnaBarPMTNphotA5->Fill(PMT_Nphotons[4]);
+  	hAnaBarPMTNphotA6->Fill(PMT_Nphotons[5]);
+  	hAnaBarPMTNphotA7->Fill(PMT_Nphotons[6]);
+  	hAnaBarPMTNphotA8->Fill(PMT_Nphotons[7]);
+  	hAnaBarPMTNphotA9->Fill(PMT_Nphotons[8]);
+  	hAnaBarPMTNphotA10->Fill(PMT_Nphotons[9]);
+  	hAnaBarPMTNphotA11->Fill(PMT_Nphotons[10]);
+  	hAnaBarPMTNphotA12->Fill(PMT_Nphotons[11]);
+  	hAnaBarPMTNphotA13->Fill(PMT_Nphotons[12]);
+  	hAnaBarPMTNphotA14->Fill(PMT_Nphotons[13]);
         hFingerPMTNphot->Fill(PMT_Nphotons[14]);
     }
 
@@ -261,8 +283,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   c7->Divide(2,2, 0.01, 0.01, 0);
   TCanvas *c8 = new TCanvas("c8", "c8", 200,500,600,400);
   c8->Divide(2,2, 0.01, 0.01, 0);
-  TCanvas *c9 = new TCanvas("c9", "c9", 200,500,600,400);
-  c9->Divide(3,1, 0.01, 0.01, 0);
+  TCanvas *c9 = new TCanvas("c9", "c9", 200,500,600,600);
+  c9->Divide(4,4, 0.01, 0.01, 0);
   
   c1->cd(1);
   hFingerX->Draw();
@@ -335,6 +357,28 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   hAnaBarPMTNphotA2->Draw();
   c9->cd(3);
   hAnaBarPMTNphotA3->Draw();
+  c9->cd(4);
+  hAnaBarPMTNphotA4->Draw();
+  c9->cd(5);
+  hAnaBarPMTNphotA5->Draw();
+  c9->cd(6);
+  hAnaBarPMTNphotA6->Draw();
+  c9->cd(7);
+  hAnaBarPMTNphotA7->Draw();
+  c9->cd(8);
+  hAnaBarPMTNphotA8->Draw();
+  c9->cd(9);
+  hAnaBarPMTNphotA9->Draw();
+  c9->cd(10);
+  hAnaBarPMTNphotA10->Draw();
+  c9->cd(11);
+  hAnaBarPMTNphotA11->Draw();
+  c9->cd(12);
+  hAnaBarPMTNphotA12->Draw();
+  c9->cd(13);
+  hAnaBarPMTNphotA13->Draw();
+  c9->cd(14);
+  hAnaBarPMTNphotA14->Draw();
   
   }
 
