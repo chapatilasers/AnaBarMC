@@ -54,23 +54,31 @@ G4bool PMTSD::ProcessHits(G4Step*,G4TouchableHistory*)
 G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
 				       G4TouchableHistory* )
 {
+  //std::cout << "Here I am in PMTSD::ProcessHits_constStep .... " << std::endl;
   if(aStep->GetTrack()->GetDefinition() 
      != G4OpticalPhoton::OpticalPhotonDefinition()) return false;
  
+  //std::cout << "Getting PMT number .... " << std::endl;
   G4int pmtNumber= aStep->GetPostStepPoint()->GetTouchable()
     ->GetVolume()->GetCopyNo();
+  //std::cout << "PMT number = " <<  pmtNumber << std::endl;
+
+  //for (G4int iii = 0; iii<20; iii++){
+  //	std::cout << " iii = " << iii << "  fhitID[iii] = " << fhitID[iii] << std::endl;
+  //}
  
   // if this PMT hasn't been hit in this event
   if ( fhitID[pmtNumber] == -1 ) {
+    //std::cout << "First PMT hit ... pmtNumber = " << pmtNumber << std::endl; 
     PMTHit* OpHit = new PMTHit;
     OpHit->SetPMTNumber(pmtNumber);
     OpHit->IncPhotonCount();
 
     fhitID[pmtNumber] = fCollection->insert(OpHit) - 1;
     fHits[fNhits++] = pmtNumber;
-    //std::cout << "First PMT hit ... pmtNumber = " << pmtNumber << std::endl; 
   }
   else // this is not a new hit
+    //std::cout << "Not a new hit ... pmtNumber = " << pmtNumber << std::endl; 
     (*fCollection)[fhitID[pmtNumber]]->IncPhotonCount();
   
   return true;

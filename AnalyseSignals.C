@@ -30,6 +30,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   Int_t PMT_id;
   Int_t PMT_Nphotons_Zero;
   Int_t PMT_Nphotons_One;
+  Int_t PMT_Nphotons_Two;
+  Int_t PMT_Nphotons_Three;
 
   tree1->SetBranchAddress("Prim_E", &Prim_E);
   tree1->SetBranchAddress("Prim_Th", &Prim_Th);
@@ -37,6 +39,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   tree1->SetBranchAddress("Prim_pdg", &Prim_pdg);
   tree1->SetBranchAddress("PMT_Nphotons_Zero", &PMT_Nphotons_Zero);
   tree1->SetBranchAddress("PMT_Nphotons_One", &PMT_Nphotons_One);
+  tree1->SetBranchAddress("PMT_Nphotons_Two", &PMT_Nphotons_Two);
+  tree1->SetBranchAddress("PMT_Nphotons_Three", &PMT_Nphotons_Three);
   tree1->SetBranchAddress("PMT_id", &PMT_id);
   tree1->SetBranchAddress("Detector_Nhits", &Detector_Nhits);
   tree1->SetBranchAddress("Detector_pdg", &Detector_pdg);
@@ -143,8 +147,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
 
     if (finger_hit && anabar_hit) trigger = true; 
     if (trigger) {
-  	hAnaBarPMTNphot->Fill(PMT_Nphotons_Zero);
-        hFingerPMTNphot->Fill(PMT_Nphotons_One);
+  	hAnaBarPMTNphot->Fill(PMT_Nphotons_One);
+        hFingerPMTNphot->Fill(PMT_Nphotons_Zero);
     }
 
     for (Int_t j=0; j < Detector_Nhits ; j++) {
@@ -225,9 +229,9 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
     	hAnaBarEd->Fill(edep1tot);
     	hFinger_Edep_vs_Y->Fill(yentrant0,edep0tot);
     	hAnaBar_Edep_vs_Y->Fill(yentrant1,edep1tot);
-    	hFinger_Edep_vs_Nphot->Fill(PMT_Nphotons_One,edep0tot);
-    	hAnaBar_Edep_vs_Nphot->Fill(PMT_Nphotons_Zero,edep1tot);
-    	hNphot0_vs_Nphot1->Fill(PMT_Nphotons_One,PMT_Nphotons_Zero);
+    	hFinger_Edep_vs_Nphot->Fill(PMT_Nphotons_Zero,edep0tot);
+    	hAnaBar_Edep_vs_Nphot->Fill(PMT_Nphotons_One,edep1tot);
+    	hNphot0_vs_Nphot1->Fill(PMT_Nphotons_Zero,PMT_Nphotons_One);
     	hE1vsE2->Fill(edep0tot,edep1tot);
    	hyentran1_vs_xentran1->Fill(xentrant1,yentrant1);
  	htracklength_vs_AnaBar_Edep->Fill(edep1tot,tracklength);

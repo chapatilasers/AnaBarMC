@@ -38,6 +38,8 @@ public:
 
   inline void SetPhotonCountZero     ( G4int          snp )        { fNphotonsZero = snp; }
   inline void SetPhotonCountOne     ( G4int          snp )        { fNphotonsOne = snp; }
+  inline void SetPhotonCountTwo     ( G4int          snp )        { fNphotonsTwo = snp; }
+  inline void SetPhotonCountThree     ( G4int          snp )        { fNphotonsThree = snp; }
   inline void SetPMTNumber       ( G4int          pno )        { fPMTNo    = pno; }
 
   inline void SetStepPDef        ( G4ParticleDefinition* sp )  { fSteppdef = sp;       }
@@ -67,6 +69,8 @@ private:
   // PMT
   Int_t                 fNphotonsZero;
   Int_t                 fNphotonsOne;
+  Int_t                 fNphotonsTwo;
+  Int_t                 fNphotonsThree;
   Int_t                 fPMTNo;
 
   // Detector (step information) 
