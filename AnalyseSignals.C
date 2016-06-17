@@ -147,14 +147,14 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
 		j_finger = j;
 		//cout<<"hit in finger";
 	}
-	if (Detector_id[j] == 1 && !anabar_hit) {
+	if (Detector_id[j] == 14 && !anabar_hit) {
 		anabar_hit = true;
 		j_anabar = j;
 	}
     }
 
-    //if (finger_hit && anabar_hit) trigger = true; 
-    if (finger_hit) trigger = true; 
+    if (finger_hit && anabar_hit) trigger = true; 
+    //if (finger_hit) trigger = true; 
     if (trigger) {
         //for (Int_t j=0; j<15; j++) { std::cout << "j = " << j << " Nphotons = " << PMT_Nphotons[j] << std::endl; }
   	hAnaBarPMTNphotA1->Fill(PMT_Nphotons[0]);
