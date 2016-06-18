@@ -38,6 +38,7 @@ private:
   G4UIcmdWithADouble*          fFingerLengthCmd;
   G4UIcmdWithADouble*          fFingerWidthCmd;
   G4UIcmdWithADouble*          fFingerThicknessCmd;
+  G4UIcmdWithADouble*          fFingerZoffsetCmd;
   G4UIcmdWithADouble*          fFibreDiameterCmd;
   G4UIcmdWithADouble*          fFibreLengthCmd;
   G4UIcmdWithADouble*          fHoleDiameterCmd;

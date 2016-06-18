@@ -72,7 +72,7 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
   //}
  
   // if this PMT hasn't been hit in this event
-  if ( fhitID[pmtNumber] == -1 ) {
+  if ( fhitID[pmtNumber] == -1 && energy > 0.1) {
     //std::cout << "First PMT hit ... pmtNumber = " << pmtNumber << " energy = " << energy << std::endl; 
     PMTHit* OpHit = new PMTHit;
     OpHit->SetPMTNumber(pmtNumber);

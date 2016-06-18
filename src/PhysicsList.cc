@@ -44,6 +44,8 @@
 #include "G4OpMieHG.hh"
 #include "G4OpBoundaryProcess.hh"
 
+#include "G4OpWLS.hh"
+
 #include "G4LossTableManager.hh"
 #include "G4EmSaturation.hh"
 
@@ -73,7 +75,7 @@ PhysicsList::PhysicsList() : G4VModularPhysicsList()
   locIonIonInelasticIsRegistered = false;
   radioactiveDecayIsRegistered = false;
 
-  SetVerboseLevel(1);
+  SetVerboseLevel(4);
 
   // EM physics
   emPhysicsList  = new G4EmStandardPhysics_option3(1);
@@ -250,6 +252,8 @@ void PhysicsList::ConstructOptical()
   G4OpMieHG* mieHGScatteringProcess = new G4OpMieHG();
   G4OpBoundaryProcess* boundaryProcess = new G4OpBoundaryProcess();
 
+  G4OpWLS* wlsProcess = new G4OpWLS();
+
   // Use Birks Correction in the Scintillation process
   if(!G4Threading::IsWorkerThread())
   {
@@ -278,6 +282,9 @@ void PhysicsList::ConstructOptical()
       pmanager->AddDiscreteProcess(rayleighScatteringProcess);
       pmanager->AddDiscreteProcess(mieHGScatteringProcess);
       pmanager->AddDiscreteProcess(boundaryProcess);
+
+      pmanager->AddDiscreteProcess(wlsProcess);
+
     }
   }
 }

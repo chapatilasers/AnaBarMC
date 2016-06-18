@@ -46,6 +46,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline void SetFingerLength   ( G4double FingerLength )    { fFingerLength   = FingerLength; }
   inline void SetFingerWidth   ( G4double FingerWidth )    { fFingerWidth   = FingerWidth; }
   inline void SetFingerThickness   ( G4double FingerThickness )    { fFingerThickness   = FingerThickness; }
+  inline void SetFingerZoffset   ( G4double FingerZoffset )    { fFingerZoffset   = FingerZoffset; }
   inline void SetFibreDiameter   ( G4double FibreDiameter )    { fFibreDiameter  = FibreDiameter; }
   inline void SetFibreLength   ( G4double FibreLength )    { fFibreLength  = FibreLength; }
   inline void SetHoleDiameter   ( G4double HoleDiameter )    { fHoleDiameter  = HoleDiameter; }
@@ -86,6 +87,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4double           fFingerLength;
   G4double           fFingerWidth;
   G4double           fFingerThickness;
+  G4double           fFingerZoffset;
   G4double           fFibreDiameter;
   G4double           fFibreLength;
   G4double           fHoleDiameter;

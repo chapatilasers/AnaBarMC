@@ -52,7 +52,7 @@ void AnalysisManager::InitOutput()
   // Set PMT Hit Branches
   fROOTtree->Branch("PMT_id",     &fPMTNo,     "PMT_id/I   " );  
   fROOTtree->Branch("PMT_Nphotons",  fNphotons,  "PMT_Nphotons[20]/I" );  
-  fROOTtree->Branch("PMT_KineticEnergy",  fPMTKineticEnergy,  "PMT_KineticEnergy[20][100]/F" );  
+  fROOTtree->Branch("PMT_KineticEnergy",  fPMTKineticEnergy,  "PMT_KineticEnergy[20][500]/F" );  
 
   // Set Raw Detector Step Hit Branches
   fROOTtree->Branch("Detector_Nhits", &fRAW_Nhits, "Detector_Nhits/I");  

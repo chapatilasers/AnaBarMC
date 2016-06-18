@@ -21,7 +21,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
 
   const int MaxHits = 10000;
   const int MaxPMTNo = 50;
-  const int MaxPMTHits = 100;
+  const int MaxPMTHits = 500;
   const Float_t Finger_Edep_Max = 10.0;
   const Float_t AnaBar_Edep_Max = 5.0;
   const Int_t Finger_NPhotons_Max = 150;

@@ -69,6 +69,7 @@ DetectorConstruction::DetectorConstruction()
   fFingerLength = 2.6;
   fFingerWidth = 4.0;
   fFingerThickness = 1.7;
+  fFingerZoffset = 1.0;
 
   fHoleDiameter = 0.16;
   //fHoleDiameter = 1.6;
@@ -167,7 +168,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   Pscint_mt->AddProperty("FASTCOMPONENT", Energy, Pscint_SCINT,     Num );
   Pscint_mt->AddProperty("SLOWCOMPONENT", Energy, Pscint_SCINT,     Num );
 
-  Pscint_mt->AddConstProperty("SCINTILLATIONYIELD", 500.0/MeV ); 
+  Pscint_mt->AddConstProperty("SCINTILLATIONYIELD", 50.0/MeV ); 
   Pscint_mt->AddConstProperty("RESOLUTIONSCALE" ,   1.0        ); 
   Pscint_mt->AddConstProperty("FASTTIMECONSTANT",   1.0 *ns    );  
   Pscint_mt->AddConstProperty("SLOWTIMECONSTANT",   1.0 *ns    );  
@@ -241,7 +242,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    G4LogicalVolume* AnaBar_log = new G4LogicalVolume(AnaBar_solid, Pscint, "AnaBar_log");
    
    for (G4int iii=0; iii<14; iii++){ 
-   	G4ThreeVector AnaBar_pos(fAnaBarXpos*cm , 0.0*cm , -1.0*(fFingerThickness/2.0+fAnaBarThickness/2.0)*cm-fAnaBarThickness*iii*cm);
+   	G4ThreeVector AnaBar_pos(fAnaBarXpos*cm , 0.0*cm , -1.0*(fFingerThickness/2.0+fAnaBarThickness/2.0)*cm-fAnaBarThickness*iii*cm+fFingerZoffset*cm);
    	AnaBar =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , iii+1);
    }
 
@@ -267,7 +268,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   logicWLSfiber->SetUserLimits(new G4UserLimits(DBL_MAX,DBL_MAX,10*ms));
 
   for (G4int iii=0; iii<14; iii++){ 
-  	G4ThreeVector Global_fibre_pos(fAnaBarXpos*cm + (fFibreLength-fAnaBarLength)/2.0*cm , 0.0*cm , -1.0*(fFingerThickness/2.0+fAnaBarThickness/2.0)*cm-fAnaBarThickness*iii*cm);
+  	G4ThreeVector Global_fibre_pos(fAnaBarXpos*cm + (fFibreLength-fAnaBarLength)/2.0*cm , 0.0*cm , -1.0*(fFingerThickness/2.0+fAnaBarThickness/2.0)*cm-fAnaBarThickness*iii*cm+fFingerZoffset*cm);
 
   	physiClad = new G4PVPlacement(anabar_rm,Global_fibre_pos,logicClad1,"Clad1",expHall_log,false,15+2.0*iii);
   	physiWLSfiber = new G4PVPlacement(anabar_rm,
@@ -293,7 +294,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 						  "det1_log", 0, 0, 0);
   for (G4int iii=0; iii<14; iii++){
   
-  	fDetVol                  = new G4PVPlacement(anabar_rm, G4ThreeVector(fFibreLength/2.0*cm+fAnaBarXpos*cm+fPhotoCathodeThickness/2.0*cm+(fFibreLength/2.0-fAnaBarLength/2.0)*cm, 0., -1.0*(fFingerThickness/2.0+fAnaBarThickness/2.0)*cm-fAnaBarThickness*iii*cm),
+  	fDetVol                  = new G4PVPlacement(anabar_rm, G4ThreeVector(fFibreLength/2.0*cm+fAnaBarXpos*cm+fPhotoCathodeThickness/2.0*cm+(fFibreLength/2.0-fAnaBarLength/2.0)*cm, 0., -1.0*(fFingerThickness/2.0+fAnaBarThickness/2.0)*cm-fAnaBarThickness*iii*cm+fFingerZoffset*cm),
 						det1_log, "det1", expHall_log, false, iii);
   }
 

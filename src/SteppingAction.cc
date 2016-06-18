@@ -58,7 +58,8 @@ void SteppingAction::UserSteppingAction(const G4Step * theStep)
     
     switch(boundaryStatus){
     case Absorption:
-      break;
+      //std::cout << "Absorption!!" << std::endl;
+      //break;
     case Detection:	              
       {
 	//Triger sensitive detector manually since photon is
