@@ -69,7 +69,7 @@ DetectorConstruction::DetectorConstruction()
   fFingerLength = 2.6;
   fFingerWidth = 4.0;
   fFingerThickness = 1.7;
-  fFingerZoffset = 1.0;
+  fFingerZoffset = -1.0;
 
   fHoleDiameter = 0.16;
   //fHoleDiameter = 1.6;

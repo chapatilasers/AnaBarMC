@@ -184,10 +184,13 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   	hAnaBarPMTNphotA13->Fill(PMT_Nphotons[12]);
   	hAnaBarPMTNphotA14->Fill(PMT_Nphotons[13]);
         hFingerPMTNphot->Fill(PMT_Nphotons[14]);
-	for (Int_t jq=0; jq<PMT_Nphotons[14]; jq++){std::cout << "Processing Finger hit = " << jq << std::endl; hFingerPMTKE->Fill(1240.0/PMT_KineticEnergy[14][jq]);}
+	for (Int_t jq=0; jq<PMT_Nphotons[14]; jq++){
+		//std::cout << "Processing Finger hit = " << jq << std::endl; 
+		hFingerPMTKE->Fill(1240.0/PMT_KineticEnergy[14][jq]);
+	}
 	for (Int_t iq=1; iq<14; iq++){
 		for (Int_t jq=0; jq<PMT_Nphotons[iq]; jq++){
-			std::cout << "Processing Anabar pmt = " << iq << " hit = " << jq << " Energy = " << PMT_KineticEnergy[iq][jq] << std::endl;
+			//std::cout << "Processing Anabar pmt = " << iq << " hit = " << jq << " Energy = " << PMT_KineticEnergy[iq][jq] << std::endl;
 			hAnaBarPMTKEA1->Fill(1240.0/PMT_KineticEnergy[iq][jq]);
 		}
 	}
