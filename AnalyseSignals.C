@@ -21,6 +21,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
 
   const int MaxHits = 10000;
   const int MaxPMTNo = 50;
+  const int MaxPMTHits = 100;
   const Float_t Finger_Edep_Max = 10.0;
   const Float_t AnaBar_Edep_Max = 5.0;
   const Int_t Finger_NPhotons_Max = 150;
@@ -34,6 +35,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   Float_t Detector_Ed[MaxHits];  
   Int_t PMT_id;
   Int_t PMT_Nphotons[MaxPMTNo];
+  Float_t PMT_KineticEnergy[MaxPMTNo][MaxPMTHits];
 
   tree1->SetBranchAddress("Prim_E", &Prim_E);
   tree1->SetBranchAddress("Prim_Th", &Prim_Th);
@@ -41,6 +43,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   tree1->SetBranchAddress("Prim_pdg", &Prim_pdg);
   tree1->SetBranchAddress("PMT_id", &PMT_id);
   tree1->SetBranchAddress("PMT_Nphotons", &PMT_Nphotons);
+  tree1->SetBranchAddress("PMT_KineticEnergy", &PMT_KineticEnergy);
   tree1->SetBranchAddress("Detector_Nhits", &Detector_Nhits);
   tree1->SetBranchAddress("Detector_pdg", &Detector_pdg);
   tree1->SetBranchAddress("Detector_id", &Detector_id);
@@ -78,6 +81,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TH1F *hAnaBarPMTNphotA12 = new TH1F("AnaBarPMTNphotA12","AnaBar PMT Number of Photons A12", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
   TH1F *hAnaBarPMTNphotA13 = new TH1F("AnaBarPMTNphotA13","AnaBar PMT Number of Photons A13", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
   TH1F *hAnaBarPMTNphotA14 = new TH1F("AnaBarPMTNphotA14","AnaBar PMT Number of Photons A14", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
+  TH1F *hFingerPMTKE = new TH1F("FingerPMTKE","Finger PMT Kinetic Energy", 300, 300.0, 600.0);
+  TH1F *hAnaBarPMTKEA1 = new TH1F("AnaBarPMTKEA1","AnaBar PMT Kinetic Energy A1", 300, 300.0, 600.0);
   
   TH2F *hFinger_Edep_vs_Nphot = new TH2F("FingerEdepVsNphot", "Finger Edep vs. Number of Photons", Finger_NPhotons_Max, 0, Finger_NPhotons_Max, 100, 0.01, Finger_Edep_Max);
   TH2F *hAnaBar_Edep_vs_Nphot = new TH2F("AnaBarEdepVsNphot", "AnaBar Edep vs. Number of Photons", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max, 100, 0.01, 5);
@@ -179,6 +184,13 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   	hAnaBarPMTNphotA13->Fill(PMT_Nphotons[12]);
   	hAnaBarPMTNphotA14->Fill(PMT_Nphotons[13]);
         hFingerPMTNphot->Fill(PMT_Nphotons[14]);
+	for (Int_t jq=0; jq<PMT_Nphotons[14]; jq++){std::cout << "Processing Finger hit = " << jq << std::endl; hFingerPMTKE->Fill(1240.0/PMT_KineticEnergy[14][jq]);}
+	for (Int_t iq=1; iq<14; iq++){
+		for (Int_t jq=0; jq<PMT_Nphotons[iq]; jq++){
+			std::cout << "Processing Anabar pmt = " << iq << " hit = " << jq << " Energy = " << PMT_KineticEnergy[iq][jq] << std::endl;
+			hAnaBarPMTKEA1->Fill(1240.0/PMT_KineticEnergy[iq][jq]);
+		}
+	}
     }
 
     for (Int_t j=0; j < Detector_Nhits ; j++) {
@@ -295,6 +307,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   c8->Divide(2,2, 0.01, 0.01, 0);
   TCanvas *c9 = new TCanvas("c9", "c9", 1100,700,300,270);
   c9->Divide(4,4, 0.01, 0.01, 0);
+  TCanvas *c10 = new TCanvas("c10", "c10", 1100,700,300,270);
+  c10->Divide(1,2, 0.01, 0.01, 0);
   
   c1->cd(1);
   hFingerX->Draw();
@@ -389,6 +403,11 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   hAnaBarPMTNphotA13->Draw();
   c9->cd(14);
   hAnaBarPMTNphotA14->Draw();
+
+  c10->cd(1);
+  hFingerPMTKE->Draw();
+  c10->cd(2);
+  hAnaBarPMTKEA1->Draw();
   
   }
 

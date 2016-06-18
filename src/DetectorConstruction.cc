@@ -123,8 +123,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   //-----------------------------------------------------
   
-  const G4int Num         = 6;
-  G4double    Energy[Num] = { 2.34*eV , 2.46*eV,  2.58*eV, 2.72*eV,  2.88 *eV, 3.06 *eV};
+  //const G4int Num         = 6;
+  //G4double    Energy[Num] = { 2.34*eV , 2.46*eV,  2.58*eV, 2.72*eV,  2.88 *eV, 3.06 *eV};
+  const G4int Num         = 12;
+  G4double    Energy[Num] = { 3.44*eV, 3.26*eV, 3.1*eV, 3.02*eV, 2.95*eV,
+			      2.92*eV, 2.82*eV, 2.76*eV, 2.7*eV, 2.58*eV,
+			      2.38*eV, 2.08*eV};
 
   //-----------------------------------------------------
   // Air
@@ -132,8 +136,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   Air->AddElement(N, 70*perCent);
   Air->AddElement(O, 30*perCent);
 
-  G4double    Air_RIND[Num]         = { 1., 1., 1. , 1., 1., 1. };
-  G4double    Air_AbsLength[Num]    = { 4200.*cm, 4200.*cm, 4200.*cm, 4200.*cm, 4200.*cm, 4200.*cm };
+  G4double    Air_RIND[Num]         = { 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1. };
+  G4double    Air_AbsLength[Num]    = { 4200.*cm, 4200.*cm, 4200.*cm, 4200.*cm, 4200.*cm, 4200.*cm,
+  					4200.*cm, 4200.*cm, 4200.*cm, 4200.*cm, 4200.*cm, 4200.*cm };
   G4MaterialPropertiesTable *Air_mt = new G4MaterialPropertiesTable();
   Air_mt->AddProperty("RINDEX",    Energy, Air_RIND,      Num );
   Air_mt->AddProperty("ABSLENGTH", Energy, Air_AbsLength, Num );
@@ -141,13 +146,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   //-----------------------------------------------------
   // Plastic Scintillator
+  //
+  // Update properties to model BC-408 ...
+  // From https://www-zeuthen.desy.de/lcdet/Feb_05_WS/talks/rd_pcdet_sim.pdf
+  //
   G4Material* Pscint = new G4Material("Pscint", 1.03*g/cm3, 2);
   Pscint->AddElement(C, 8);
   Pscint->AddElement(H, 8);
 
-  G4double    Pscint_RIND[Num]      = { 1.6, 1.6, 1.6, 1.6, 1.6, 1.6 };
-  G4double    Pscint_AbsLength[Num] = { 220.*cm, 220.*cm, 220.*cm, 220.*cm, 220.*cm, 220.*cm };
-  G4double    Pscint_SCINT[Num]     = { 0.1, 0.2, 0.2, 0.5, 0.7, 0.7 };
+  G4double    Pscint_RIND[Num]      = { 1.58, 1.58, 1.58, 1.58, 1.58, 1.58,
+  					1.58, 1.58, 1.58, 1.58, 1.58, 1.58 };
+  G4double    Pscint_AbsLength[Num] = { 210.*cm, 210.*cm, 210.*cm, 210.*cm, 210.*cm, 210.*cm,
+  					210.*cm, 210.*cm, 210.*cm, 210.*cm, 210.*cm, 210.*cm };
+  G4double    Pscint_SCINT[Num]     = { 0.04, 0.07, 0.20, 0.49, 0.84, 1.00,
+  					0.83, 0.55, 0.40, 0.17, 0.03, 0.005 };
 
   G4MaterialPropertiesTable *Pscint_mt = new G4MaterialPropertiesTable();
   Pscint_mt->AddProperty("RINDEX",        Energy, Pscint_RIND,      Num );
@@ -155,10 +167,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   Pscint_mt->AddProperty("FASTCOMPONENT", Energy, Pscint_SCINT,     Num );
   Pscint_mt->AddProperty("SLOWCOMPONENT", Energy, Pscint_SCINT,     Num );
 
-  Pscint_mt->AddConstProperty("SCINTILLATIONYIELD", 80.0/MeV ); 
+  Pscint_mt->AddConstProperty("SCINTILLATIONYIELD", 500.0/MeV ); 
   Pscint_mt->AddConstProperty("RESOLUTIONSCALE" ,   1.0        ); 
-  Pscint_mt->AddConstProperty("FASTTIMECONSTANT",   2.7 *ns    );  
-  Pscint_mt->AddConstProperty("SLOWTIMECONSTANT",   2.7 *ns    );  
+  Pscint_mt->AddConstProperty("FASTTIMECONSTANT",   1.0 *ns    );  
+  Pscint_mt->AddConstProperty("SLOWTIMECONSTANT",   1.0 *ns    );  
   Pscint_mt->AddConstProperty("YIELDRATIO",         1.0        );
 
   Pscint->SetMaterialPropertiesTable(Pscint_mt);
@@ -172,9 +184,15 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   Glass->AddElement(O, 0.5395);
   Glass->AddElement(Si, 0.3905);
 
-  G4double    Glass_RIND[Num]      = { 1.54367, 1.54332, 1.53440, 1.53114, 1.52770, 1.52562 };
-  G4double    Glass_AbsLength[Num] = { 420.*cm, 420.*cm, 420.*cm, 420.*cm, 420.*cm, 420.*cm };
-  G4double    Glass_REFL[Num]      = { 0.0909, 0.0898, 0.0864, 0.0867, 0.0853, 0.0846 };
+  //G4double    Glass_RIND[Num]      = { 1.54367, 1.54332, 1.53440, 1.53114, 1.52770, 1.52562 };
+  //G4double    Glass_AbsLength[Num] = { 420.*cm, 420.*cm, 420.*cm, 420.*cm, 420.*cm, 420.*cm };
+  //G4double    Glass_REFL[Num]      = { 0.0909, 0.0898, 0.0864, 0.0867, 0.0853, 0.0846 };
+  G4double    Glass_RIND[Num]      = { 1.525, 1.525, 1.525, 1.525, 1.525, 1.528,
+  					1.528, 1.528, 1.531, 1.531, 1.534, 1.534 };
+  G4double    Glass_AbsLength[Num] = { 420.*cm, 420.*cm, 420.*cm, 420.*cm, 420.*cm, 420.*cm,
+  					420.*cm, 420.*cm, 420.*cm, 420.*cm, 420.*cm, 420.*cm };
+  G4double    Glass_REFL[Num]      = { 0.0846, 0.0846, 0.0846, 0.0846, 0.0846, 0.0853,
+  					 0.0853, 0.0853, 0.0864, 0.0867, 0.0909, 0.0909 };
 
   G4MaterialPropertiesTable *Glass_mt = new G4MaterialPropertiesTable();
   Glass_mt->AddProperty("ABSLENGTH",    Energy, Glass_AbsLength, Num);

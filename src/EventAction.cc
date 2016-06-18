@@ -100,6 +100,8 @@ void EventAction::EndOfEventAction(const G4Event* evt)
 	//		fAnaManager->SetPhotonCountThree( (G4int) hit2->GetPhotonCount() );
 	//	}
 	//}
+	//fAnaManager->SetPMTKE( (G4int) hit2->GetPMTNumber(), (G4double) hit2->GetPMTKineticEnergy( (G4int) hit2->GetPhotonCount() ), (G4int) hit2->GetPhotonCount() );
+	fAnaManager->SetPMTKE( hit2 );
 	fAnaManager->SetPhotonCount( (G4int) hit2->GetPMTNumber(), (G4int) hit2->GetPhotonCount() );
 	fAnaManager->SetPMTNumber( (G4int) hit2->GetPMTNumber() );
 	//std::cout << "hit " << j << " pmt number " << hit2->GetPMTNumber() << " number of photons = " << hit2->GetPhotonCount() << std::endl;

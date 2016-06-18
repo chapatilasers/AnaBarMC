@@ -10,6 +10,7 @@
 #include "Rtypes.h"
 #include "TVector3.h"
 #include "TString.h"
+#include "PMTHit.hh"
 
 class TTree;
 class TFile;
@@ -37,7 +38,25 @@ public:
   inline void SetPrimaryDirection( G4ThreeVector  dir  )       { fPdir  = dir;  }
 
   inline void SetPMTNumber       ( G4int          pno )        { fPMTNo    = pno; }
-  inline void SetPhotonCount       ( G4int pno, G4int snp )        { std::cout << " Array PMT " << pno << " = " << snp << std::endl; fNphotons[pno]    = snp; }
+  inline void SetPhotonCount       ( G4int pno, G4int snp )        { 
+		//std::cout << " Nphotons on PMT " << pno << " = " << snp << std::endl; 
+		fNphotons[pno]    = snp; 
+	}
+  
+  //inline void SetPMTKE       ( G4int pno, G4double energy, G4int snp )        {
+  //	    	for (int iii = 0; iii <= snp; iii++) { 
+  //			std::cout << " Kinetic Energy of hit " << iii << " on PMT " << pno << " = " << energy << std::endl; 
+  //			fPMTKineticEnergy[pno][iii] = energy; 
+  //		}
+  //	}
+  inline void SetPMTKE ( PMTHit* hit2 ) {
+		G4int snp = hit2->GetPhotonCount();
+		G4int pno = hit2->GetPMTNumber();
+	    	for (G4int iii = 0; iii < snp; iii++) { 
+			std::cout << " Kinetic Energy of hit " << iii << " on PMT " << pno << " = " << hit2->GetPMTKineticEnergy(iii) << std::endl; 
+			fPMTKineticEnergy[pno][iii] = hit2->GetPMTKineticEnergy(iii); 
+		}
+	}
 
   inline void SetStepPDef        ( G4ParticleDefinition* sp )  { fSteppdef = sp;       }
   inline void SetStepPosPre      ( G4ThreeVector  spos )       { fSteppospre  = spos;  }
@@ -65,8 +84,10 @@ private:
 
   // PMT
   Int_t                 fPMTNo;
-  static const Int_t	fMaxPMTNo = 100;
+  static const Int_t	fMaxPMTNo = 20;
+  static const Int_t    fMaxPMTHits = 100;
   Int_t			fNphotons[fMaxPMTNo];
+  Float_t 		fPMTKineticEnergy[fMaxPMTNo][fMaxPMTHits];
 
   // Detector (step information) 
   G4ParticleDefinition* fSteppdef;
