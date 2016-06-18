@@ -69,6 +69,7 @@ class WLSMaterials
     G4Material*        fPolystyrene;
     G4Material*        fSilicone;
     G4Material*        fCoating;
+    G4Material*	       fMylar;
 
 };
 

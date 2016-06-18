@@ -32,6 +32,7 @@ private:
   G4UIcmdWithADouble*          fTumourRadiusCmd;
   G4UIcmdWithADouble*          fTumourHeightCmd;
   G4UIcmdWithADouble*          fAnaBarXposCmd;
+  G4UIcmdWithAnInteger*          fNumberOfLayersCmd;
   G4UIcmdWithADouble*          fAnaBarLengthCmd;
   G4UIcmdWithADouble*          fAnaBarWidthCmd;
   G4UIcmdWithADouble*          fAnaBarThicknessCmd;
@@ -47,6 +48,8 @@ private:
   G4UIcmdWithADouble*          fCladdingLengthCmd;
   G4UIcmdWithADouble*          fPhotoCathodeDiameterCmd;
   G4UIcmdWithADouble*          fPhotoCathodeThicknessCmd;
+  G4UIcmdWithADouble*          fMirrorThicknessCmd;
+  G4UIcmdWithADouble*          fMylarThicknessCmd;
 
   G4UIcommand*                 fUpdateCmd;
 };

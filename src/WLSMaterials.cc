@@ -55,6 +55,7 @@ WLSMaterials::~WLSMaterials()
   delete    fFPethylene;
   delete    fPolystyrene;
   delete    fSilicone;
+  delete    fMylar;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -204,6 +205,22 @@ void WLSMaterials::CreateMaterials()
 
   G4Material* TiO2 = fNistMan->
           ConstructNewMaterial("TiO2", elements, natoms, density);
+
+  elements.clear();
+  natoms.clear();
+
+  //--------------------------------------------------
+  // Mylar
+  //--------------------------------------------------
+
+  elements.push_back("C");      natoms.push_back(5);
+  elements.push_back("H");      natoms.push_back(4);
+  elements.push_back("O");      natoms.push_back(2);
+
+  density     = 1.39*g/cm3;
+
+  fMylar = fNistMan->
+          ConstructNewMaterial("Mylar", elements, natoms, density);
 
   elements.clear();
   natoms.clear();

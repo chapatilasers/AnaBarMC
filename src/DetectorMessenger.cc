@@ -28,6 +28,8 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Detect)
   fAnaBarXposCmd->SetGuidance("Set Anabar x position in cm.");
   fAnaBarLengthCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarLength",this);
   fAnaBarLengthCmd->SetGuidance("Set Anabar Length in cm.");
+  fNumberOfLayersCmd = new G4UIcmdWithAnInteger("/AnaBarMC/detector/NumberOfLayers",this);
+  fNumberOfLayersCmd->SetGuidance("Set Number of AnaBar Layers.");
   fAnaBarWidthCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarWidth",this);
   fAnaBarWidthCmd->SetGuidance("Set Anabar Width in cm.");
   fAnaBarThicknessCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarThickness",this);
@@ -54,6 +56,10 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Detect)
   fPhotoCathodeDiameterCmd->SetGuidance("Set PhotoCathode Diameter in cm.");
   fPhotoCathodeThicknessCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/PhotoCathodeThickness",this);
   fPhotoCathodeThicknessCmd->SetGuidance("Set PhotoCathode Thickness in cm.");
+  fMirrorThicknessCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/MirrorThickness",this);
+  fMirrorThicknessCmd->SetGuidance("Set Mirror Thickness in cm.");
+  fMylarThicknessCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/MylarThickness",this);
+  fMylarThicknessCmd->SetGuidance("Set Mylar Thickness in cm.");
 
   fUpdateCmd          = new G4UIcommand("/AnaBarMC/detector/update",this);
   fUpdateCmd->SetGuidance("Update the detector geometry with changed values.");
@@ -70,6 +76,7 @@ DetectorMessenger::~DetectorMessenger()
   delete fTumourRadiusCmd;
   delete fTumourHeightCmd;
   delete fAnaBarXposCmd;
+  delete fNumberOfLayersCmd;
   delete fAnaBarLengthCmd;
   delete fAnaBarWidthCmd;
   delete fAnaBarThicknessCmd;
@@ -84,6 +91,8 @@ DetectorMessenger::~DetectorMessenger()
   delete fCladdingLengthCmd;
   delete fPhotoCathodeDiameterCmd;
   delete fPhotoCathodeThicknessCmd;
+  delete fMirrorThicknessCmd;
+  delete fMylarThicknessCmd;
 
   delete fUpdateCmd;
 }
@@ -103,6 +112,8 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   if (command == fAnaBarXposCmd)
     fDetector->SetAnaBarXpos(fAnaBarXposCmd->GetNewDoubleValue(newValue));
   
+  if (command == fNumberOfLayersCmd)
+    fDetector->SetNumberOfLayers(fNumberOfLayersCmd->GetNewIntValue(newValue));
   if (command == fAnaBarLengthCmd)
     fDetector->SetAnaBarLength(fAnaBarLengthCmd->GetNewDoubleValue(newValue));
   if (command == fAnaBarWidthCmd)
@@ -136,6 +147,10 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     fDetector->SetPhotoCathodeThickness(fPhotoCathodeThicknessCmd->GetNewDoubleValue(newValue));
   if (command == fPhotoCathodeDiameterCmd)
     fDetector->SetPhotoCathodeDiameter(fPhotoCathodeDiameterCmd->GetNewDoubleValue(newValue));
+  if (command == fMirrorThicknessCmd)
+    fDetector->SetMirrorThickness(fMirrorThicknessCmd->GetNewDoubleValue(newValue));
+  if (command == fMylarThicknessCmd)
+    fDetector->SetMylarThickness(fMylarThicknessCmd->GetNewDoubleValue(newValue));
 }
 
 //---------------------------------------------------------------------------

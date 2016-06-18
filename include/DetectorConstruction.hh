@@ -40,6 +40,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline void SetTumourRadius ( G4double radius )  { fTumourRadius = radius; }
   inline void SetTumourHeight ( G4double height )  { fTumourHeight = height; }
   inline void SetAnaBarXpos   ( G4double AnaBarXpos )    { fAnaBarXpos   = AnaBarXpos; }
+  inline void SetNumberOfLayers   ( G4int NumberOfLayers )    { fNumberOfLayers   = NumberOfLayers; }
   inline void SetAnaBarLength   ( G4double AnaBarLength )    { fAnaBarLength   = AnaBarLength; }
   inline void SetAnaBarWidth   ( G4double AnaBarWidth )    { fAnaBarWidth   = AnaBarWidth; }
   inline void SetAnaBarThickness   ( G4double AnaBarThickness )    { fAnaBarThickness   = AnaBarThickness; }
@@ -55,6 +56,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline void SetCladdingLength   ( G4double CladdingLength )    { fCladdingLength  = CladdingLength; }
   inline void SetPhotoCathodeDiameter   ( G4double PhotoCathodeDiameter )    { fPhotoCathodeDiameter  = PhotoCathodeDiameter; }
   inline void SetPhotoCathodeThickness   ( G4double PhotoCathodeThickness)    { fPhotoCathodeThickness  = PhotoCathodeThickness; }
+  inline void SetMirrorThickness   ( G4double MirrorThickness)    { fMirrorThickness  = MirrorThickness; }
+  inline void SetMylarThickness   ( G4double MylarThickness)    { fMylarThickness  = MylarThickness; }
 
   G4Material* FindMaterial(G4String);
   
@@ -70,6 +73,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4VPhysicalVolume* fDet15Vol;
   G4VPhysicalVolume* FingerCounter;
   G4VPhysicalVolume* AnaBar;
+  G4VPhysicalVolume* MylarTop;
+  G4VPhysicalVolume* MylarBottom;
+  G4VPhysicalVolume* MylarSideFront;
+  G4VPhysicalVolume* MylarSideBack;
+  G4VPhysicalVolume* Mirror;
   G4VPhysicalVolume* physiClad;
   G4VPhysicalVolume* physiWLSfiber;
 
@@ -81,6 +89,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4double           fTumourHeight;
   G4double           fAnaBarXpos;
 
+  G4int		     fNumberOfLayers;
   G4double           fAnaBarLength;
   G4double           fAnaBarWidth;
   G4double           fAnaBarThickness;
@@ -96,6 +105,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4double           fCladdingLength;
   G4double           fPhotoCathodeDiameter;
   G4double           fPhotoCathodeThickness;
+  G4double           fMirrorThickness;
+  G4double           fMylarThickness;
 
 };
 #endif
