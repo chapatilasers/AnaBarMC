@@ -416,7 +416,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   fingercounter_log->SetSensitiveDetector( fDetSD );
   AnaBar_log->SetSensitiveDetector( fDetSD );
 
-  fPMTSD = new PMTSD("PMTSD", 20);
+  fPMTSD = new PMTSD("PMTSD", 100);
   SDman->AddNewDetector( fPMTSD );
   det1_log->SetSensitiveDetector( fPMTSD );
   det2_log->SetSensitiveDetector( fPMTSD );

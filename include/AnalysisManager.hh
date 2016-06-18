@@ -53,7 +53,7 @@ public:
 		G4int snp = hit2->GetPhotonCount();
 		G4int pno = hit2->GetPMTNumber();
 	    	for (G4int iii = 0; iii < snp; iii++) { 
-			std::cout << " Kinetic Energy of hit " << iii << " on PMT " << pno << " = " << hit2->GetPMTKineticEnergy(iii) << std::endl; 
+			//std::cout << " Kinetic Energy of hit " << iii << " on PMT " << pno << " = " << hit2->GetPMTKineticEnergy(iii) << std::endl; 
 			fPMTKineticEnergy[pno][iii] = hit2->GetPMTKineticEnergy(iii); 
 		}
 	}
