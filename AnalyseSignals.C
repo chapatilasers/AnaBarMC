@@ -15,7 +15,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   //Set stuff up for reading
   //-------------------------------------------------------------------
   TString filename;
-  filename.Form("data/G4_test%d.root",Analysis_Run_Number);
+  filename.Form("data/AnaBarMC_%d.root",Analysis_Run_Number);
   TFile *f1 = new TFile(filename,"READ");
   TTree *tree1 = (TTree*)f1->Get("T");
 

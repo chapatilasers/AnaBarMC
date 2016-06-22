@@ -20,7 +20,7 @@ echo "/AnaBarMC/generator/InputFile $tempdir/data/AnaBarMC_Gen_$RUN_NUMBER.root"
 echo "/AnaBarMC/analysis/setOutputFile $tempdir/rootfiles/AnaBarMC_$RUN_NUMBER.root" >>  $MCMACRO
 
 cd $tempdir
-source /home/brash/geant4/G4setup.sh
+source /home/brash/geant4/G4setup_batch.sh
 export ROOTSYS=/cern/root/pro
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
 export PATH=$ROOTSYS/bin:$PATH
