@@ -2,3 +2,4 @@ GenCosmics_C.d
 GenCosmics_C.so
 data/*.root
 *.wrl
+batch/data/*.root

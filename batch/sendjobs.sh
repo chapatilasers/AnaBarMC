@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [[ $# -ne 1 ]]; then
+	echo "illegal number of parameters"
+	exit 
+fi
+
+export runlist=$1
+export OUTPUT_DIR=/home/brash/CDetOptical/data
+
+echo "Reading runs from $runlist"
+
+#submit a job for each file in filelist
+for run in `cat $runlist`
+do
+    echo "The next run is $run"
+    export RUN_NUMBER=$run
+    qsub AnaBarNeutron.sh 
+#    ./AnaBarNeutron.sh 
+    sleep 10
+done
+
+echo "All finished ... :)"
