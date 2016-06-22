@@ -36,11 +36,8 @@ public:
   inline void SetPrimaryPDef     ( G4ParticleDefinition* pdef) { fPPDef = pdef; }
   inline void SetPrimaryDirection( G4ThreeVector  dir  )       { fPdir  = dir;  }
 
-  inline void SetPhotonCountZero     ( G4int          snp )        { fNphotonsZero = snp; }
-  inline void SetPhotonCountOne     ( G4int          snp )        { fNphotonsOne = snp; }
-  inline void SetPhotonCountTwo     ( G4int          snp )        { fNphotonsTwo = snp; }
-  inline void SetPhotonCountThree     ( G4int          snp )        { fNphotonsThree = snp; }
   inline void SetPMTNumber       ( G4int          pno )        { fPMTNo    = pno; }
+  inline void SetPhotonCount       ( G4int pno, G4int snp )        { std::cout << " Array PMT " << pno << " = " << snp << std::endl; fNphotons[pno]    = snp; }
 
   inline void SetStepPDef        ( G4ParticleDefinition* sp )  { fSteppdef = sp;       }
   inline void SetStepPosPre      ( G4ThreeVector  spos )       { fSteppospre  = spos;  }
@@ -67,11 +64,9 @@ private:
   G4ThreeVector         fPdir;
 
   // PMT
-  Int_t                 fNphotonsZero;
-  Int_t                 fNphotonsOne;
-  Int_t                 fNphotonsTwo;
-  Int_t                 fNphotonsThree;
   Int_t                 fPMTNo;
+  static const Int_t	fMaxPMTNo = 100;
+  Int_t			fNphotons[fMaxPMTNo];
 
   // Detector (step information) 
   G4ParticleDefinition* fSteppdef;

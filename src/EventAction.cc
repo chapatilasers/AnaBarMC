@@ -87,19 +87,20 @@ void EventAction::EndOfEventAction(const G4Event* evt)
     if( pmt_hits != 0 ) {
       for( G4int j = 0; j < pmt_hits; j++) {
 	PMTHit* hit2 = static_cast<PMTHit*>( PHC->GetHit(j) );
-	if (hit2->GetPMTNumber() == 14) {
-		fAnaManager->SetPhotonCountZero( (G4int) hit2->GetPhotonCount() );
-	}else{
-		if (hit2->GetPMTNumber() == 0) {
-			fAnaManager->SetPhotonCountOne( (G4int) hit2->GetPhotonCount() );
-		}
-		if (hit2->GetPMTNumber() == 1) {
-			fAnaManager->SetPhotonCountTwo( (G4int) hit2->GetPhotonCount() );
-		}
-		if (hit2->GetPMTNumber() == 2) {
-			fAnaManager->SetPhotonCountThree( (G4int) hit2->GetPhotonCount() );
-		}
-	}
+	//if (hit2->GetPMTNumber() == 14) {
+	//	fAnaManager->SetPhotonCountZero( (G4int) hit2->GetPhotonCount() );
+	//}else{
+	//	if (hit2->GetPMTNumber() == 0) {
+	//		fAnaManager->SetPhotonCountOne( (G4int) hit2->GetPhotonCount() );
+	//	}
+	//	if (hit2->GetPMTNumber() == 1) {
+	//		fAnaManager->SetPhotonCountTwo( (G4int) hit2->GetPhotonCount() );
+	//	}
+	//	if (hit2->GetPMTNumber() == 2) {
+	//		fAnaManager->SetPhotonCountThree( (G4int) hit2->GetPhotonCount() );
+	//	}
+	//}
+	fAnaManager->SetPhotonCount( (G4int) hit2->GetPMTNumber(), (G4int) hit2->GetPhotonCount() );
 	fAnaManager->SetPMTNumber( (G4int) hit2->GetPMTNumber() );
 	//std::cout << "hit " << j << " pmt number " << hit2->GetPMTNumber() << " number of photons = " << hit2->GetPhotonCount() << std::endl;
       }

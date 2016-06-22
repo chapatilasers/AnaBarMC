@@ -27,20 +27,12 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   void UpdateGeometry();
 
   inline G4VPhysicalVolume* GetExpHall()    { return fExpHall;  };
-  inline G4VPhysicalVolume* GetDet1Vol()    { return fDet1Vol;  };
-  inline G4VPhysicalVolume* GetDet2Vol()    { return fDet2Vol;  };
-  inline G4VPhysicalVolume* GetDet3Vol()    { return fDet3Vol;  };
+  inline G4VPhysicalVolume* GetDetVol()    { return fDetVol;  };
   inline G4VPhysicalVolume* GetDet15Vol()    { return fDet15Vol;  };
   inline G4VPhysicalVolume* GetFingerVol()    { return FingerCounter;  };
-  inline G4VPhysicalVolume* GetAnaBar1Vol()    { return AnaBar1;  };
-  inline G4VPhysicalVolume* GetAnaBar2Vol()    { return AnaBar2;  };
-  inline G4VPhysicalVolume* GetAnaBar3Vol()    { return AnaBar3;  };
-  inline G4VPhysicalVolume* GetClad1Vol()    { return physiClad1;  };
-  inline G4VPhysicalVolume* GetClad2Vol()    { return physiClad2;  };
-  inline G4VPhysicalVolume* GetClad3Vol()    { return physiClad3;  };
-  inline G4VPhysicalVolume* GetWLSfiber1Vol()    { return physiWLSfiber1;  };
-  inline G4VPhysicalVolume* GetWLSfiber2Vol()    { return physiWLSfiber2;  };
-  inline G4VPhysicalVolume* GetWLSfiber3Vol()    { return physiWLSfiber3;  };
+  inline G4VPhysicalVolume* GetAnaBarVol()    { return AnaBar;  };
+  inline G4VPhysicalVolume* GetCladVol()    { return physiClad;  };
+  inline G4VPhysicalVolume* GetWLSfiberVol()    { return physiWLSfiber;  };
   inline DetectorSD*        GetDetSD()      { return fDetSD;    };
   inline PMTSD*             GetPMTSD()      { return fPMTSD;    };
 
@@ -73,20 +65,12 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   DetectorMessenger* fDetMessenger;
 
   G4VPhysicalVolume* fExpHall;
-  G4VPhysicalVolume* fDet1Vol;
-  G4VPhysicalVolume* fDet2Vol;
-  G4VPhysicalVolume* fDet3Vol;
+  G4VPhysicalVolume* fDetVol;
   G4VPhysicalVolume* fDet15Vol;
   G4VPhysicalVolume* FingerCounter;
-  G4VPhysicalVolume* AnaBar1;
-  G4VPhysicalVolume* AnaBar2;
-  G4VPhysicalVolume* AnaBar3;
-  G4VPhysicalVolume* physiClad1;
-  G4VPhysicalVolume* physiClad2;
-  G4VPhysicalVolume* physiClad3;
-  G4VPhysicalVolume* physiWLSfiber1;
-  G4VPhysicalVolume* physiWLSfiber2;
-  G4VPhysicalVolume* physiWLSfiber3;
+  G4VPhysicalVolume* AnaBar;
+  G4VPhysicalVolume* physiClad;
+  G4VPhysicalVolume* physiWLSfiber;
 
   DetectorSD*        fDetSD;
   PMTSD*             fPMTSD;

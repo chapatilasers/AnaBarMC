@@ -20,6 +20,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TTree *tree1 = (TTree*)f1->Get("T");
 
   const int MaxHits = 10000;
+  const int MaxPMTNo = 50;
   Float_t Prim_E, Prim_Th, Prim_Ph;
   Int_t Prim_pdg;
   Int_t Detector_Nhits;
@@ -28,20 +29,14 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   Float_t Detector_x[MaxHits], Detector_y[MaxHits], Detector_z[MaxHits], Detector_t[MaxHits];
   Float_t Detector_Ed[MaxHits];  
   Int_t PMT_id;
-  Int_t PMT_Nphotons_Zero;
-  Int_t PMT_Nphotons_One;
-  Int_t PMT_Nphotons_Two;
-  Int_t PMT_Nphotons_Three;
+  Int_t PMT_Nphotons[MaxPMTNo];
 
   tree1->SetBranchAddress("Prim_E", &Prim_E);
   tree1->SetBranchAddress("Prim_Th", &Prim_Th);
   tree1->SetBranchAddress("Prim_Ph", &Prim_Ph);
   tree1->SetBranchAddress("Prim_pdg", &Prim_pdg);
-  tree1->SetBranchAddress("PMT_Nphotons_Zero", &PMT_Nphotons_Zero);
-  tree1->SetBranchAddress("PMT_Nphotons_One", &PMT_Nphotons_One);
-  tree1->SetBranchAddress("PMT_Nphotons_Two", &PMT_Nphotons_Two);
-  tree1->SetBranchAddress("PMT_Nphotons_Three", &PMT_Nphotons_Three);
   tree1->SetBranchAddress("PMT_id", &PMT_id);
+  tree1->SetBranchAddress("PMT_Nphotons", &PMT_Nphotons);
   tree1->SetBranchAddress("Detector_Nhits", &Detector_Nhits);
   tree1->SetBranchAddress("Detector_pdg", &Detector_pdg);
   tree1->SetBranchAddress("Detector_id", &Detector_id);
@@ -65,7 +60,9 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TH1F *hDetectorID = new TH1F("DetectorID","Detector ID Number", 5, 0, 5);
   TH1F *hPMTID = new TH1F("PMTID","PMT ID Number", 5, 0, 5);
   TH1F *hFingerPMTNphot = new TH1F("FingerPMTNphot","Finger PMT Number of Photons", 200, 0, 200);
-  TH1F *hAnaBarPMTNphot = new TH1F("AnaBarPMTNphot","AnaBar PMT Number of Photons", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA1 = new TH1F("AnaBarPMTNphotA1","AnaBar PMT Number of Photons A1", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA2 = new TH1F("AnaBarPMTNphotA2","AnaBar PMT Number of Photons A2", 100, 0, 100);
+  TH1F *hAnaBarPMTNphotA3 = new TH1F("AnaBarPMTNphotA3","AnaBar PMT Number of Photons A3", 100, 0, 100);
   
   TH2F *hFinger_Edep_vs_Nphot = new TH2F("FingerEdepVsNphot", "Finger Edep vs. Number of Photons", 200, 0, 200, 100, 0.01, 10);
   TH2F *hAnaBar_Edep_vs_Nphot = new TH2F("AnaBarEdepVsNphot", "AnaBar Edep vs. Number of Photons", 100, 0, 100, 100, 0.01, 10);
@@ -145,10 +142,14 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
 	}
     }
 
-    if (finger_hit && anabar_hit) trigger = true; 
+    //if (finger_hit && anabar_hit) trigger = true; 
+    if (finger_hit) trigger = true; 
     if (trigger) {
-  	hAnaBarPMTNphot->Fill(PMT_Nphotons_One);
-        hFingerPMTNphot->Fill(PMT_Nphotons_Zero);
+        //for (Int_t j=0; j<15; j++) { std::cout << "j = " << j << " Nphotons = " << PMT_Nphotons[j] << std::endl; }
+  	hAnaBarPMTNphotA1->Fill(PMT_Nphotons[0]);
+  	hAnaBarPMTNphotA2->Fill(PMT_Nphotons[1]);
+  	hAnaBarPMTNphotA3->Fill(PMT_Nphotons[2]);
+        hFingerPMTNphot->Fill(PMT_Nphotons[14]);
     }
 
     for (Int_t j=0; j < Detector_Nhits ; j++) {
@@ -229,9 +230,9 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
     	hAnaBarEd->Fill(edep1tot);
     	hFinger_Edep_vs_Y->Fill(yentrant0,edep0tot);
     	hAnaBar_Edep_vs_Y->Fill(yentrant1,edep1tot);
-    	hFinger_Edep_vs_Nphot->Fill(PMT_Nphotons_Zero,edep0tot);
-    	hAnaBar_Edep_vs_Nphot->Fill(PMT_Nphotons_One,edep1tot);
-    	hNphot0_vs_Nphot1->Fill(PMT_Nphotons_Zero,PMT_Nphotons_One);
+    	hFinger_Edep_vs_Nphot->Fill(PMT_Nphotons[14],edep0tot);
+    	hAnaBar_Edep_vs_Nphot->Fill(PMT_Nphotons[0],edep1tot);
+    	hNphot0_vs_Nphot1->Fill(PMT_Nphotons[0],PMT_Nphotons[14]);
     	hE1vsE2->Fill(edep0tot,edep1tot);
    	hyentran1_vs_xentran1->Fill(xentrant1,yentrant1);
  	htracklength_vs_AnaBar_Edep->Fill(edep1tot,tracklength);
@@ -260,6 +261,17 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   c7->Divide(2,2, 0.01, 0.01, 0);
   TCanvas *c8 = new TCanvas("c8", "c8", 200,500,600,400);
   c8->Divide(2,2, 0.01, 0.01, 0);
+  TCanvas *c9 = new TCanvas("c9", "c9", 200,500,600,400);
+  c9->Divide(3,1, 0.01, 0.01, 0);
+  
+  c1->cd(1);
+  hFingerX->Draw();
+  c1->cd(2);
+  hFingerY->Draw();
+  c1->cd(3);
+  hFingerZ->Draw();
+  c1->cd(4);
+  hFingerT->Draw();
   
   c2->cd(1);
   hPrimE->Draw();
@@ -279,16 +291,6 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   hDetectorID->Draw();
   c3->cd(4);
   hPMTID->Draw();
-
- 
-  c1->cd(1);
-  hFingerX->Draw();
-  c1->cd(2);
-  hFingerY->Draw();
-  c1->cd(3);
-  hFingerZ->Draw();
-  c1->cd(4);
-  hFingerT->Draw();
   
   c5->cd(1);
   hAnaBarX->Draw();
@@ -298,7 +300,18 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   hAnaBarZ->Draw();
   c5->cd(4);
   hAnaBarT->Draw();
-
+  
+  c6->cd(1);
+  gPad->SetLogz();
+  hE1vsE2->Draw("COLZ");
+  c6->cd(2);
+  gPad->SetLogz();
+  hyentran1_vs_xentran1->Draw("COLZ");
+  c6->cd(3);
+  gPad->SetLogz();
+  hyexit1_vs_xexit1->Draw("COLZ");
+  c6->cd(4);
+  htracklength_vs_AnaBar_Edep->Draw("COLZ");
 
   c7->cd(1);
   hFinger_Edep_vs_Nphot->Draw("COLZ");
@@ -307,29 +320,25 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   c7->cd(3);
   hNphot0_vs_Nphot1->Draw("COLZ");
 
-  c6->cd(1);
-  gPad->SetLogz();
-  hE1vsE2->Draw("COLZ");
-  c6->cd(2);
- gPad->SetLogz();
-  hyentran1_vs_xentran1->Draw("COLZ");
-  c6->cd(3);
- gPad->SetLogz();
-  hyexit1_vs_xexit1->Draw("COLZ");
-  c6->cd(4);
-  htracklength_vs_AnaBar_Edep->Draw("COLZ");
-
   c8->cd(1);
   hAnaBarEd->Draw();
   c8->cd(2);
-  hAnaBarPMTNphot->Draw();
+  hAnaBarPMTNphotA1->Draw();
   c8->cd(3);
   hAnaBar_Edep_vs_Nphot->Draw("COLZ");
   c8->cd(4);
   htracklength_vs_AnaBar_Edep->Draw("COLZ");
   
+  c9->cd(1);
+  hAnaBarPMTNphotA1->Draw();
+  c9->cd(2);
+  hAnaBarPMTNphotA2->Draw();
+  c9->cd(3);
+  hAnaBarPMTNphotA3->Draw();
+  
   }
 
+  
   TCanvas *c4 = new TCanvas("c4", "c4", 100,500,600,400);
   c4->Divide(3,2, 0.01, 0.01, 0);
   
@@ -346,6 +355,6 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   c4->cd(5);
   hAnaBarEd->Draw();
   c4->cd(6);
-  hAnaBarPMTNphot->Draw();
+  hAnaBarPMTNphotA1->Draw();
 
 }

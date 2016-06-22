@@ -50,11 +50,8 @@ void AnalysisManager::InitOutput()
   fROOTtree->Branch("Prim_pdg",    &fPpdg,   "Prim_pdg/I"    );
   
   // Set PMT Hit Branches
-  fROOTtree->Branch("PMT_Nphotons_Zero",  &fNphotonsZero,  "PMT_Nphotons_Zero/I" );  
-  fROOTtree->Branch("PMT_Nphotons_One",  &fNphotonsOne,  "PMT_Nphotons_One/I" );  
-  fROOTtree->Branch("PMT_Nphotons_Two",  &fNphotonsTwo,  "PMT_Nphotons_Two/I" );  
-  fROOTtree->Branch("PMT_Nphotons_Three",  &fNphotonsThree,  "PMT_Nphotons_Three/I" );  
   fROOTtree->Branch("PMT_id",     &fPMTNo,     "PMT_id/I   " );  
+  fROOTtree->Branch("PMT_Nphotons",  fNphotons,  "PMT_Nphotons[20]/I" );  
 
   // Set Raw Detector Step Hit Branches
   fROOTtree->Branch("Detector_Nhits", &fRAW_Nhits, "Detector_Nhits/I");  
@@ -82,11 +79,10 @@ void AnalysisManager::ZeroArray()
   fPpdg   = 9999;
 
   // PMT
-  fNphotonsZero = 0;
-  fNphotonsOne = 0;
-  fNphotonsTwo = 0;
-  fNphotonsThree = 0;
   fPMTNo    = -1;
+  for ( Int_t i = 0; i < fMaxPMTNo; i++) {
+	fNphotons[i]=0;
+  }
 
   // Raw Hits
   fRAW_Nhits  = 0;
