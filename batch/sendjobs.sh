@@ -15,9 +15,9 @@ for run in `cat $runlist`
 do
     echo "The next run is $run"
     export RUN_NUMBER=$run
-    qsub AnaBarNeutron.sh 
-#    ./AnaBarNeutron.sh 
-    sleep 10
+#    qsub AnaBarNeutron.sh 
+    ./AnaBarNeutron.sh 
+    sleep 1
 done
 
 echo "All finished ... :)"

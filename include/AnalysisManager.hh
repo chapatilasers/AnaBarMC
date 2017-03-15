@@ -39,21 +39,13 @@ public:
 
   inline void SetPMTNumber       ( G4int          pno )        { fPMTNo    = pno; }
   inline void SetPhotonCount       ( G4int pno, G4int snp )        { 
-		//std::cout << " Nphotons on PMT " << pno << " = " << snp << std::endl; 
 		fNphotons[pno]    = snp; 
 	}
   
-  //inline void SetPMTKE       ( G4int pno, G4double energy, G4int snp )        {
-  //	    	for (int iii = 0; iii <= snp; iii++) { 
-  //			std::cout << " Kinetic Energy of hit " << iii << " on PMT " << pno << " = " << energy << std::endl; 
-  //			fPMTKineticEnergy[pno][iii] = energy; 
-  //		}
-  //	}
   inline void SetPMTKE ( PMTHit* hit2 ) {
 		G4int snp = hit2->GetPhotonCount();
 		G4int pno = hit2->GetPMTNumber();
 	    	for (G4int iii = 0; iii < snp; iii++) { 
-			//std::cout << " Kinetic Energy of hit " << iii << " on PMT " << pno << " = " << hit2->GetPMTKineticEnergy(iii) << std::endl; 
 			fPMTKineticEnergy[pno][iii] = hit2->GetPMTKineticEnergy(iii); 
 		}
 	}
@@ -85,7 +77,7 @@ private:
   // PMT
   Int_t                 fPMTNo;
   static const Int_t	fMaxPMTNo = 20;
-  static const Int_t    fMaxPMTHits = 500;
+  static const Int_t    fMaxPMTHits = 5000;
   Int_t			fNphotons[fMaxPMTNo];
   Float_t 		fPMTKineticEnergy[fMaxPMTNo][fMaxPMTHits];
 

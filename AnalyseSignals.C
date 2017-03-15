@@ -218,9 +218,9 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TFile *f1 = new TFile(filename,"READ");
   TTree *tree1 = (TTree*)f1->Get("T");
 
-  const int MaxHits = 10000;
-  const int MaxPMTNo = 50;
-  const int MaxPMTHits = 500;
+  const int MaxHits = 50000;
+  const int MaxPMTNo = 20;
+  const int MaxPMTHits = 5000;
   const Float_t Finger_Edep_Max = 10.0;
   const Float_t AnaBar_Edep_Max = 5.0;
   const Int_t Finger_NPhotons_Max = 1000;
@@ -396,7 +396,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
 	}
 	for (Int_t iq=1; iq<14; iq++){
 		for (Int_t jq=0; jq<PMT_Nphotons[iq]; jq++){
-			//std::cout << "Processing Anabar pmt = " << iq << " hit = " << jq << " Energy = " << PMT_KineticEnergy[iq][jq] << std::endl;
+			std::cout << "Processing Anabar pmt = " << iq << " hit = " << jq << " Energy = " << PMT_KineticEnergy[iq][jq] << std::endl;
 			hAnaBarPMTKEA1->Fill(1240.0/PMT_KineticEnergy[iq][jq]);
 		}
 	}

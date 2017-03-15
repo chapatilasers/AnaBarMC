@@ -36,7 +36,7 @@ public:
 private:
   G4int pmtNumber;
   G4int photons;
-  G4double pmtKineticEnergy[1000];
+  G4double pmtKineticEnergy[10000];
 };
 
 typedef G4THitsCollection<PMTHit> PMTHitsCollection;
