@@ -280,8 +280,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TH1F *hAnaBarPMTNphotA12 = new TH1F("AnaBarPMTNphotA12","AnaBar PMT Number of Photons A12", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
   TH1F *hAnaBarPMTNphotA13 = new TH1F("AnaBarPMTNphotA13","AnaBar PMT Number of Photons A13", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
   TH1F *hAnaBarPMTNphotA14 = new TH1F("AnaBarPMTNphotA14","AnaBar PMT Number of Photons A14", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hFingerPMTKE = new TH1F("FingerPMTKE","Finger PMT Kinetic Energy", 400, 300.0, 700.0);
-  TH1F *hAnaBarPMTKEA1 = new TH1F("AnaBarPMTKEA1","AnaBar PMT Kinetic Energy A1", 400, 300.0, 700.0);
+  TH1F *hFingerPMTKE = new TH1F("FingerPMTKE","Photon Wavelength Production Spectrum", 400, 300.0, 700.0);
+  TH1F *hAnaBarPMTKEA1 = new TH1F("AnaBarPMTKEA1","Photon Wavelength in WLS at PMT", 400, 300.0, 700.0);
   
   TH2F *hFinger_Edep_vs_Nphot = new TH2F("FingerEdepVsNphot", "Finger Edep vs. Number of Photons", Finger_NPhotons_Max, 0, Finger_NPhotons_Max, 100, 0.01, Finger_Edep_Max);
   TH2F *hAnaBar_Edep_vs_Nphot = new TH2F("AnaBarEdepVsNphot", "AnaBar Edep vs. Number of Photons", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max, 100, 0.01, 5);
