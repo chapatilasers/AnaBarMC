@@ -322,6 +322,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   float edeptot[NMaxPMT];
   
   for (Int_t i = 0; i < nentries; i++) {
+  //for (Int_t i = 0; i < 10; i++) {
     for (Int_t j=0; j<NMaxPMT; j++) {edeptot[j] = 0.0;};
     float edep0tot = 0.0;
     float yentrant0 = 0.0;
@@ -355,15 +356,17 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
     int j_finger = 0;
     int j_anabar = 0;
     for (Int_t j=0; j < Detector_Nhits ; j++) {
-	if (Detector_id[j] == 0 && !finger_hit) {
+	//cout << "Detector hit = " << j << " Detector_id[j] = " << Detector_id[j] << endl;
+	if (Detector_id[j] == 15 && !finger_hit) {
 		finger_hit = true;
 		j_finger = j;
 		//cout<<"hit in finger";
 	}
 	for (Int_t ibar = 1; ibar<15; ibar++){
-		if (Detector_id[j] == ibar && !anabar_hit) {
+		if (Detector_id[j+15] == ibar+15 && !anabar_hit) {
 		  anabar_hit = true;
 		  j_anabar = j;
+		  //cout << "hit in anabar " << j << endl;
 		}
 	}
 	//if (Detector_id[j] == 14 && !anabar_bottom_hit) {
@@ -410,7 +413,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
 	if (trigger) {
 		
 		counter++;
-		if (Detector_id[j] == 0 ) {
+		if (Detector_id[j] == 15 ) {
 			if (j==j_finger) {
 			   yentrant0 = Detector_y[j];
 		 	   xentrant0 = Detector_x[j];
@@ -441,7 +444,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
 			} 
 
 		}
-		if (Detector_id[j] == 1 ) {
+		if (Detector_id[j] == 16 ) {
 			if (j==j_anabar) {
 	                   yentrant1 = Detector_y[j];
                            xentrant1 = Detector_x[j];
@@ -467,11 +470,11 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
 
 		}
 
-		if (Detector_id[j] > 0 && Detector_id[j] <= NMaxPMT) {
+		if (Detector_id[j] > 15 && Detector_id[j] <= NMaxPMT+15) {
 			if (Analyse_Secondaries == 1 && Prim_Th > Theta_min_cut) {
-				edeptot[Detector_id[j]-1] += Detector_Ed[j];
+				edeptot[Detector_id[j]-1-15] += Detector_Ed[j];
 			}else{ if (Detector_pdg[j] == 13 && Prim_Th > Theta_min_cut) {
-					edeptot[Detector_id[j]-1] += Detector_Ed[j];
+					edeptot[Detector_id[j]-1-15] += Detector_Ed[j];
 		     	       }
 			}
 		}
@@ -601,128 +604,128 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   c9->cd(1);
   gPad->SetLogy();
   hAnaBarPMTNphotA1->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA1->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA1->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA1,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA1->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA1->GetMean();
+  TF1 *fitsnr1 = langaufit(hAnaBarPMTNphotA1,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr1->Draw("SAME");
   
   c9->cd(2);
   gPad->SetLogy();
   hAnaBarPMTNphotA2->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA2->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA2->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA2,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA2->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA2->GetMean();
+  TF1 *fitsnr2 = langaufit(hAnaBarPMTNphotA2,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr2->Draw("SAME");
   
   c9->cd(3);
   gPad->SetLogy();
   hAnaBarPMTNphotA3->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA3->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA3->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA3,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA3->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA3->GetMean();
+  TF1 *fitsnr3 = langaufit(hAnaBarPMTNphotA3,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr3->Draw("SAME");
   
   c9->cd(4);
   gPad->SetLogy();
   hAnaBarPMTNphotA4->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA4->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA4->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA4,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA4->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA4->GetMean();
+  TF1 *fitsnr4 = langaufit(hAnaBarPMTNphotA4,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr4->Draw("SAME");
   
   c9->cd(5);
   gPad->SetLogy();
   hAnaBarPMTNphotA5->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA5->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA5->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA5,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA5->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA5->GetMean();
+  TF1 *fitsnr5 = langaufit(hAnaBarPMTNphotA5,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr5->Draw("SAME");
   
   c9->cd(6);
   gPad->SetLogy();
   hAnaBarPMTNphotA6->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA6->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA6->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA6,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA6->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA6->GetMean();
+  TF1 *fitsnr6 = langaufit(hAnaBarPMTNphotA6,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr6->Draw("SAME");
   
   c9->cd(7);
   gPad->SetLogy();
   hAnaBarPMTNphotA7->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA7->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA7->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA7,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA7->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA7->GetMean();
+  TF1 *fitsnr7 = langaufit(hAnaBarPMTNphotA7,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr7->Draw("SAME");
   
   c9->cd(8);
   gPad->SetLogy();
   hAnaBarPMTNphotA8->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA8->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA8->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA8,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA8->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA8->GetMean();
+  TF1 *fitsnr8 = langaufit(hAnaBarPMTNphotA8,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr8->Draw("SAME");
   
   c9->cd(9);
   gPad->SetLogy();
   hAnaBarPMTNphotA9->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA9->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA9->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA9,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA9->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA9->GetMean();
+  TF1 *fitsnr9 = langaufit(hAnaBarPMTNphotA9,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr9->Draw("SAME");
   
   c9->cd(10);
   gPad->SetLogy();
   hAnaBarPMTNphotA10->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA10->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA10->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA10,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA10->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA10->GetMean();
+  TF1 *fitsnr10 = langaufit(hAnaBarPMTNphotA10,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr10->Draw("SAME");
   
   c9->cd(11);
   gPad->SetLogy();
   hAnaBarPMTNphotA11->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA11->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA11->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA11,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA11->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA11->GetMean();
+  TF1 *fitsnr11 = langaufit(hAnaBarPMTNphotA11,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr11->Draw("SAME");
   
   c9->cd(12);
   gPad->SetLogy();
   hAnaBarPMTNphotA12->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA12->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA12->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA12,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA12->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA12->GetMean();
+  TF1 *fitsnr12 = langaufit(hAnaBarPMTNphotA12,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr12->Draw("SAME");
   
   c9->cd(13);
   gPad->SetLogy();
   hAnaBarPMTNphotA13->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA13->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA13->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA13,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA13->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA13->GetMean();
+  TF1 *fitsnr13 = langaufit(hAnaBarPMTNphotA13,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr13->Draw("SAME");
   
   c9->cd(14);
   gPad->SetLogy();
   hAnaBarPMTNphotA14->Draw();
-  fr[0]=0.1*hAnaBarPMTNphotA14->GetMean();
-  fr[1]=4.0*hAnaBarPMTNphotA14->GetMean();
-  TF1 *fitsnr = langaufit(hAnaBarPMTNphotA14,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
+  fr[0]=0.7*hAnaBarPMTNphotA14->GetMean();
+  fr[1]=25.0*hAnaBarPMTNphotA14->GetMean();
+  TF1 *fitsnr14 = langaufit(hAnaBarPMTNphotA14,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr->Draw("SAME");
+  fitsnr14->Draw("SAME");
   
 
   c10->cd(1);
