@@ -48,6 +48,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline void SetFingerWidth   ( G4double FingerWidth )    { fFingerWidth   = FingerWidth; }
   inline void SetFingerThickness   ( G4double FingerThickness )    { fFingerThickness   = FingerThickness; }
   inline void SetFingerZoffset   ( G4double FingerZoffset )    { fFingerZoffset   = FingerZoffset; }
+  inline void SetFingerYoffset   ( G4double FingerYoffset )    { fFingerYoffset   = FingerYoffset; }
   inline void SetFibreDiameter   ( G4double FibreDiameter )    { fFibreDiameter  = FibreDiameter; }
   inline void SetFibreLength   ( G4double FibreLength )    { fFibreLength  = FibreLength; }
   inline void SetHoleDiameter   ( G4double HoleDiameter )    { fHoleDiameter  = HoleDiameter; }
@@ -77,6 +78,10 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4VPhysicalVolume* MylarBottom;
   G4VPhysicalVolume* MylarSideFront;
   G4VPhysicalVolume* MylarSideBack;
+  G4VPhysicalVolume* MylarFingerFront;
+  G4VPhysicalVolume* MylarFingerBack;
+  G4VPhysicalVolume* MylarFingerSide1;
+  G4VPhysicalVolume* MylarFingerSide2;
   G4VPhysicalVolume* Mirror;
   G4VPhysicalVolume* physiClad;
   G4VPhysicalVolume* physiWLSfiber;
@@ -97,6 +102,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4double           fFingerWidth;
   G4double           fFingerThickness;
   G4double           fFingerZoffset;
+  G4double           fFingerYoffset;
   G4double           fFibreDiameter;
   G4double           fFibreLength;
   G4double           fHoleDiameter;
