@@ -3,6 +3,7 @@
 #include "TROOT.h"
 #include "TStyle.h"
 #include "TMath.h"
+#include "TRandom3.h"
 
 Double_t langaufun(Double_t *x, Double_t *par) {
 
@@ -218,12 +219,16 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TFile *f1 = new TFile(filename,"READ");
   TTree *tree1 = (TTree*)f1->Get("T");
 
+  TRandom3* fRand;
+  fRand = new TRandom3(-1);
+
   const int MaxHits = 50000;
   const int MaxPMTNo = 20;
   const int MaxPMTHits = 5000;
   const Float_t Finger_Edep_Max = 10.0;
   const Float_t AnaBar_Edep_Max = 5.0;
   const Float_t Photon_Threshold = 5.0;
+  const Float_t pedastel_sigma = 1.0;
   const Int_t Detector_Offset = 15;
   const Int_t Finger_NPhotons_Max = 150;
   const Int_t AnaBar_NPhotons_Max = 50;
@@ -267,21 +272,21 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TH1F *hDetectorPdg = new TH1F("DetectorPdg","Detector PDG ID", 50, -20, 30);
   TH1F *hDetectorID = new TH1F("DetectorID","Detector ID Number", 5, 0, 5);
   TH1F *hPMTID = new TH1F("PMTID","PMT ID Number", 5, 0, 5);
-  TH1F *hFingerPMTNphot = new TH1F("FingerPMTNphot","Finger PMT Number of Photons", Finger_NPhotons_Max, 0, Finger_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA1 = new TH1F("AnaBarPMTNphotA1","AnaBar PMT Number of Photons A1", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA2 = new TH1F("AnaBarPMTNphotA2","AnaBar PMT Number of Photons A2", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA3 = new TH1F("AnaBarPMTNphotA3","AnaBar PMT Number of Photons A3", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA4 = new TH1F("AnaBarPMTNphotA4","AnaBar PMT Number of Photons A4", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA5 = new TH1F("AnaBarPMTNphotA5","AnaBar PMT Number of Photons A5", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA6 = new TH1F("AnaBarPMTNphotA6","AnaBar PMT Number of Photons A6", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA7 = new TH1F("AnaBarPMTNphotA7","AnaBar PMT Number of Photons A7", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA8 = new TH1F("AnaBarPMTNphotA8","AnaBar PMT Number of Photons A8", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA9 = new TH1F("AnaBarPMTNphotA9","AnaBar PMT Number of Photons A9", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA10 = new TH1F("AnaBarPMTNphotA10","AnaBar PMT Number of Photons A10", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA11 = new TH1F("AnaBarPMTNphotA11","AnaBar PMT Number of Photons A11", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA12 = new TH1F("AnaBarPMTNphotA12","AnaBar PMT Number of Photons A12", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA13 = new TH1F("AnaBarPMTNphotA13","AnaBar PMT Number of Photons A13", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA14 = new TH1F("AnaBarPMTNphotA14","AnaBar PMT Number of Photons A14", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
+  TH1F *hFingerPMTNphot = new TH1F("FingerPMTNphot","Finger PMT Number of Photons", Finger_NPhotons_Max, -10, Finger_NPhotons_Max);
+  TH1F *hAnaBarPMTNphotA1 = new TH1F("AnaBarPMTNphotA1","AnaBar PMT Number of Photons A1", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA2 = new TH1F("AnaBarPMTNphotA2","AnaBar PMT Number of Photons A2", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA3 = new TH1F("AnaBarPMTNphotA3","AnaBar PMT Number of Photons A3", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA4 = new TH1F("AnaBarPMTNphotA4","AnaBar PMT Number of Photons A4", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA5 = new TH1F("AnaBarPMTNphotA5","AnaBar PMT Number of Photons A5", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA6 = new TH1F("AnaBarPMTNphotA6","AnaBar PMT Number of Photons A6", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA7 = new TH1F("AnaBarPMTNphotA7","AnaBar PMT Number of Photons A7", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA8 = new TH1F("AnaBarPMTNphotA8","AnaBar PMT Number of Photons A8", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA9 = new TH1F("AnaBarPMTNphotA9","AnaBar PMT Number of Photons A9", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA10 = new TH1F("AnaBarPMTNphotA10","AnaBar PMT Number of Photons A10", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA11 = new TH1F("AnaBarPMTNphotA11","AnaBar PMT Number of Photons A11", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA12 = new TH1F("AnaBarPMTNphotA12","AnaBar PMT Number of Photons A12", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA13 = new TH1F("AnaBarPMTNphotA13","AnaBar PMT Number of Photons A13", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA14 = new TH1F("AnaBarPMTNphotA14","AnaBar PMT Number of Photons A14", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
   TH1F *hFingerPMTKE = new TH1F("FingerPMTKE","Photon Wavelength Production Spectrum", 400, 300.0, 700.0);
   TH1F *hAnaBarPMTKEA1 = new TH1F("AnaBarPMTKEA1","Photon Wavelength in WLS at PMT", 400, 300.0, 700.0);
   TH1F *hAnaBarMult = new TH1F("AnaBarMult","Anabar PMT Multiplicity",12,0,12);
@@ -384,21 +389,21 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
     
     if (trigger) {
         //for (Int_t j=0; j<Detector_Offset; j++) { std::cout << "j = " << j << " Nphotons = " << PMT_Nphotons[j] << std::endl; }
-  	hAnaBarPMTNphotA1->Fill(PMT_Nphotons[0]);
-  	hAnaBarPMTNphotA2->Fill(PMT_Nphotons[1]);
-  	hAnaBarPMTNphotA3->Fill(PMT_Nphotons[2]);
-  	hAnaBarPMTNphotA4->Fill(PMT_Nphotons[3]);
-  	hAnaBarPMTNphotA5->Fill(PMT_Nphotons[4]);
-  	hAnaBarPMTNphotA6->Fill(PMT_Nphotons[5]);
-  	hAnaBarPMTNphotA7->Fill(PMT_Nphotons[6]);
-  	hAnaBarPMTNphotA8->Fill(PMT_Nphotons[7]);
-  	hAnaBarPMTNphotA9->Fill(PMT_Nphotons[8]);
-  	hAnaBarPMTNphotA10->Fill(PMT_Nphotons[9]);
-  	hAnaBarPMTNphotA11->Fill(PMT_Nphotons[10]);
-  	hAnaBarPMTNphotA12->Fill(PMT_Nphotons[11]);
-  	hAnaBarPMTNphotA13->Fill(PMT_Nphotons[12]);
-  	hAnaBarPMTNphotA14->Fill(PMT_Nphotons[13]);
-        hFingerPMTNphot->Fill(PMT_Nphotons[14]);
+  	hAnaBarPMTNphotA1->Fill(PMT_Nphotons[0]+fRand->Gaus(0.0,pedastel_sigma));
+  	hAnaBarPMTNphotA2->Fill(PMT_Nphotons[1]+fRand->Gaus(0.0,pedastel_sigma));
+  	hAnaBarPMTNphotA3->Fill(PMT_Nphotons[2]+fRand->Gaus(0.0,pedastel_sigma));
+  	hAnaBarPMTNphotA4->Fill(PMT_Nphotons[3]+fRand->Gaus(0.0,pedastel_sigma));
+  	hAnaBarPMTNphotA5->Fill(PMT_Nphotons[4]+fRand->Gaus(0.0,pedastel_sigma));
+  	hAnaBarPMTNphotA6->Fill(PMT_Nphotons[5]+fRand->Gaus(0.0,pedastel_sigma));
+  	hAnaBarPMTNphotA7->Fill(PMT_Nphotons[6]+fRand->Gaus(0.0,pedastel_sigma));
+  	hAnaBarPMTNphotA8->Fill(PMT_Nphotons[7]+fRand->Gaus(0.0,pedastel_sigma));
+  	hAnaBarPMTNphotA9->Fill(PMT_Nphotons[8]+fRand->Gaus(0.0,pedastel_sigma));
+  	hAnaBarPMTNphotA10->Fill(PMT_Nphotons[9]+fRand->Gaus(0.0,pedastel_sigma));
+  	hAnaBarPMTNphotA11->Fill(PMT_Nphotons[10]+fRand->Gaus(0.0,pedastel_sigma));
+  	hAnaBarPMTNphotA12->Fill(PMT_Nphotons[11]+fRand->Gaus(0.0,pedastel_sigma));
+  	hAnaBarPMTNphotA13->Fill(PMT_Nphotons[12]+fRand->Gaus(0.0,pedastel_sigma));
+  	hAnaBarPMTNphotA14->Fill(PMT_Nphotons[13]+fRand->Gaus(0.0,pedastel_sigma));
+        hFingerPMTNphot->Fill(PMT_Nphotons[14]+fRand->Gaus(0.0,pedastel_sigma));
 	Int_t imult=0;
 	for(Int_t icount=0;icount<Detector_Offset;icount++){
 		if(PMT_Nphotons[icount]>=Photon_Threshold) imult++;
@@ -618,7 +623,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA1->GetMean();
   TF1 *fitsnr1 = langaufit(hAnaBarPMTNphotA1,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr1->Draw("SAME");
+  //fitsnr1->Draw("SAME");
   
   c9->cd(2);
   gPad->SetLogy();
@@ -627,7 +632,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA2->GetMean();
   TF1 *fitsnr2 = langaufit(hAnaBarPMTNphotA2,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr2->Draw("SAME");
+  //fitsnr2->Draw("SAME");
   
   c9->cd(3);
   gPad->SetLogy();
@@ -636,7 +641,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA3->GetMean();
   TF1 *fitsnr3 = langaufit(hAnaBarPMTNphotA3,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr3->Draw("SAME");
+  //fitsnr3->Draw("SAME");
   
   c9->cd(4);
   gPad->SetLogy();
@@ -645,7 +650,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA4->GetMean();
   TF1 *fitsnr4 = langaufit(hAnaBarPMTNphotA4,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr4->Draw("SAME");
+  //fitsnr4->Draw("SAME");
   
   c9->cd(5);
   gPad->SetLogy();
@@ -654,7 +659,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA5->GetMean();
   TF1 *fitsnr5 = langaufit(hAnaBarPMTNphotA5,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr5->Draw("SAME");
+  //fitsnr5->Draw("SAME");
   
   c9->cd(6);
   gPad->SetLogy();
@@ -663,7 +668,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA6->GetMean();
   TF1 *fitsnr6 = langaufit(hAnaBarPMTNphotA6,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr6->Draw("SAME");
+  //fitsnr6->Draw("SAME");
   
   c9->cd(7);
   gPad->SetLogy();
@@ -672,7 +677,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA7->GetMean();
   TF1 *fitsnr7 = langaufit(hAnaBarPMTNphotA7,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr7->Draw("SAME");
+  //fitsnr7->Draw("SAME");
   
   c9->cd(8);
   gPad->SetLogy();
@@ -681,7 +686,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA8->GetMean();
   TF1 *fitsnr8 = langaufit(hAnaBarPMTNphotA8,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr8->Draw("SAME");
+  //fitsnr8->Draw("SAME");
   
   c9->cd(9);
   gPad->SetLogy();
@@ -690,7 +695,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA9->GetMean();
   TF1 *fitsnr9 = langaufit(hAnaBarPMTNphotA9,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr9->Draw("SAME");
+  //fitsnr9->Draw("SAME");
   
   c9->cd(10);
   gPad->SetLogy();
@@ -699,7 +704,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA10->GetMean();
   TF1 *fitsnr10 = langaufit(hAnaBarPMTNphotA10,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr10->Draw("SAME");
+  //fitsnr10->Draw("SAME");
   
   c9->cd(11);
   gPad->SetLogy();
@@ -708,7 +713,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA11->GetMean();
   TF1 *fitsnr11 = langaufit(hAnaBarPMTNphotA11,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr11->Draw("SAME");
+  //fitsnr11->Draw("SAME");
   
   c9->cd(12);
   gPad->SetLogy();
@@ -717,7 +722,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA12->GetMean();
   TF1 *fitsnr12 = langaufit(hAnaBarPMTNphotA12,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr12->Draw("SAME");
+  //fitsnr12->Draw("SAME");
   
   c9->cd(13);
   gPad->SetLogy();
@@ -726,7 +731,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA13->GetMean();
   TF1 *fitsnr13 = langaufit(hAnaBarPMTNphotA13,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr13->Draw("SAME");
+  //fitsnr13->Draw("SAME");
   
   c9->cd(14);
   gPad->SetLogy();
@@ -735,7 +740,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   fr[1]=25.0*hAnaBarPMTNphotA14->GetMean();
   TF1 *fitsnr14 = langaufit(hAnaBarPMTNphotA14,fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   langaupro(fp,SNRPeak,SNRFWHM);
-  fitsnr14->Draw("SAME");
+  //fitsnr14->Draw("SAME");
   
 
   c10->cd(1);
