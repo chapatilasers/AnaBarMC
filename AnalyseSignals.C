@@ -223,6 +223,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   const int MaxPMTHits = 5000;
   const Float_t Finger_Edep_Max = 10.0;
   const Float_t AnaBar_Edep_Max = 5.0;
+  const Float_t Photon_Threshold = 5.0;
+  const Int_t Detector_Offset = 15;
   const Int_t Finger_NPhotons_Max = 150;
   const Int_t AnaBar_NPhotons_Max = 50;
   Float_t Prim_E, Prim_Th, Prim_Ph;
@@ -282,6 +284,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   TH1F *hAnaBarPMTNphotA14 = new TH1F("AnaBarPMTNphotA14","AnaBar PMT Number of Photons A14", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max);
   TH1F *hFingerPMTKE = new TH1F("FingerPMTKE","Photon Wavelength Production Spectrum", 400, 300.0, 700.0);
   TH1F *hAnaBarPMTKEA1 = new TH1F("AnaBarPMTKEA1","Photon Wavelength in WLS at PMT", 400, 300.0, 700.0);
+  TH1F *hAnaBarMult = new TH1F("AnaBarMult","Anabar PMT Multiplicity",12,0,12);
   
   TH2F *hFinger_Edep_vs_Nphot = new TH2F("FingerEdepVsNphot", "Finger Edep vs. Number of Photons", Finger_NPhotons_Max, 0, Finger_NPhotons_Max, 100, 0.01, Finger_Edep_Max);
   TH2F *hAnaBar_Edep_vs_Nphot = new TH2F("AnaBarEdepVsNphot", "AnaBar Edep vs. Number of Photons", AnaBar_NPhotons_Max, 0, AnaBar_NPhotons_Max, 100, 0.01, 5);
@@ -357,13 +360,13 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
     int j_anabar = 0;
     for (Int_t j=0; j < Detector_Nhits ; j++) {
 	//cout << "Detector hit = " << j << " Detector_id[j] = " << Detector_id[j] << endl;
-	if (Detector_id[j] == 15 && !finger_hit) {
+	if (Detector_id[j] == Detector_Offset && !finger_hit) {
 		finger_hit = true;
 		j_finger = j;
 		//cout<<"hit in finger";
 	}
-	for (Int_t ibar = 1; ibar<15; ibar++){
-		if (Detector_id[j+15] == ibar+15 && !anabar_hit) {
+	for (Int_t ibar = 1; ibar<=Detector_Offset; ibar++){
+		if (Detector_id[j+Detector_Offset] == ibar+Detector_Offset && !anabar_hit) {
 		  anabar_hit = true;
 		  j_anabar = j;
 		  //cout << "hit in anabar " << j << endl;
@@ -380,7 +383,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
     if (finger_hit && anabar_hit) trigger = true; 
     
     if (trigger) {
-        //for (Int_t j=0; j<15; j++) { std::cout << "j = " << j << " Nphotons = " << PMT_Nphotons[j] << std::endl; }
+        //for (Int_t j=0; j<Detector_Offset; j++) { std::cout << "j = " << j << " Nphotons = " << PMT_Nphotons[j] << std::endl; }
   	hAnaBarPMTNphotA1->Fill(PMT_Nphotons[0]);
   	hAnaBarPMTNphotA2->Fill(PMT_Nphotons[1]);
   	hAnaBarPMTNphotA3->Fill(PMT_Nphotons[2]);
@@ -396,6 +399,11 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   	hAnaBarPMTNphotA13->Fill(PMT_Nphotons[12]);
   	hAnaBarPMTNphotA14->Fill(PMT_Nphotons[13]);
         hFingerPMTNphot->Fill(PMT_Nphotons[14]);
+	Int_t imult=0;
+	for(Int_t icount=0;icount<Detector_Offset;icount++){
+		if(PMT_Nphotons[icount]>=Photon_Threshold) imult++;
+	}
+	hAnaBarMult->Fill(imult);
 	for (Int_t jq=0; jq<PMT_Nphotons[14]; jq++){
 		//std::cout << "Processing Finger hit = " << jq << std::endl; 
 		hFingerPMTKE->Fill(1240.0/PMT_KineticEnergy[14][jq]);
@@ -413,7 +421,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
 	if (trigger) {
 		
 		counter++;
-		if (Detector_id[j] == 15 ) {
+		if (Detector_id[j] == Detector_Offset ) {
 			if (j==j_finger) {
 			   yentrant0 = Detector_y[j];
 		 	   xentrant0 = Detector_x[j];
@@ -470,11 +478,11 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
 
 		}
 
-		if (Detector_id[j] > 15 && Detector_id[j] <= NMaxPMT+15) {
+		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
 			if (Analyse_Secondaries == 1 && Prim_Th > Theta_min_cut) {
-				edeptot[Detector_id[j]-1-15] += Detector_Ed[j];
+				edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
 			}else{ if (Detector_pdg[j] == 13 && Prim_Th > Theta_min_cut) {
-					edeptot[Detector_id[j]-1-15] += Detector_Ed[j];
+					edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
 		     	       }
 			}
 		}
@@ -514,16 +522,18 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   c3->Divide(2,2, 0.01, 0.01, 0);
   TCanvas *c5 = new TCanvas("c5", "c5", 100,400,500,270);
   c5->Divide(2,2, 0.01, 0.01, 0);
-  TCanvas *c6 = new TCanvas("c6", "c6", 1100,400,500,270);
+  TCanvas *c6 = new TCanvas("c6", "c6", 600,400,500,270);
   c6->Divide(2,2, 0.01, 0.01, 0);
-  TCanvas *c7 = new TCanvas("c7", "c7", 100,700,500,270);
+  TCanvas *c7 = new TCanvas("c7", "c7", 1100,400,500,270);
   c7->Divide(2,2, 0.01, 0.01, 0);
-  TCanvas *c8 = new TCanvas("c8", "c8", 600,700,500,270);
+  TCanvas *c8 = new TCanvas("c8", "c8", 100,700,500,270);
   c8->Divide(2,2, 0.01, 0.01, 0);
-  TCanvas *c9 = new TCanvas("c9", "c9", 1100,700,300,270);
+  TCanvas *c9 = new TCanvas("c9", "c9", 600,700,500,270);
   c9->Divide(4,4, 0.01, 0.01, 0);
-  TCanvas *c10 = new TCanvas("c10", "c10", 1100,700,300,270);
+  TCanvas *c10 = new TCanvas("c10", "c10", 1100,700,500,270);
   c10->Divide(1,2, 0.01, 0.01, 0);
+  TCanvas *c11 = new TCanvas("c11", "c11", 100,1000,500,270);
+  c11->Divide(1,1, 0.01, 0.01, 0);
   
   c1->cd(1);
   hFingerX->Draw();
@@ -733,10 +743,13 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 1, Int_t Analyse_Secondaries = 1
   c10->cd(2);
   hAnaBarPMTKEA1->Draw();
   
+  c11->cd(1);
+  hAnaBarMult->Draw();
+  
   }
 
   
-  TCanvas *c4 = new TCanvas("c4", "c4", 600,400,500,270);
+  TCanvas *c4 = new TCanvas("c4", "c4", 600,1000,500,270);
   c4->Divide(3,2, 0.01, 0.01, 0);
   
   c4->cd(1);
