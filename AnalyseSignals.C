@@ -349,9 +349,19 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
     float edep0tot = 0.0;
     tree1->GetEntry(i);
 
+    Float_t fMass = 105.70;
+    Float_t fMomentum = sqrt(Prim_E*Prim_E - fMass*fMass); 
+    Float_t fPx        = fMomentum * TMath::Sin(Prim_Th) * TMath::Cos(Prim_Ph);
+    Float_t fPy        = fMomentum * TMath::Sin(Prim_Th) * TMath::Sin(Prim_Ph);
+    Float_t fPz        = fMomentum * TMath::Cos(Prim_Th);
+    Float_t fNewTheta = TMath::ACos(fPy/fMomentum);
+    Float_t fNewPhi = TMath::ATan(fPz/fPx);
+
+    //cout << "Theta = " << fNewTheta << " Phi = " << fNewPhi << endl;
+
     hPrimE->Fill(Prim_E);
-    hPrimTh->Fill(Prim_Th);
-    hPrimPh->Fill(Prim_Ph);
+    hPrimTh->Fill(fNewTheta);
+    hPrimPh->Fill(fNewPhi);
     hPrimPdg->Fill(Prim_pdg);
     hPMTID->Fill(PMT_id);
     
@@ -445,9 +455,9 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
     			  hFingerT->Fill(Detector_t[j]);
 
                         }
-			if (Analyse_Secondaries == 1 && Prim_Th > Theta_min_cut) {
+			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 			  edep0tot += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == 13 && Prim_Th > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
 				edep0tot += Detector_Ed[j];
 			       }
 			} 
@@ -468,9 +478,9 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
 		}
 
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
-			if (Analyse_Secondaries == 1 && Prim_Th > Theta_min_cut) {
+			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 				edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == 13 && Prim_Th > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
 					edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
 		     	       }
 			}
@@ -792,4 +802,3 @@ void langaus() {
    for (Int_t i=0; i<100; i++) hSNR->Fill(i,data[i]);
 
 }
-
