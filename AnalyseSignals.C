@@ -209,7 +209,7 @@ Int_t langaupro(Double_t *params, Double_t &maxx, Double_t &FWHM) {
    return (0);
 }
 
-void AnalyseSignals(Int_t Analysis_Run_Number = 1, bool displayall = true, Float_t Photon_Threshold = 5.0, Float_t Edep_Threshold = 0.5, Int_t Analyse_Secondaries = 1, Float_t Theta_min_cut = 0.0) {
+void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Float_t Photon_Threshold = 8.0, Float_t Edep_Threshold = 1.0, Int_t Analyse_Secondaries = 1, Float_t Theta_min_cut = 0.0) {
 
   //-------------------------------------------------------------------
   //Set stuff up for reading
