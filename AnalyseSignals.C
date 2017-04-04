@@ -227,7 +227,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
   const int MaxPMTHits = 5000;
   const Float_t Finger_Edep_Max = 10.0;
   const Float_t AnaBar_Edep_Max = 10.0;
-  const Float_t pedastel_sigma = 1.0;
+  const Float_t pedastel_sigma = 3.0;
   const Int_t Detector_Offset = 15;
   const Int_t Finger_NPhotons_Max = 150;
   const Int_t AnaBar_NPhotons_Max = 100;
@@ -240,7 +240,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
   Float_t Detector_Ed[MaxHits];  
   Int_t PMT_id;
   Int_t PMT_Nphotons[MaxPMTNo];
-  Int_t PMT_Nphotons_Noise[MaxPMTNo];
+  Float_t PMT_Nphotons_Noise[MaxPMTNo];
   Int_t PMT_Nphotons_Total;
   Float_t PMT_KineticEnergy[MaxPMTNo][MaxPMTHits];
 
@@ -274,34 +274,34 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
   TH1F *hDetectorID = new TH1F("DetectorID","Detector ID Number", 30, 0, 30);
   TH1F *hPMTID = new TH1F("PMTID","PMT ID Number", 15, 0, 15);
   TH1F *hFingerPMTNphot = new TH1F("FingerPMTNphot","Finger PMT Number of Photons", Finger_NPhotons_Max+10, -10, Finger_NPhotons_Max);
-  TH1F *hAnaBarPMTNphotA1 = new TH1F("AnaBarPMTNphotA1","AnaBar PMT Number of Photons A1", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNphotA2 = new TH1F("AnaBarPMTNphotA2","AnaBar PMT Number of Photons A2", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNphotA3 = new TH1F("AnaBarPMTNphotA3","AnaBar PMT Number of Photons A3", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNphotA4 = new TH1F("AnaBarPMTNphotA4","AnaBar PMT Number of Photons A4", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNphotA5 = new TH1F("AnaBarPMTNphotA5","AnaBar PMT Number of Photons A5", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNphotA6 = new TH1F("AnaBarPMTNphotA6","AnaBar PMT Number of Photons A6", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNphotA7 = new TH1F("AnaBarPMTNphotA7","AnaBar PMT Number of Photons A7", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNphotA8 = new TH1F("AnaBarPMTNphotA8","AnaBar PMT Number of Photons A8", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNphotA9 = new TH1F("AnaBarPMTNphotA9","AnaBar PMT Number of Photons A9", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNphotA10 = new TH1F("AnaBarPMTNphotA10","AnaBar PMT Number of Photons A10", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNphotA11 = new TH1F("AnaBarPMTNphotA11","AnaBar PMT Number of Photons A11", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNphotA12 = new TH1F("AnaBarPMTNphotA12","AnaBar PMT Number of Photons A12", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNphotA13 = new TH1F("AnaBarPMTNphotA13","AnaBar PMT Number of Photons A13", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNphotA14 = new TH1F("AnaBarPMTNphotA14","AnaBar PMT Number of Photons A14", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA1 = new TH1F("AnaBarPMTNoiseNphotA1","AnaBar PMT Number of Photons A1", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA2 = new TH1F("AnaBarPMTNoiseNphotA2","AnaBar PMT Number of Photons A2", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA3 = new TH1F("AnaBarPMTNoiseNphotA3","AnaBar PMT Number of Photons A3", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA4 = new TH1F("AnaBarPMTNoiseNphotA4","AnaBar PMT Number of Photons A4", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA5 = new TH1F("AnaBarPMTNoiseNphotA5","AnaBar PMT Number of Photons A5", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA6 = new TH1F("AnaBarPMTNoiseNphotA6","AnaBar PMT Number of Photons A6", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA7 = new TH1F("AnaBarPMTNoiseNphotA7","AnaBar PMT Number of Photons A7", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA8 = new TH1F("AnaBarPMTNoiseNphotA8","AnaBar PMT Number of Photons A8", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA9 = new TH1F("AnaBarPMTNoiseNphotA9","AnaBar PMT Number of Photons A9", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA10 = new TH1F("AnaBarPMTNoiseNphotA10","AnaBar PMT Number of Photons A10", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA11 = new TH1F("AnaBarPMTNoiseNphotA11","AnaBar PMT Number of Photons A11", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA12 = new TH1F("AnaBarPMTNoiseNphotA12","AnaBar PMT Number of Photons A12", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA13 = new TH1F("AnaBarPMTNoiseNphotA13","AnaBar PMT Number of Photons A13", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
-  TH1F *hAnaBarPMTNoiseNphotA14 = new TH1F("AnaBarPMTNoiseNphotA14","AnaBar PMT Number of Photons A14", AnaBar_NPhotons_Max*0.4+10, -10, AnaBar_NPhotons_Max*0.4);
+  TH1F *hAnaBarPMTNphotA1 = new TH1F("AnaBarPMTNphotA1","AnaBar PMT Number of Photons A1", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNphotA2 = new TH1F("AnaBarPMTNphotA2","AnaBar PMT Number of Photons A2", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNphotA3 = new TH1F("AnaBarPMTNphotA3","AnaBar PMT Number of Photons A3", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNphotA4 = new TH1F("AnaBarPMTNphotA4","AnaBar PMT Number of Photons A4", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNphotA5 = new TH1F("AnaBarPMTNphotA5","AnaBar PMT Number of Photons A5", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNphotA6 = new TH1F("AnaBarPMTNphotA6","AnaBar PMT Number of Photons A6", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNphotA7 = new TH1F("AnaBarPMTNphotA7","AnaBar PMT Number of Photons A7", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNphotA8 = new TH1F("AnaBarPMTNphotA8","AnaBar PMT Number of Photons A8", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNphotA9 = new TH1F("AnaBarPMTNphotA9","AnaBar PMT Number of Photons A9", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNphotA10 = new TH1F("AnaBarPMTNphotA10","AnaBar PMT Number of Photons A10", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNphotA11 = new TH1F("AnaBarPMTNphotA11","AnaBar PMT Number of Photons A11", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNphotA12 = new TH1F("AnaBarPMTNphotA12","AnaBar PMT Number of Photons A12", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNphotA13 = new TH1F("AnaBarPMTNphotA13","AnaBar PMT Number of Photons A13", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNphotA14 = new TH1F("AnaBarPMTNphotA14","AnaBar PMT Number of Photons A14", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA1 = new TH1F("AnaBarPMTNoiseNphotA1","AnaBar PMT Number of Photons A1", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA2 = new TH1F("AnaBarPMTNoiseNphotA2","AnaBar PMT Number of Photons A2", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA3 = new TH1F("AnaBarPMTNoiseNphotA3","AnaBar PMT Number of Photons A3", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA4 = new TH1F("AnaBarPMTNoiseNphotA4","AnaBar PMT Number of Photons A4", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA5 = new TH1F("AnaBarPMTNoiseNphotA5","AnaBar PMT Number of Photons A5", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA6 = new TH1F("AnaBarPMTNoiseNphotA6","AnaBar PMT Number of Photons A6", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA7 = new TH1F("AnaBarPMTNoiseNphotA7","AnaBar PMT Number of Photons A7", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA8 = new TH1F("AnaBarPMTNoiseNphotA8","AnaBar PMT Number of Photons A8", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA9 = new TH1F("AnaBarPMTNoiseNphotA9","AnaBar PMT Number of Photons A9", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA10 = new TH1F("AnaBarPMTNoiseNphotA10","AnaBar PMT Number of Photons A10", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA11 = new TH1F("AnaBarPMTNoiseNphotA11","AnaBar PMT Number of Photons A11", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA12 = new TH1F("AnaBarPMTNoiseNphotA12","AnaBar PMT Number of Photons A12", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA13 = new TH1F("AnaBarPMTNoiseNphotA13","AnaBar PMT Number of Photons A13", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
+  TH1F *hAnaBarPMTNoiseNphotA14 = new TH1F("AnaBarPMTNoiseNphotA14","AnaBar PMT Number of Photons A14", AnaBar_NPhotons_Max*0.8+20, -20, AnaBar_NPhotons_Max*0.8);
   TH1F *hFingerPMTKE = new TH1F("FingerPMTKE","Photon Wavelength Production Spectrum", 400, 300.0, 700.0);
   TH1F *hAnaBarPMTKEA1 = new TH1F("AnaBarPMTKEA1","Photon Wavelength in WLS at PMT", 400, 300.0, 700.0);
   TH1F *hAnaBarMult = new TH1F("AnaBarMult","Anabar PMT Multiplicity",12,0,12);
@@ -381,7 +381,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
 		j_finger = j;
 		//cout<<"hit in finger";
 	}
-	for (Int_t ibar = 1; ibar<=Detector_Offset; ibar++){
+	for (Int_t ibar = 1; ibar<Detector_Offset; ibar++){
 		if (Detector_id[j+Detector_Offset] == ibar+Detector_Offset) {
 		  anabar_hit = true;
 		  anabar_hit_paddle[ibar-1]=true;
