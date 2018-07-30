@@ -6,7 +6,7 @@ if [[ $# -ne 1 ]]; then
 fi
 
 export runlist=$1
-export OUTPUT_DIR=/home/brash/CDetOptical/data
+export OUTPUT_DIR=/home/llorenti/CDetOptical/data
 
 echo "Reading runs from $runlist"
 
@@ -15,8 +15,8 @@ for run in `cat $runlist`
 do
     echo "The next run is $run"
     export RUN_NUMBER=$run
-#    qsub AnaBarNeutron.sh 
-    ./AnaBarNeutron.sh 
+    qsub AnaBarNeutron.sh 
+#    ./AnaBarNeutron.sh 
     sleep 1
 done
 
