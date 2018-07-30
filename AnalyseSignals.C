@@ -209,7 +209,7 @@ Int_t langaupro(Double_t *params, Double_t &maxx, Double_t &FWHM) {
    return (0);
 }
 
-void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Float_t Photon_Threshold = 8.0, Float_t Edep_Threshold = 1.0, Int_t Analyse_Secondaries = 1, Float_t Theta_min_cut = 0.0) {
+void AnalyseSignals(Float_t Theta_min_cut = 0.0, Int_t Analysis_Run_Number = 9996, bool displayall = true, Float_t Photon_Threshold = 8.0, Float_t Edep_Threshold = 1.0, Int_t Analyse_Secondaries = 1) {
 
   //-------------------------------------------------------------------
   //Set stuff up for reading
@@ -266,8 +266,12 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
   
   TH1F *hPrimE = new TH1F("PrimE","Primary Energy", 100, 0, 25000);
   TH1F *hPrimTh = new TH1F("PrimTh","Primary Theta", 100, 0, TMath::Pi());
-  TH1F *hPrimPh = new TH1F("PrimPh","Primary Phi", 100, -TMath::Pi(), TMath::Pi());
+  TH1F *hPrimPh = new TH1F("PrimPh","Primary Phi", 100, 0, 2.0*TMath::Pi());
   TH1F *hPrimPdg = new TH1F("PrimPdg","Primary PDG ID", 20, 0, 20);
+  
+  TH1F *hPrimPx = new TH1F("PrimPx","Primary Px", 100, -2000, 2000);
+  TH1F *hPrimPz = new TH1F("PrimPz","Primary Pz", 100, -2000, 2000);
+  TH1F *hPrimPy = new TH1F("PrimPy","Primary Py", 100, -25000, 0);
 
   TH1F *hDetectorNhits = new TH1F("DetectorNhits","Detector Number of Hits", 100, 0, 400);
   TH1F *hDetectorPdg = new TH1F("DetectorPdg","Detector PDG ID", 50, -20, 30);
@@ -340,7 +344,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
   float edeptot[NMaxPMT];
   
   for (Int_t i = 0; i < nentries; i++) {
-  //for (Int_t i = 0; i < 10; i++) {
+  //for (Int_t i = 0; i < 1000; i++) {
     bool anabar_hit_paddle[NMaxPMT];
     for (Int_t j=0; j<NMaxPMT; j++) {
 	    edeptot[j] = 0.0;
@@ -355,8 +359,14 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
     Float_t fPy        = fMomentum * TMath::Sin(Prim_Th) * TMath::Sin(Prim_Ph);
     Float_t fPz        = fMomentum * TMath::Cos(Prim_Th);
     Float_t fNewTheta = TMath::ACos(fPy/fMomentum);
-    Float_t fNewPhi = TMath::ATan(fPz/fPx);
-
+    Float_t fNewPhi;
+    if (fPx < 0)
+	fNewPhi = TMath::ATan(fPz/fPx) + TMath::Pi();
+    else if (fPx > 0 && fPz < 0)
+	fNewPhi = TMath::ATan(fPz/fPx) + TMath::TwoPi();
+    else
+	fNewPhi = TMath::ATan(fPz/fPx);
+    
     //cout << "Theta = " << fNewTheta << " Phi = " << fNewPhi << endl;
 
     hPrimE->Fill(Prim_E);
@@ -364,6 +374,10 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
     hPrimPh->Fill(fNewPhi);
     hPrimPdg->Fill(Prim_pdg);
     hPMTID->Fill(PMT_id);
+
+    hPrimPx->Fill(fPx);
+    hPrimPy->Fill(fPy);
+    hPrimPz->Fill(fPz);
     
     hDetectorNhits->Fill(Detector_Nhits);
 
@@ -541,6 +555,8 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
   c10->Divide(1,2, 0.01, 0.01, 0);
   TCanvas *c11 = new TCanvas("c11", "c11", 100,1000,500,270);
   c11->Divide(1,1, 0.01, 0.01, 0);
+  TCanvas *c12 = new TCanvas("c12", "c12", 600,1000,500,270);
+  c12->Divide(2,2, 0.01, 0.01, 0);
   
   c1->cd(1);
   hFingerX->Draw();
@@ -559,6 +575,13 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
   hPrimPh->Draw();
   c2->cd(4);
   hPrimPdg->Draw();
+  
+  c12->cd(1);
+  hPrimPx->Draw();
+  c12->cd(2);
+  hPrimPy->Draw();
+  c12->cd(3);
+  hPrimPz->Draw();
   
   c3->cd(1);
   hDetectorNhits->Draw();
@@ -775,7 +798,7 @@ void AnalyseSignals(Int_t Analysis_Run_Number = 9996, bool displayall = true, Fl
   }
 
   
-  TCanvas *c4 = new TCanvas("c4", "c4", 600,1000,500,270);
+  TCanvas *c4 = new TCanvas("c4", "c4", 1100,1000,500,270);
   c4->Divide(2,2, 0.01, 0.01, 0);
   
   c4->cd(1);
