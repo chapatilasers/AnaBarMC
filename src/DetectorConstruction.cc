@@ -178,7 +178,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   Pscint_mt->AddProperty("FASTCOMPONENT", Energy, Pscint_SCINT,     Num );
   Pscint_mt->AddProperty("SLOWCOMPONENT", Energy, Pscint_SCINT,     Num );
 
-  Pscint_mt->AddConstProperty("SCINTILLATIONYIELD", 50.0/MeV ); 
+  Pscint_mt->AddConstProperty("SCINTILLATIONYIELD", 500./MeV ); 
   Pscint_mt->AddConstProperty("RESOLUTIONSCALE" ,   1.0        ); 
   Pscint_mt->AddConstProperty("FASTTIMECONSTANT",   1.0 *ns    );  
   Pscint_mt->AddConstProperty("SLOWTIMECONSTANT",   1.0 *ns    );  
@@ -421,7 +421,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Create Optical Surface
   //---------------------------------------------------------------------------
  
-  G4double PhotoCath_EFF[Num]  = { 0.24, 0.24, 0.24, 0.24, 0.24, 0.24 };
+  //G4double PhotoCath_EFF[Num]  = { 0.24, 0.24, 0.24, 0.24, 0.24, 0.24 };
+  G4double PhotoCath_EFF[Num]  = { 0.13, 0.13, 0.13, 0.13, 0.13, 0.13 };
   G4double PhotoCath_REFL[Num] = { 0., 0., 0., 0., 0., 0. };
   
   G4MaterialPropertiesTable* PhotoCath_mt = new G4MaterialPropertiesTable();
