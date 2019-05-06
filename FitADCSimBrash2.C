@@ -37,7 +37,7 @@ static const int MaxPMTNo = 20;
 static const int MaxPMTHits = 5000;
 static const Float_t Finger_Edep_Max = 10.0;
 static const Float_t AnaBar_Edep_Max = 10.0;
-static const Float_t pedastel_sigma = 2.71;
+static const Float_t pedastel_sigma = 2.68;
 static const Int_t Detector_Offset = 0;
 static const Int_t Finger_NPhotons_Max = 150;
 static const Int_t AnaBar_NPhotons_Max = 200;
@@ -52,8 +52,9 @@ static const float e = 1.6e-19; // C, electron charge
 static const Int_t xcanvas = 800; // width of canvases
 static const Int_t ycanvas = 800; // height of canvases
 
-//static const Int_t PEperMeV = 18; // photo-electrons per MeV
-static const Int_t PEperMeV = 17;
+static const Float_t PEperMeV = 19.02; // photo-electrons per MeV
+static const Float_t MeanEdep = 7.20; // Mean Energy Deposition
+static const Float_t EffDetector = 0.84; // Mean Energy Deposition
 
 TTree *tree1;
 
@@ -107,9 +108,10 @@ Double_t langaufun(Double_t *x, Double_t *par);
 TF1 *langaufit(TH1F *his, Double_t *fitrange, Double_t *startvalues, Double_t *parlimitslo, Double_t *parlimitshi, Double_t *fitparams, Double_t *fiterrors, Double_t *ChiSqr, Int_t *NDF);
 Int_t langaupro(Double_t *params, Double_t &maxx, Double_t &FWHM);
 
+TCanvas *cADCToPE = new TCanvas("cADCToPE", "PhotoElectron Comparison", xcanvas, ycanvas);
 
 
-void FitADCSimBrash(Int_t Analysis_Run_Number = 88811, Int_t runno = 1550, Int_t n_events=-1) {
+void FitADCSimBrash2(Int_t Analysis_Run_Number = 88811, Int_t runno = 1550, Int_t n_events=-1) {
 
   //-------------------------------------------------------------------
   //Set stuff up for reading simulated events
@@ -141,7 +143,7 @@ void FitADCSimBrash(Int_t Analysis_Run_Number = 88811, Int_t runno = 1550, Int_t
   //*************** Set up for reading real data ***************//
 
   TString file2;
-  file2.Form("/home/llorenti/analyzer/replay/rootfiles/scint_%d.root",runno);
+  file2.Form("./rootfiles/scint_%d.root",runno);
   TFile *_file0 = TFile::Open(file2);
 
   run=runno;
@@ -182,7 +184,7 @@ void FitADCSimBrash(Int_t Analysis_Run_Number = 88811, Int_t runno = 1550, Int_t
 //****************** Functions for simulation plots, for now ********************//
 //*******************************************************************************//
 
-TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, Float_t Edep_Threshold = 0.0, Int_t Nphot_Neighbor_Cut = 8, Int_t Analyse_Secondaries = 1){
+TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, Float_t Edep_Threshold = 0.0, Int_t Nphot_Neighbor_Cut = 10, Int_t Analyse_Secondaries = 1){
 
   //-------------------------------------------------------------------
   //Create histograms
@@ -193,14 +195,14 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
   for(Int_t i = 1; i <= NUMPADDLE; i++){
 	name.Form("AnaBarPMTNphotA%d", i);
 	title.Form("AnaBar PMT Number of Photons A%d", i);
-	hAnaBarPMTNphot[i-1] = new TH1F(name, title, AnaBar_NPhotons_Max+20, -20, AnaBar_NPhotons_Max);
+	hAnaBarPMTNphot[i-1] = new TH1F(name, title, (AnaBar_NPhotons_Max+20)/4, -20, AnaBar_NPhotons_Max);
   }
 
   TH1F *hAnaBarPMTNoiseCutNphot[NUMPADDLE];
   for(Int_t i = 1; i <= NUMPADDLE; i++){
 	name.Form("AnaBarPMTNoiseCutNphotA%d", i);
 	title.Form("AnaBar PMT Number of Photons A%d", i);
-	hAnaBarPMTNoiseCutNphot[i-1] = new TH1F(name, title, AnaBar_NPhotons_Max+20, -20, AnaBar_NPhotons_Max);
+	hAnaBarPMTNoiseCutNphot[i-1] = new TH1F(name, title, (AnaBar_NPhotons_Max+20)/4, -20, AnaBar_NPhotons_Max);
 	hAnaBarPMTNoiseCutNphot[i-1]->SetLineColor(kRed);
   }
 
@@ -278,7 +280,7 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
 
     //if (finger_hit && anabar_top_hit && anabar_bottom_hit) trigger = true; 
     //if (finger_hit && anabar_top_hit) trigger = true; 
-    if (finger_hit && anabar_hit && fNewTheta > 2.524) trigger = true; 
+    if (finger_hit && anabar_hit) trigger = true; 
 
     if (trigger) {
 	good_triggers++;
@@ -288,8 +290,11 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
 		//PMT_Nphotons_Noise[icount]=PMT_Nphotons[icount];
 		hAnaBarPMTNphot[icount]->Fill(PMT_Nphotons_Noise[icount]);
 	}
+    }
 
-    	for (Int_t j=0; j < Detector_Nhits ; j++) {
+    for (Int_t j=0; j < Detector_Nhits ; j++) {
+
+	if (trigger) {
 		
 		counter++; // unused
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
@@ -300,8 +305,10 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
 		     	       }
 			}
 		}
-    	}
+	}
+    }
 
+    if (trigger) {
 	hNewTheta->Fill(fNewTheta);
 	for (Int_t i = 0; i < NUMPADDLE; i++){
 		if(anabar_hit_paddle[i]&&edeptot[i]>=Edep_Threshold && fNewTheta > Theta_min_cut){
@@ -324,7 +331,6 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
 		    }
 		}
 	}
-
     }
 
 
@@ -340,7 +346,7 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
   TCanvas *cTheta = new TCanvas("cTheta", "cTheta", 600,100,800,500);
   TCanvas *cThetaPhi = new TCanvas("cThetaPhi", "cThetaPhi", 600,100,800,500);
 
-  printf("Fitting A1 ...\n"); 
+  printf("Fittingi A1 ...\n"); 
   // Setting fit range and start values
   Double_t fr[2];
   Double_t sv[4], pllo[4], plhi[4], fp[4], fpe[4];
@@ -352,11 +358,7 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
   Double_t SNRPeak, SNRFWHM;
 
   TF1 *fcn;
-  Double_t constants[NUMPADDLE] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  Double_t means[NUMPADDLE] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  Double_t sigmas[NUMPADDLE] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  Double_t meanErr[NUMPADDLE] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  Double_t sigErr[NUMPADDLE] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  Double_t constants[NUMPADDLE], means[NUMPADDLE], sigmas[NUMPADDLE], meanErr[NUMPADDLE], sigErr[NUMPADDLE];
   Double_t res[NUMPADDLE], resErr[NUMPADDLE];
   Double_t counts[NUMPADDLE], countsErr[NUMPADDLE];
   Double_t upaddle[NUMPADDLE] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14};
@@ -364,19 +366,19 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
 
   Double_t numEntries[NUMPADDLE];
 
-  for (Int_t i = 1; i < NUMPADDLE-1; i++){
-	c9->cd(i);
+  for (Int_t i = 0; i < NUMPADDLE; i++){
+	cADCToPE->cd(i+1);
   	gPad->SetLogy();
   	//hAnaBarPMTNphot[i]->Draw();
- 	hAnaBarPMTNoiseCutNphot[i]->Draw();
+ 	hAnaBarPMTNoiseCutNphot[i]->Draw("SAME");
 
 	numEntries[i] = hAnaBarPMTNoiseCutNphot[i]->GetEntries();
 
 	Double_t bc =0.0;
 	Double_t bn = 0.0;
-	Int_t nbin = AnaBar_NPhotons_Max+20;
+	Int_t nbin = (AnaBar_NPhotons_Max*0.8+10)/4;
 	Int_t min = -10;
-	Int_t max = AnaBar_NPhotons_Max;
+	Int_t max = AnaBar_NPhotons_Max*0.8;
 
 	//TF1 *gfit = new TF1("gfit", "gaus", 0.0, AnaBar_NPhotons_Max*0.8);
 	//hAnaBarPMTNoiseCutNphot[i]->Fit(gfit, "R+");
@@ -418,7 +420,7 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
 //  	fitsnr->Draw("SAME");
   }
 
-  for(Int_t i = 1; i < NUMPADDLE-1; i++) {
+  for(Int_t i = 0; i < NUMPADDLE; i++) {
 	
 	res[i] = sigmas[i]/means[i];
 	resErr[i] = res[i] * TMath::Sqrt( (meanErr[i]*meanErr[i])/(means[i]*means[i]) + (sigErr[i]*sigErr[i])/(sigmas[i]*sigmas[i]) );
@@ -468,17 +470,9 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
   hNewThetaPhiCut->Draw("COLZ");
   cThetaPhi->Update();
 
-  Double_t meanSum = 0.0;
-  Double_t avgMean;
-
   for(int i = 0; i < NUMPADDLE; i++){
-	//cout << "Num entries in AnaBarPMTNoiseCutNphot histogram " << i + 1 << ": " << numEntries[i] << endl;
-	cout << "Mean PE, paddle " << i + 1 << ": " << means[i] << endl;
-
-	meanSum += means[i];
+	cout << "Num entries in AnaBarPMTNoiseCutNphot histogram " << i + 1 << ": " << numEntries[i] << endl;
   }
-  avgMean = meanSum/(NUMPADDLE-2);
-  cout << "Avg. mean PE: " << avgMean << endl;
 
 
   return c9;
@@ -766,8 +760,6 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 	TCanvas *cADCMeanFit= new TCanvas("cADCMeanFit",title,xcanvas,ycanvas);
 
 	title.Form("run_%d_ADC_to_PE", run);
-	TCanvas *cADCToPE = new TCanvas("cADCToPE", title, xcanvas, ycanvas);
-	title.Form("run_%d_PE_Fit_Resolution", run);
 	TCanvas *cPEFitRes =  new TCanvas("cPEFitRes", title, xcanvas, ycanvas);
 	title.Form("run_%d_PE_Total_Counts", run);
 	TCanvas *cPECounts =  new TCanvas("cPECounts", title, xcanvas, ycanvas);
@@ -799,21 +791,13 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 	Double_t epixel[NUMPIXEL]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	Double_t errors[NUMPIXEL]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-	Double_t constants[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	Double_t means[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	Double_t sigmas[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	Double_t constants[NUMPIXEL], means[NUMPIXEL], sigmas[NUMPIXEL];
+	Double_t pconstants[NUMPIXEL], pmeans[NUMPIXEL], psigmas[NUMPIXEL];
 
-	Double_t pconstants[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	Double_t pmeans[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	Double_t psigmas[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
-	Double_t meanPE[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	Double_t sigmaPE[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-	Double_t constPE[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	Double_t meanPE[NUMPIXEL], sigmaPE[NUMPIXEL], constPE[NUMPIXEL];
 	Double_t meanError[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	Double_t sigError[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	Double_t constError[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
 	Double_t resolutions[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	Double_t resError[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	Double_t countIntegral[NUMPIXEL] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -854,17 +838,21 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 		  ipaddle--;
 		  if(tdcl[index] > tdc_min && tdcl[index] < tdc_min+tdc_width)
 		  {
-		    if (ipaddle < 2) 
+		    //if (ipaddle < 2) 
+		    if ((ipaddle%NUMPADDLE) == 1) 
 		    {
 			if (adc_c[paddleindex[ipaddle+1]] < adc_neighbor_cut)
 			{
+                          //cout << "(left end) good hit on paddle " << ipaddle << endl;
 			  htmp[pixel]->Fill(adc_c[index]);
 			}
 		    }
-		    else if (ipaddle == NUMPMT*NUMPADDLE) // should this be > or = ?
+		    //else if (ipaddle == NUMPMT*NUMPADDLE) // should this be > or = ?
+		    else if ((ipaddle%NUMPADDLE) == 0) // should this be > or = ?
 		    {
 			if (adc_c[paddleindex[ipaddle-1]] < adc_neighbor_cut)
 			{
+                            //cout << "(right end) good hit on paddle " << ipaddle << endl;
 			    htmp[pixel]->Fill(adc_c[index]);
 			}
 		    }
@@ -872,6 +860,7 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 		    {
 			if (adc_c[paddleindex[ipaddle-1]] < adc_neighbor_cut && adc_c[paddleindex[ipaddle+1]] < adc_neighbor_cut)
 			{
+                          //cout << "(mid) good hit on paddle " << ipaddle << endl;
 			  htmp[pixel]->Fill(adc_c[index]);
 			}
 		    }
@@ -921,29 +910,36 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 		  }
 		}       
 
+                cout << "Fitting histogram " << i << " with " << entries << " entries." << endl;
 		Double_t par[3];
+
+                if (entries > 500){
 		TF1 *g1 = new TF1("g1", "gaus", min, bn);
 		htmp[i]->Fit(g1,"R");
 		function = htmp[i]->GetFunction("g1");
-		function->SetLineColor(1);
+		if (function) function->SetLineColor(1);
+                cout << "Fit pedestal" << endl;
 
-		pconstants[i] = function->GetParameter(0);
-		pmeans[i] = function->GetParameter(1);
-		psigmas[i] = function->GetParameter(2);
+		if (function) pconstants[i] = function->GetParameter(0);
+		if (function) pmeans[i] = function->GetParameter(1);
+		if (function) psigmas[i] = function->GetParameter(2);
 		
 		g1->GetParameters(&par[0]);
 		Double_t blow = par[1]+15.0*par[2];
+                cout << "Low/high = " << blow << " " << max << endl;
 		TF1 *g2 = new TF1("g2","gaus",blow, max);
 
 		htmp[i]->Fit(g2, "R+");
 
 		//htmp[i]->Fit("landau","","", 0, 250);
 		function = htmp[i]->GetFunction("g2");
-		function->SetLineColor(1);
+		if (function) function->SetLineColor(1);
+                cout << "Fit main peak" << endl;
 
-		constants[i] = function->GetParameter(0);
-		means[i] = function->GetParameter(1);
-		sigmas[i] = function->GetParameter(2);
+		if (function) constants[i] = function->GetParameter(0);
+		if (function) means[i] = function->GetParameter(1);
+		if (function) sigmas[i] = function->GetParameter(2);
+                }
               
 		count++;
 	      
@@ -957,14 +953,14 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 
 	for(Int_t i = 0; i < NUMPIXEL; i++) {
 
-		PEperADCs[i] = PEperMeV*6.9/means[i];
+		PEperADCs[i] = PEperMeV*MeanEdep*EffDetector/means[i];
 		//minPEs[i] = 0;
 		//maxPEs[i] = TMath::CeilNint(PEperADCs[i]*max);
 		//nbinPEs[i] = maxPEs[i];
 
 		minPE = -20;
 		maxPE = 200;
-		nbinPE = maxPE - minPE;
+		nbinPE = (maxPE - minPE)/4;
 
 		tmpentry.Form("hPE%d", i+1);
 		//hPE[i] = new TH1I(tmpentry, tmpentry, nbinPEs[i], minPEs[i], maxPEs[i]);
@@ -989,7 +985,8 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 		  ipaddle--;
 		  if(tdcl[index] > tdc_min && tdcl[index] < tdc_min+tdc_width)
 		  {
-		    if (ipaddle < 2) 
+		    //if (ipaddle < 2) 
+		    if ((ipaddle%NUMPADDLE) == 1) 
 		    {
 			if (adc_c[paddleindex[ipaddle+1]] < adc_neighbor_cut)
 			{
@@ -1001,7 +998,8 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 			    hPE[pixel]->Fill(numPE);
 			}
 		    }
-		    else if (ipaddle == NUMPMT*NUMPADDLE) 
+		    //else if (ipaddle == NUMPMT*NUMPADDLE) 
+		    else if ((ipaddle%NUMPADDLE) == 0) 
 		    {
 			if (adc_c[paddleindex[ipaddle-1]] < adc_neighbor_cut)
 			{
@@ -1060,10 +1058,12 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 
 		Double_t par[3];
 		//TF1 *g1 = new TF1("g1", "gaus", minPEs[pixel], bn);
+                
+                if (numEntries[count] > 500){
 		TF1 *g1 = new TF1("g1", "gaus", minPE, bn);
 		hPE[pixel]->Fit(g1,"R");
 		function = hPE[pixel]->GetFunction("g1");
-		function->SetLineColor(1);
+		if (function) function->SetLineColor(1);
 
 		g1->GetParameters(&par[0]);
 		Double_t blow = par[1]+21.0*par[2];
@@ -1074,14 +1074,15 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 
 		//htmp[i]->Fit("landau","","", 0, 250);
 		function = hPE[pixel]->GetFunction("g2");
-		function->SetLineColor(1);
+		if (function) function->SetLineColor(1);
 
-		meanPE[pixel] = function->GetParameter(1);
-		sigmaPE[pixel] = function->GetParameter(2);
-		constPE[pixel] = function->GetParameter(0);
-		meanError[pixel] = function->GetParError(1);
-		sigError[pixel] = function->GetParError(2);
-		constError[pixel] = function->GetParError(0);
+		if (function) meanPE[pixel] = function->GetParameter(1);
+		if (function) sigmaPE[pixel] = function->GetParameter(2);
+		if (function) constPE[pixel] = function->GetParameter(0);
+		if (function) meanError[pixel] = function->GetParError(1);
+		if (function) sigError[pixel] = function->GetParError(2);
+		if (function) constError[pixel] = function->GetParError(0);
+                }
 
 		count++;
 	    }
@@ -1184,15 +1185,12 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 	Double_t mean_sum = 0.0;
 	for (Int_t i=0; i<NUMPIXEL; i++)
 	  {
-	   if(i != pixel1[pmt-1]-1 && i != pixel2[pmt-1]-1)
-	    {
 	    cout << "Pixel number: " << i+1 << "   \t mean = " << means[i] << "    \t sigma = " << sigmas[i] << endl;
 	    cout << "Pixel number: " << i+1 << "   \t ped mean = " << pmeans[i] << "    \t ped sigma = " << psigmas[i] << endl;
 	    cout << "Suggested threshold = " << pmeans[i]+3.0*psigmas[i] << endl;
 	    thresh_sum += pmeans[i]+3.0*psigmas[i];
 	    sigma_sum += psigmas[i];
 	    mean_sum += means[i];
-	    }
 	  }
 	Double_t average_thresh = thresh_sum/(NUMPIXEL-2);
 	Double_t average_sigma = sigma_sum/(NUMPIXEL-2);
@@ -1200,8 +1198,8 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 	cout << "Suggested Threshold overall = " << average_thresh << endl;
 	cout << "Average Sigma = " << average_sigma << endl;
 	cout << "Average Mean = " << average_mean << endl;
-	cout << "Suggested Calibration = " << PEperMeV*6.9/average_mean << endl;
-	cout << "Suggested Smearing = " << average_sigma*PEperMeV*6.9/average_mean << endl;
+	cout << "Suggested Calibration = " << PEperMeV*MeanEdep*EffDetector/average_mean << endl;
+	cout << "Suggested Smearing = " << average_sigma*PEperMeV*MeanEdep*EffDetector/average_mean << endl;
 
         title.Form("run_%d_ADC_pmt_%d_tdc_min_%d_max_%d.png",run,pmt,tdc_min,tdc_min+tdc_width);
         cADCFit->Print(title);

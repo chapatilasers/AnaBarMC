@@ -750,11 +750,8 @@ TCanvas *plotC7 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 	for (Int_t icount = 0;icount<14;icount++){
 		PMT_Nphotons_Total+=PMT_Nphotons[icount];
 	}
-    }
 
-    for (Int_t j=0; j < Detector_Nhits ; j++) {
-
-	if (trigger) {
+    	for (Int_t j=0; j < Detector_Nhits ; j++) {
 		
 		counter++; // unused
 		if (Detector_id[j] == Detector_Offset ) {
@@ -773,11 +770,8 @@ TCanvas *plotC7 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		     	       }
 			}
 		}
+    	}
 
-	}
-    }
-
-    if (trigger) {
     	hFinger_Edep_vs_Nphot->Fill(PMT_Nphotons[14],edep0tot); 
     	hAnaBar_Edep_vs_Nphot->Fill(PMT_Nphotons[6],edeptot[6]); 
     	hNphot0_vs_Nphot1->Fill(PMT_Nphotons_Total,PMT_Nphotons[14]); 
@@ -794,6 +788,9 @@ TCanvas *plotC7 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
   hAnaBar_Edep_vs_Nphot->Draw("COLZ");
   c7->cd(3);
   hNphot0_vs_Nphot1->Draw("COLZ");
+  c7->cd(4);
+  TProfile *prof = hAnaBar_Edep_vs_Nphot->ProfileX();
+  prof->Fit("pol1");
 
   return c7;
 
@@ -879,7 +876,8 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 
     //if (finger_hit && anabar_top_hit && anabar_bottom_hit) trigger = true; 
     //if (finger_hit && anabar_top_hit) trigger = true; 
-    if (finger_hit && anabar_hit) trigger = true;
+    //if (finger_hit && anabar_hit) trigger = true;
+    if (finger_hit && anabar_hit && fNewTheta > 2.524) trigger = true; 
 
     if (trigger) {
 
@@ -887,12 +885,9 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		PMT_Nphotons_Noise[icount]=PMT_Nphotons[icount]+fRand->Gaus(0.0,pedastel_sigma);
 		hAnaBarPMTNphot[icount]->Fill(PMT_Nphotons_Noise[icount]);
 	}
-    }
 
-    for (Int_t j=0; j < Detector_Nhits ; j++) {
+    	for (Int_t j=0; j < Detector_Nhits ; j++) {
 
-	if (trigger) {
-		
 		counter++; // unused
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
@@ -902,10 +897,8 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		     	       }
 			}
 		}
-	}
-    }
+    	}
 
-    if (trigger) {
 	for(Int_t i = 0; i < NUMPADDLE; i ++){
 		hAnaBarEdAll[i]->Fill(edeptot[i]);
 	}
@@ -916,7 +909,7 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 
   }
 
-  TCanvas *c8 = new TCanvas("c8", "c8", 100,700,500,270);
+  TCanvas *c8 = new TCanvas("c8", "c8", 100,200,500,270);
   c8->Divide(2,2, 0.01, 0.01, 0);
 
   TCanvas *cEd = new TCanvas("cEd", "cEd", 600, 100, 800, 500);
@@ -936,7 +929,8 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 	cEd->cd(i+1);
 	hAnaBarEdAll[i]->Draw();
 
-	Double_t start = 4.0;
+	//Double_t start = 6.0;
+	Double_t start = 5.8;
 
 	Double_t par3[3];
 	TF1 *gf = new TF1("gf", "gaus", start, AnaBar_Edep_Max);
