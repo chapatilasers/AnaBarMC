@@ -14,7 +14,7 @@ static const int MaxPMTNo = 20;
 static const int MaxPMTHits = 5000;
 static const Float_t Finger_Edep_Max = 10.0;
 static const Float_t AnaBar_Edep_Max = 10.0;
-static const Float_t pedastel_sigma = 3.33;
+static const Float_t pedastel_sigma = 2.9;
 static const Int_t Detector_Offset = 0;
 //static const Int_t Finger_NPhotons_Max = 150;
 //static const Int_t AnaBar_NPhotons_Max = 100;
@@ -790,6 +790,7 @@ TCanvas *plotC7 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
   hNphot0_vs_Nphot1->Draw("COLZ");
   c7->cd(4);
   TProfile *prof = hAnaBar_Edep_vs_Nphot->ProfileX();
+
   prof->Fit("pol1");
 
   return c7;
@@ -797,7 +798,7 @@ TCanvas *plotC7 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 }
 
 
-TCanvas *plotC8 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
+TCanvas *plotC8 (Float_t Theta_min_cut = 3.05, Int_t Analyse_Secondaries = 1){
 
   //-------------------------------------------------------------------
   //Create histograms
@@ -923,14 +924,15 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
   hAnaBar_Edep_vs_Nphot->Draw("COLZ");
 
   TF1* function;
-  Double_t means[NUMPADDLE];
+  Double_t means[NUMPADDLE], meanErr[NUMPADDLE];
 
   for(Int_t i = 0; i < NUMPADDLE; i++) {
 	cEd->cd(i+1);
 	hAnaBarEdAll[i]->Draw();
 
-	//Double_t start = 6.0;
-	Double_t start = 5.8;
+	//Double_t start = 6.4;
+	//Double_t start = 5.8;
+	Double_t start = 4.0;
 
 	Double_t par3[3];
 	TF1 *gf = new TF1("gf", "gaus", start, AnaBar_Edep_Max);
@@ -939,22 +941,34 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 	function->SetLineColor(1);
 
 	means[i] = function->GetParameter(1);
+	meanErr[i] = function->GetParError(1);
   }
 
   for(Int_t i = 0; i < NUMPADDLE; i++){
 	cout << "Paddle " << i+1 << ": Mean peak Edep = " << means[i] << " MeV" << endl;
+	cout << "    \t Mean Edep error = " << meanErr[i] << " MeV" << endl;
   }
 
   Double_t sumMeans = 0.0;
   Double_t meanMean;
+  Double_t sumMeanErrSqrs = 0.0;
+  Double_t sumErr;
+  Double_t meanMeanErr;
 
   for(int i = 0; i < NUMPADDLE; i++){
 	sumMeans += means[i];
+	sumMeanErrSqrs += meanErr[i]*meanErr[i];
   }
+  cout << "Sum of mean error squares = " << sumMeanErrSqrs << endl;
 
   meanMean = sumMeans/NUMPADDLE;
 
+  sumErr = TMath::Sqrt(sumMeanErrSqrs);
+  cout << "Error in sum of means = " << sumErr << endl;
+  meanMeanErr = sumErr/NUMPADDLE;
+
   cout << "Mean peak Edep across all paddles: " << meanMean << " MeV" << endl;
+  cout << "Mean peak Edep uncertainty: " << meanMeanErr << " Mev" << endl;
 
 
   return c8;
