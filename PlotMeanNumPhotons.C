@@ -7,7 +7,7 @@ void PlotMeanNumPhotons(){
 
   TCanvas *grc = new TCanvas("grc", "grc", 100,100,700,500);
   grc->SetGrid();
-  grc->SetFillColor(18);
+  grc->SetFillColor(42);
 
 
   // With mirror

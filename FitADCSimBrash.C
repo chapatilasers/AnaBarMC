@@ -193,14 +193,14 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
   for(Int_t i = 1; i <= NUMPADDLE; i++){
 	name.Form("AnaBarPMTNphotA%d", i);
 	title.Form("AnaBar PMT Number of Photons A%d", i);
-	hAnaBarPMTNphot[i-1] = new TH1F(name, title, AnaBar_NPhotons_Max+20, -20, AnaBar_NPhotons_Max);
+	hAnaBarPMTNphot[i-1] = new TH1F(name, title, (AnaBar_NPhotons_Max+20)/4, -20, AnaBar_NPhotons_Max);
   }
 
   TH1F *hAnaBarPMTNoiseCutNphot[NUMPADDLE];
   for(Int_t i = 1; i <= NUMPADDLE; i++){
 	name.Form("AnaBarPMTNoiseCutNphotA%d", i);
 	title.Form("AnaBar PMT Number of Photons A%d", i);
-	hAnaBarPMTNoiseCutNphot[i-1] = new TH1F(name, title, AnaBar_NPhotons_Max+20, -20, AnaBar_NPhotons_Max);
+	hAnaBarPMTNoiseCutNphot[i-1] = new TH1F(name, title, (AnaBar_NPhotons_Max+20)/4, -20, AnaBar_NPhotons_Max);
 	hAnaBarPMTNoiseCutNphot[i-1]->SetLineColor(kRed);
   }
 

@@ -14,7 +14,7 @@ static const int MaxPMTNo = 20;
 static const int MaxPMTHits = 5000;
 static const Float_t Finger_Edep_Max = 10.0;
 static const Float_t AnaBar_Edep_Max = 10.0;
-static const Float_t pedastel_sigma = 3.33;
+static const Float_t pedastel_sigma = 2.9;
 static const Int_t Detector_Offset = 0;
 //static const Int_t Finger_NPhotons_Max = 150;
 //static const Int_t AnaBar_NPhotons_Max = 100;
@@ -779,8 +779,11 @@ TCanvas *plotC7 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 
   }
 
-  TCanvas *c7 = new TCanvas("c7", "c7", 1100,400,500,270);
+  TCanvas *c7 = new TCanvas("c7", "c7", 400,200,800,500);
   c7->Divide(2,2, 0.01, 0.01, 0);
+
+  TCanvas *c7PE_MeV = new TCanvas("c7PE_MeV", "c7PE_MeV", 350,200,600,600);
+  TCanvas *c7Profile = new TCanvas("c7Profile", "c7Profile", 500,200,600,600);
 
   c7->cd(1);
   hFinger_Edep_vs_Nphot->Draw("COLZ");
@@ -788,16 +791,22 @@ TCanvas *plotC7 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
   hAnaBar_Edep_vs_Nphot->Draw("COLZ");
   c7->cd(3);
   hNphot0_vs_Nphot1->Draw("COLZ");
-  c7->cd(4);
+  //c7->cd(4);
+
+  c7Profile->cd();
   TProfile *prof = hAnaBar_Edep_vs_Nphot->ProfileX();
+
   prof->Fit("pol1");
+
+  c7PE_MeV->cd();
+  hAnaBar_Edep_vs_Nphot->Draw("COLZ");
 
   return c7;
 
 }
 
 
-TCanvas *plotC8 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
+TCanvas *plotC8 (Float_t Theta_min_cut = 3.05, Int_t Analyse_Secondaries = 1){
 
   //-------------------------------------------------------------------
   //Create histograms
@@ -909,11 +918,13 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 
   }
 
-  TCanvas *c8 = new TCanvas("c8", "c8", 100,200,500,270);
+  TCanvas *c8 = new TCanvas("c8", "c8", 500,100,800,500);
   c8->Divide(2,2, 0.01, 0.01, 0);
 
   TCanvas *cEd = new TCanvas("cEd", "cEd", 600, 100, 800, 500);
   cEd->Divide(4,4);
+
+  TCanvas *cEdOne = new TCanvas("cEdOne", "cEdOne", 450, 100, 800, 500);
 
   c8->cd(1);
   hAnaBarEd->Draw();
@@ -923,14 +934,20 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
   hAnaBar_Edep_vs_Nphot->Draw("COLZ");
 
   TF1* function;
-  Double_t means[NUMPADDLE];
+  Double_t means[NUMPADDLE], meanErr[NUMPADDLE];
 
   for(Int_t i = 0; i < NUMPADDLE; i++) {
-	cEd->cd(i+1);
+
+	if (i+1 == 3)
+	    cEdOne->cd();
+	else
+	    cEd->cd(i+1);
+	
 	hAnaBarEdAll[i]->Draw();
 
-	//Double_t start = 6.0;
-	Double_t start = 5.8;
+	//Double_t start = 6.4;
+	//Double_t start = 5.8;
+	Double_t start = 4.0;
 
 	Double_t par3[3];
 	TF1 *gf = new TF1("gf", "gaus", start, AnaBar_Edep_Max);
@@ -939,22 +956,34 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 	function->SetLineColor(1);
 
 	means[i] = function->GetParameter(1);
+	meanErr[i] = function->GetParError(1);
   }
 
   for(Int_t i = 0; i < NUMPADDLE; i++){
 	cout << "Paddle " << i+1 << ": Mean peak Edep = " << means[i] << " MeV" << endl;
+	cout << "    \t Mean Edep error = " << meanErr[i] << " MeV" << endl;
   }
 
   Double_t sumMeans = 0.0;
   Double_t meanMean;
+  Double_t sumMeanErrSqrs = 0.0;
+  Double_t sumErr;
+  Double_t meanMeanErr;
 
   for(int i = 0; i < NUMPADDLE; i++){
 	sumMeans += means[i];
+	sumMeanErrSqrs += meanErr[i]*meanErr[i];
   }
+  cout << "Sum of mean error squares = " << sumMeanErrSqrs << endl;
 
   meanMean = sumMeans/NUMPADDLE;
 
+  sumErr = TMath::Sqrt(sumMeanErrSqrs);
+  cout << "Error in sum of means = " << sumErr << endl;
+  meanMeanErr = sumErr/NUMPADDLE;
+
   cout << "Mean peak Edep across all paddles: " << meanMean << " MeV" << endl;
+  cout << "Mean peak Edep uncertainty: " << meanMeanErr << " Mev" << endl;
 
 
   return c8;
@@ -1077,8 +1106,10 @@ TCanvas *plotC9 (Float_t Theta_min_cut = 0.0, Float_t Edep_Threshold = 0.0, Int_
 
   }
 
-  TCanvas *c9 = new TCanvas("c9", "c9", 600,700,500,270);
+  TCanvas *c9 = new TCanvas("c9", "c9", 350,250,800,500);
   c9->Divide(4,4, 0.01, 0.01, 0);
+
+  TCanvas *c9Single = new TCanvas("c9Single", "c9Single", 400, 300, 800, 500);
 
   printf("Fittingi A1 ...\n"); 
   // Setting fit range and start values
@@ -1092,10 +1123,15 @@ TCanvas *plotC9 (Float_t Theta_min_cut = 0.0, Float_t Edep_Threshold = 0.0, Int_
   Double_t SNRPeak, SNRFWHM;
 
   for (Int_t i = 0; i < NUMPADDLE; i++){
-	c9->cd(i+1);
+
+	if(i == NUMPADDLE - 1)
+	    c9Single->cd();
+	else
+	    c9->cd(i+1);
+
   	gPad->SetLogy();
   	hAnaBarPMTNphot[i]->Draw();
- 	hAnaBarPMTNoiseCutNphot[i]->Draw("SAME");
+ 	//hAnaBarPMTNoiseCutNphot[i]->Draw("SAME");
   	fr[0]=0.7*hAnaBarPMTNphot[i]->GetMean();
   	fr[1]=25.0*hAnaBarPMTNphot[i]->GetMean();
   	TF1 *fitsnr = langaufit(hAnaBarPMTNphot[i],fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);

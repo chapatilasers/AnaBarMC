@@ -52,9 +52,9 @@ static const float e = 1.6e-19; // C, electron charge
 static const Int_t xcanvas = 800; // width of canvases
 static const Int_t ycanvas = 800; // height of canvases
 
-static const Float_t PEperMeV = 19.02; // photo-electrons per MeV
-static const Float_t MeanEdep = 7.20; // Mean Energy Deposition
-static const Float_t EffDetector = 0.84; // Mean Energy Deposition
+static const Float_t PEperMeV = 19.02; // photo-electrons per MeV (ideal from simulation)
+static const Float_t MeanEdep = 7.20; // Mean Energy Deposition (ideal from theory) (???)
+static const Float_t EffDetector = 0.84; // overall efficiency factor
 
 TTree *tree1;
 
@@ -184,7 +184,7 @@ void FitADCSimBrash2(Int_t Analysis_Run_Number = 88811, Int_t runno = 1550, Int_
 //****************** Functions for simulation plots, for now ********************//
 //*******************************************************************************//
 
-TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, Float_t Edep_Threshold = 0.0, Int_t Nphot_Neighbor_Cut = 10, Int_t Analyse_Secondaries = 1){
+TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 2.524, Float_t Edep_Threshold = 0.0, Int_t Nphot_Neighbor_Cut = 8, Int_t Analyse_Secondaries = 1){
 
   //-------------------------------------------------------------------
   //Create histograms
@@ -280,7 +280,8 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
 
     //if (finger_hit && anabar_top_hit && anabar_bottom_hit) trigger = true; 
     //if (finger_hit && anabar_top_hit) trigger = true; 
-    if (finger_hit && anabar_hit) trigger = true; 
+    //if (finger_hit && anabar_hit) trigger = true; 
+    if (finger_hit && anabar_hit && fNewTheta > 2.524) trigger = true; 
 
     if (trigger) {
 	good_triggers++;
@@ -290,12 +291,10 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
 		//PMT_Nphotons_Noise[icount]=PMT_Nphotons[icount];
 		hAnaBarPMTNphot[icount]->Fill(PMT_Nphotons_Noise[icount]);
 	}
-    }
+    
 
-    for (Int_t j=0; j < Detector_Nhits ; j++) {
+    	for (Int_t j=0; j < Detector_Nhits ; j++) {
 
-	if (trigger) {
-		
 		counter++; // unused
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
@@ -305,10 +304,8 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
 		     	       }
 			}
 		}
-	}
-    }
+    	}
 
-    if (trigger) {
 	hNewTheta->Fill(fNewTheta);
 	for (Int_t i = 0; i < NUMPADDLE; i++){
 		if(anabar_hit_paddle[i]&&edeptot[i]>=Edep_Threshold && fNewTheta > Theta_min_cut){
@@ -376,9 +373,9 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
 
 	Double_t bc =0.0;
 	Double_t bn = 0.0;
-	Int_t nbin = (AnaBar_NPhotons_Max*0.8+10)/4;
+	Int_t nbin = (AnaBar_NPhotons_Max+20)/4;
 	Int_t min = -10;
-	Int_t max = AnaBar_NPhotons_Max*0.8;
+	Int_t max = AnaBar_NPhotons_Max;
 
 	//TF1 *gfit = new TF1("gfit", "gaus", 0.0, AnaBar_NPhotons_Max*0.8);
 	//hAnaBarPMTNoiseCutNphot[i]->Fit(gfit, "R+");
@@ -395,7 +392,7 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
 	TF1 *g1 = new TF1("g1", "gaus", min, bn);
 	hAnaBarPMTNoiseCutNphot[i]->Fit(g1,"R");
 	fcn = hAnaBarPMTNoiseCutNphot[i]->GetFunction("g1");
-	fcn->SetLineColor(1);
+	if (fcn) fcn->SetLineColor(1);
 
 	g1->GetParameters(&par[0]);
 	Double_t blow = par[1]+20.0*par[2];
@@ -404,13 +401,13 @@ TCanvas *plotC9 (/*Float_t Theta_min_cut = 3.017*/ Float_t Theta_min_cut = 0.0, 
 	hAnaBarPMTNoiseCutNphot[i]->Fit(g2, "R+");
 
 	fcn = hAnaBarPMTNoiseCutNphot[i]->GetFunction("g2");
-	fcn->SetLineColor(1);
+	if (fcn) fcn->SetLineColor(1);
 
-	means[i] = fcn->GetParameter(1);
-	sigmas[i] = fcn->GetParameter(2);
-	constants[i] = fcn->GetParameter(0);
-	meanErr[i] = fcn->GetParError(1);
-	sigErr[i] = fcn->GetParError(2);
+	if (fcn) means[i] = fcn->GetParameter(1);
+	if (fcn) sigmas[i] = fcn->GetParameter(2);
+	if (fcn) constants[i] = fcn->GetParameter(0);
+	if (fcn) meanErr[i] = fcn->GetParError(1);
+	if (fcn) sigErr[i] = fcn->GetParError(2);
 
 
 //  	fr[0]=0.7*hAnaBarPMTNphot[i]->GetMean();
@@ -759,7 +756,7 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 	title.Form("run_%d_ADC_Mean_Fit",run);
 	TCanvas *cADCMeanFit= new TCanvas("cADCMeanFit",title,xcanvas,ycanvas);
 
-	title.Form("run_%d_ADC_to_PE", run);
+	title.Form("run_%d_PE_Fit_Resolution", run);
 	TCanvas *cPEFitRes =  new TCanvas("cPEFitRes", title, xcanvas, ycanvas);
 	title.Form("run_%d_PE_Total_Counts", run);
 	TCanvas *cPECounts =  new TCanvas("cPECounts", title, xcanvas, ycanvas);
@@ -848,7 +845,7 @@ TCanvas *plot_adc_fit(Int_t pmt=7, Int_t tdc_min=850, Int_t tdc_width=100, Int_t
 			}
 		    }
 		    //else if (ipaddle == NUMPMT*NUMPADDLE) // should this be > or = ?
-		    else if ((ipaddle%NUMPADDLE) == 0) // should this be > or = ?
+		    else if ((ipaddle%NUMPADDLE) == 0) 
 		    {
 			if (adc_c[paddleindex[ipaddle-1]] < adc_neighbor_cut)
 			{
