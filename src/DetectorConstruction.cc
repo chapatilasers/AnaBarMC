@@ -378,14 +378,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   	physiWLSfiber = new G4PVPlacement(anabar_rm,
                                        Global_fibre_pos,
                                        logicWLSfiber,
-atBarrier
-\begin{figure}[h]
-    \centering
-    \includegraphics{Flow.png}
-    \caption{Flow Chart of Work}
-    \label{fig:my_label}
-\end{figure}
-\FloatBarrier 
                                        "WLSFiber",
                                        expHall_log,
                                        false,
