@@ -47,7 +47,7 @@ Int_t langaupro(Double_t *params, Double_t &maxx, Double_t &FWHM);
 
 
 
-void AnalyseSignals(Int_t Analysis_Run_Number = 9996) {
+void AnalyseSignals(Int_t Analysis_Run_Number = 8888) {
 
   //-------------------------------------------------------------------
   //Set stuff up for reading

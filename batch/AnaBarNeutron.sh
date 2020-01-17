@@ -1,14 +1,14 @@
 #!/bin/bash
 #PBS -N CDetOptical
 #PBS -m n
-#PBS -M lydia.lorenti.15@cnu.edu
+#PBS -M tanner.hawk.16@cnu.edu
 #PBS -l walltime=40:00:00
 #PBS -V
 
 export nevents=100
-export tempdir=/home/llorenti/CDetOptical/batch
+export tempdir=/home/thawk/CDetOptical/batch
 
-export MACRO_PATH=/home/llorenti/CDetOptical/macros/
+export MACRO_PATH=/home/thawk/CDetOptical/macros/
 export MCMACRO=$tempdir/AnaBarMC_$RUN_NUMBER.mac
 
 echo "/control/macroPath $MACRO_PATH"	 	                         >   $MCMACRO
@@ -21,13 +21,13 @@ echo "/AnaBarMC/generator/InputFile $tempdir/data/AnaBarMC_Gen_$RUN_NUMBER.root"
 echo "/AnaBarMC/analysis/setOutputFile $tempdir/rootfiles/AnaBarMC_$RUN_NUMBER.root" >>  $MCMACRO
 
 cd $tempdir
-source /home/llorenti/geant4/G4setup_batch.sh
+source /home/thawk/geant4/G4setup_batch.sh
 export ROOTSYS=/cern/root/pro
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
 export PATH=$ROOTSYS/bin:$PATH
 export DISPLAY=jlabanalysis.pcs.cnu.edu:0.0
 #nohup root -l -q GenCosmics.C++\($nevents,$RUN_NUMBER\) #>& /dev/null
-nohup /home/llorenti/geant4/bin/Linux-g++/AnaBarMC $MCMACRO #>& /dev/null
+nohup /home/thawk/geant4/bin/Linux-g++/AnaBarMC $MCMACRO #>& /dev/null
 echo "****************** AnaBarMC Finished"
 
 cp    ${tempdir}/rootfiles/"AnaBarMC_$RUN_NUMBER.root"   ${OUTPUT_DIR}/

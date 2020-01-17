@@ -61,6 +61,7 @@ DetectorConstruction::DetectorConstruction()
   fTumourHeight = 0.0;
   fAnaBarXpos	= 0.0;
 
+//TODO increase this to 3x14 and 14x14 to model a half module
   fNumberOfLayers = 14;
   
   fMirrorThickness = 0.20;
@@ -377,6 +378,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   	physiWLSfiber = new G4PVPlacement(anabar_rm,
                                        Global_fibre_pos,
                                        logicWLSfiber,
+atBarrier
+\begin{figure}[h]
+    \centering
+    \includegraphics{Flow.png}
+    \caption{Flow Chart of Work}
+    \label{fig:my_label}
+\end{figure}
+\FloatBarrier 
                                        "WLSFiber",
                                        expHall_log,
                                        false,
@@ -395,6 +404,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4LogicalVolume* det1_log = new G4LogicalVolume(det1_tubs,
 						  Glass,
 						  "det1_log", 0, 0, 0);
+  //TODO increase the fNumberOfLayers from 14 -> 3x14 and 14x14
   for (G4int iii=0; iii<fNumberOfLayers; iii++){
   
   	fDetVol                  = new G4PVPlacement(anabar_rm, G4ThreeVector(fFibreLength/2.0*cm+fAnaBarXpos*cm+fPhotoCathodeThickness/2.0*cm+(fFibreLength/2.0-fAnaBarLength/2.0)*cm, 0., -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iii*cm),
@@ -404,7 +414,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //---------------------------------------------------------------------------
   // Create Finger PMT
   //---------------------------------------------------------------------------
-
+ 
+       // TODO  Finger(x,y,z) in order to add an extra above the bar and two below
   G4RotationMatrix* finger_rm  = new G4RotationMatrix();
   finger_rm->rotateX(0. *deg);
   

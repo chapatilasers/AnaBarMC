@@ -65,7 +65,7 @@ void GenCosmics( ULong64_t nevents = 100,
 
   // Initialise output
   TString fname;
-  fname.Form("/home/llorenti/CDetOptical/batch/data/AnaBarMC_Gen_%d.root",run_number);
+  fname.Form("/home/thawk/CDetOptical/batch/data/AnaBarMC_Gen_%d.root",run_number);
   fOutFileName = fname;
   InitOutput();
 
@@ -137,6 +137,7 @@ void InitOutput()
 
 // ------------------------------------------------------------------------------------------------
 
+//TODO copy this into a GenerateOneElectron() and a GenerateOneProton() method for use
 void GenerateOneMuon()
 {
   fPDGCode = 13;
@@ -169,5 +170,6 @@ void GenerateOneMuon()
   fE         = TMath::Sqrt( (fP*fP + fM*fM) );
   
 }
+
 
 // ------------------------------------------------------------------------------------------------
