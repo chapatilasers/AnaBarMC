@@ -16,6 +16,7 @@
 // Functions
 void  InitOutput();
 void  GenerateOneMuon();
+void  GenerateOneElectron();
 
 // Random number generator
 TRandom3*       fRand;
@@ -95,7 +96,8 @@ void GenCosmics( ULong64_t nevents = 100,
     {
       nTotal++;
       
-      GenerateOneMuon();
+      //GenerateOneMuon();
+      GenerateOneElectron();
       fROOTTree->Fill();
       
       if( i % 10 == 0 )
@@ -137,7 +139,6 @@ void InitOutput()
 
 // ------------------------------------------------------------------------------------------------
 
-//TODO copy this into a GenerateOneElectron() and a GenerateOneProton() method for use
 void GenerateOneMuon()
 {
   fPDGCode = 13;
@@ -173,3 +174,34 @@ void GenerateOneMuon()
 
 
 // ------------------------------------------------------------------------------------------------
+void GenerateOneElectron()
+{
+  fPDGCode = 11;
+
+  // Generate vertex position in cm 
+  fVx = fRand->Uniform(-4.5 , 4.5 );
+  fVy = 5.0;
+  fVz = fRand->Uniform( -9.5 , 2.5 );
+  //fVx = fRand->Uniform(-0.01 , 0.01 );
+  //fVy = fRand->Uniform( -.01, 0.01 );
+  //fVz = 2.0;
+
+  // Sample Momentum Distributions (flat from min to mean, p^-2.7 from mean to max)
+  if( fRand->Uniform(0.,1) < fIntRatio ) 
+    fP = 1000. * fMomFlatDist->GetRandom();
+  else 
+    fP = 1000. * fMomPowDist->GetRandom();
+
+  // Sample Angular Distributions (cos^2(theta) and flat phi)
+  Float_t th = fThetaDist->GetRandom();
+  Float_t ph = fPhiDist->GetRandom();
+  //Float_t th = 3.14159265;
+  //Float_t ph = 0.0;
+  fPx        = fP * TMath::Sin(th) * TMath::Cos(ph);
+  fPz        = fP * TMath::Sin(th) * TMath::Sin(ph);
+  fPy        = fP * TMath::Cos(th);
+  //fPy        = fP * TMath::Sin(th) * TMath::Sin(ph);
+  //fPz        = fP * TMath::Cos(th);
+  fM         = fPDG->GetParticle( fPDGCode )->Mass() * 1000;
+  fE         = TMath::Sqrt( (fP*fP + fM*fM) );
+}

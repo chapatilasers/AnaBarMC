@@ -16,3 +16,9 @@ then at the prompt type:
 To run the simaultion in batch mode type:
 
 AnaBarMC macros/batch.mac
+
+
+
+
+Tanner's Comments:
+Change Primary Particle in ~/CDetOptical/batch/GenCosmics.C at line 100
