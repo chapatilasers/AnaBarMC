@@ -20,5 +20,7 @@ AnaBarMC macros/batch.mac
 
 
 
-Tanner's Comments:
-Change Primary Particle in ~/CDetOptical/batch/GenCosmics.C at line 100
+---Tanner's Comments---
+Changing the Primary Particle:
+Switch the Generator Function in ~/CDetOptical/batch/GenCosmics.C at line 100
+Change PrimaryParticleID in ~/CDetOptical/AnalyseSignals.C at line 28
