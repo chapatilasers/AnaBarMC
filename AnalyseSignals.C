@@ -25,7 +25,7 @@ static const Int_t NUMPADDLE = 14;
 
 //Change this for analysing different primary particles 
 //e- = 11    mu- = 13   
-PrimaryParticleID = 11;
+static const int PrimaryParticleID = 11;
 
 //-----------------------------------------------------
 
