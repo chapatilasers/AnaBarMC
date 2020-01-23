@@ -16,6 +16,7 @@
 // Functions
 void  InitOutput();
 void  GenerateOneMuon();
+void  GenerateOneElectron();
 
 // Random number generator
 TRandom3*       fRand;
