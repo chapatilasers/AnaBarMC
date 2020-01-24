@@ -187,18 +187,23 @@ void GenerateOneElectron()
   //fVz = 2.0;
 
   // Sample Momentum Distributions (flat from min to mean, p^-2.7 from mean to max)
-  if( fRand->Uniform(0.,1) < fIntRatio ) 
-    fP = 1000. * fMomFlatDist->GetRandom();
-  else 
-    fP = 1000. * fMomPowDist->GetRandom();
+  //if( fRand->Uniform(0.,1) < fIntRatio ) 
+  //  fP = 1000. * fMomFlatDist->GetRandom();
+  //else 
+  //  fP = 1000. * fMomPowDist->GetRandom();
+
+  // Sample Momentum Distribution (flat top from min to max)
+  fP = 1000. * fMomFlatDist->GetRandom();
 
   // Sample Angular Distributions (cos^2(theta) and flat phi)
   Float_t th = fThetaDist->GetRandom();
   Float_t ph = fPhiDist->GetRandom();
   //Float_t th = 3.14159265;
   //Float_t ph = 0.0;
-  fPx        = fP * TMath::Sin(th) * TMath::Cos(ph);
-  fPz        = fP * TMath::Sin(th) * TMath::Sin(ph);
+  
+  // Commented out the sin and cos terms to cause electrons to enter the paddle perpendicular.
+  fPx        = fP //* TMath::Sin(th) * TMath::Cos(ph);
+  fPz        = fP //* TMath::Sin(th) * TMath::Sin(ph);
   fPy        = fP * TMath::Cos(th);
   //fPy        = fP * TMath::Sin(th) * TMath::Sin(ph);
   //fPz        = fP * TMath::Cos(th);
