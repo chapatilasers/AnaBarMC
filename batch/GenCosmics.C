@@ -202,11 +202,13 @@ void GenerateOneElectron()
   //Float_t ph = 0.0;
   
   // Commented out the sin and cos terms to cause electrons to enter the paddle perpendicular.
-  fPx        = fP //* TMath::Sin(th) * TMath::Cos(ph);
-  fPz        = fP //* TMath::Sin(th) * TMath::Sin(ph);
+  // Setting fPx and fPz to be 0 to cause a perpendicular entrance angle
+  fPx        = 0; //fP * TMath::Sin(th) * TMath::Cos(ph);
+  fPz        = 0; //fP * TMath::Sin(th) * TMath::Sin(ph);
   fPy        = fP * TMath::Cos(th);
   //fPy        = fP * TMath::Sin(th) * TMath::Sin(ph);
   //fPz        = fP * TMath::Cos(th);
   fM         = fPDG->GetParticle( fPDGCode )->Mass() * 1000;
-  fE         = TMath::Sqrt( (fP*fP + fM*fM) );
+  fE         = 2*TMath::Sqrt( (fP*fP + fM*fM) );
+  // multiplied by 2 because want between 1 and 7 GeV but flat top is set for .5 to 3.5 Mev
 }
