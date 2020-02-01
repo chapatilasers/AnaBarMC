@@ -262,6 +262,7 @@ void PhysicsList::ConstructOptical()
       scintillationProcess->AddSaturation(emSaturation);
   }
 
+  auto theParticleIterator = GetParticleIterator();
   theParticleIterator->reset();
   while( (*theParticleIterator)() ){
     G4ParticleDefinition* particle = theParticleIterator->value();

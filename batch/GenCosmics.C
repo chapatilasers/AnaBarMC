@@ -66,7 +66,7 @@ void GenCosmics( ULong64_t nevents = 100,
 
   // Initialise output
   TString fname;
-  fname.Form("/home/brash/CDetOptical/batch/data/AnaBarMC_Gen_%d.root",run_number);
+  fname.Form("/Users/brash/CDetOptical/batch/data/AnaBarMC_Gen_%d.root",run_number);
   fOutFileName = fname;
   InitOutput();
 
