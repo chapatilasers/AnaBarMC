@@ -1,0 +1,2 @@
+#!/bin/sh
+qstat -f | grep exec_host | sed -e 's\/\ \g' | awk '{print $3}' | sort | uniq -c
