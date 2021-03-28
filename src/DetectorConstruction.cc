@@ -217,7 +217,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Create Experimental Hall
   //---------------------------------------------------------------------------
 
-  G4Box* expHall_box           = new G4Box("expHall_box",
+  G4Box* expHall_box           = new G4Box("expHall_box", // @suppress("Abstract class cannot be instantiated")
 					   1.5 *m, 1.5 *m, 1.5 *m );
   
   //G4LogicalVolume* expHall_log = new G4LogicalVolume(expHall_box,

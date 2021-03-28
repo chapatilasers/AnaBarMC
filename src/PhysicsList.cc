@@ -96,7 +96,7 @@ PhysicsList::~PhysicsList()
   delete decPhysicsList;
   delete raddecayList;
 
-  for(size_t i=0; i<hadronPhys.size(); i++) {delete hadronPhys[i];}
+  for(size_t i=0; i<hadronPhys.size(); i++) {delete hadronPhys[i];} // @suppress("Type cannot be resolved")
 }
 
 //---------------------------------------------------------------------------
