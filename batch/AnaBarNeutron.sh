@@ -17,9 +17,9 @@ else
 fi
 
 export nevents=100
-export tempdir=/home/brash/CDetOptical/batch
+export tempdir=/Users/brash/CDetOptical/batch
 
-export MACRO_PATH=/home/brash/CDetOptical/macros/
+export MACRO_PATH=/Users/brash/CDetOptical/macros/
 export MCMACRO=$tempdir/AnaBarMC_$RUN_NUMBER.mac
 
 echo "/control/macroPath $MACRO_PATH"	 	                         >   $MCMACRO
@@ -32,6 +32,8 @@ echo "/AnaBarMC/generator/InputFile $tempdir/data/AnaBarMC_Gen_$RUN_NUMBER.root"
 echo "/AnaBarMC/analysis/setOutputFile $tempdir/rootfiles/AnaBarMC_$RUN_NUMBER.root" >>  $MCMACRO
 
 cd $tempdir
+
+source /Users/brash/geant4/G4setup_batch.sh
 export ROOTSYS=/cern/root/pro
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
 export PATH=$ROOTSYS/bin:$PATH

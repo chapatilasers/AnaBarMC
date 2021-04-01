@@ -96,7 +96,7 @@ PhysicsList::~PhysicsList()
   delete decPhysicsList;
   delete raddecayList;
 
-  for(size_t i=0; i<hadronPhys.size(); i++) {delete hadronPhys[i];}
+  for(size_t i=0; i<hadronPhys.size(); i++) {delete hadronPhys[i];} // @suppress("Type cannot be resolved")
 }
 
 //---------------------------------------------------------------------------
@@ -264,7 +264,7 @@ void PhysicsList::ConstructOptical()
 
   // geant 10.4.7
   //auto theParticleIterator=GetParticleIterator();
-
+  
   theParticleIterator->reset();
 
   while( (*theParticleIterator)() ){
