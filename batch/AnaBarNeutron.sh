@@ -1,9 +1,20 @@
 #!/bin/bash
 #PBS -N CDetOptical
 #PBS -m n
-#PBS -M edward.brash@cnu.edu
+#PBS -M lydia.lorenti.15@cnu.edu
 #PBS -l walltime=40:00:00
 #PBS -V
+
+export CENTOS_VERSION=`rpm --eval '%{centos_ver}'`
+
+if [ $CENTOS_VERSION == "7" ]
+then
+	source /home/brash/geant4_C7/G4setup_batch.sh
+	export G4BINARY=/home/brash/geant4_C7/bin/Linux-g++/AnaBarMC
+else
+	source /home/brash/geant4_C8/G4setup_batch.sh
+	export G4BINARY=/home/brash/geant4_C8/bin/Linux-g++/AnaBarMC
+fi
 
 export nevents=100
 export tempdir=/home/brash/CDetOptical/batch
@@ -21,13 +32,12 @@ echo "/AnaBarMC/generator/InputFile $tempdir/data/AnaBarMC_Gen_$RUN_NUMBER.root"
 echo "/AnaBarMC/analysis/setOutputFile $tempdir/rootfiles/AnaBarMC_$RUN_NUMBER.root" >>  $MCMACRO
 
 cd $tempdir
-source /home/brash/geant4/G4setup_batch.sh
 export ROOTSYS=/cern/root/pro
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
 export PATH=$ROOTSYS/bin:$PATH
 export DISPLAY=jlabanalysis.pcs.cnu.edu:0.0
 #nohup root -l -q GenCosmics.C++\($nevents,$RUN_NUMBER\) #>& /dev/null
-nohup /home/brash/geant4/bin/Linux-g++/AnaBarMC $MCMACRO #>& /dev/null
+nohup $G4BINARY $MCMACRO #>& /dev/null
 echo "****************** AnaBarMC Finished"
 
 cp    ${tempdir}/rootfiles/"AnaBarMC_$RUN_NUMBER.root"   ${OUTPUT_DIR}/

@@ -12,8 +12,8 @@
 ##################################################################
 
 /AnaBarMC/generator/Mode 1
-/AnaBarMC/generator/InputFile data/AnaBarMC_Gen_8001.root
-/AnaBarMC/analysis/setOutputFile data/G4_vis.root
+/AnaBarMC/generator/InputFile data/Gen_test_single.root
+/AnaBarMC/analysis/setOutputFile data/G4_vis_single.root
 
 ##################################################################
 # Set visualisation options
@@ -28,5 +28,5 @@
 
 ##################################################################
 
-/run/beamOn 30
+/run/beamOn 1
 

@@ -50,12 +50,12 @@ Float_t         fIntRatio;
 
 // ------------------------------------------------------------------------------------------------
 
-void GenCosmics( ULong64_t nevents = 100, 
-		 ULong64_t run_number = 2000 ) 
+void GenCosmics( ULong64_t nevents = 50, 
+		 TString fname = "data/Gen_test1.root" ) 
 {
   
   // Initialise random number generator
-  fRand = new TRandom3( run_number );
+  fRand = new TRandom3( -1 );
   
   // Set up PDG Table
   fPDG             = new TDatabasePDG();
@@ -64,8 +64,6 @@ void GenCosmics( ULong64_t nevents = 100,
   fPDG->ReadPDGTable( pdgtable );
 
   // Initialise output
-  TString fname;
-  fname.Form("/home/brash/CDetOptical/batch/data/AnaBarMC_Gen_%d.root",run_number);
   fOutFileName = fname;
   InitOutput();
 
@@ -144,8 +142,8 @@ void GenerateOneMuon()
   // Generate vertex position in cm 
   fVx = fRand->Uniform(-4.5 , 4.5 );
   fVy = 5.0;
-  fVz = fRand->Uniform( -9.5 , 2.5 );
-  //fVx = fRand->Uniform(-0.01 , 0.01 );
+  fVz = fRand->Uniform(-9.5 , 2.5 );
+  //fVy = fRand->Uniform( -2.0, 2.0 );
   //fVy = fRand->Uniform( -.01, 0.01 );
   //fVz = 2.0;
 

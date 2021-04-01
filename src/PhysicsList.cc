@@ -262,7 +262,11 @@ void PhysicsList::ConstructOptical()
       scintillationProcess->AddSaturation(emSaturation);
   }
 
+  // geant 10.4.7
+  //auto theParticleIterator=GetParticleIterator();
+
   theParticleIterator->reset();
+
   while( (*theParticleIterator)() ){
     G4ParticleDefinition* particle = theParticleIterator->value();
     G4ProcessManager* pmanager = particle->GetProcessManager();

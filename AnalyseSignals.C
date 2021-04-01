@@ -23,12 +23,6 @@ static const Int_t AnaBar_NPhotons_Max = 200;
 
 static const Int_t NUMPADDLE = 14;
 
-//Change this for analysing different primary particles 
-//e- = 11    mu- = 13   
-static const int PrimaryParticleID = 11;
-
-//-----------------------------------------------------
-
 TTree *tree1;
 
 Float_t Prim_E, Prim_Th, Prim_Ph;
@@ -53,7 +47,7 @@ Int_t langaupro(Double_t *params, Double_t &maxx, Double_t &FWHM);
 
 
 
-void AnalyseSignals(Int_t Analysis_Run_Number = 8888) {
+void AnalyseSignals(Int_t Analysis_Run_Number = 9996) {
 
   //-------------------------------------------------------------------
   //Set stuff up for reading
@@ -153,7 +147,7 @@ TCanvas *plotC1(){
 	if (trigger) {
 		
 		counter++; // unused
-		if (Detector_id[j] == Detector_Offset && Detector_pdg[j] == PrimaryParticleID) {
+		if (Detector_id[j] == Detector_Offset && Detector_pdg[j] == 13) {
 			hFingerX->Fill(Detector_x[j]);
         		hFingerY->Fill(Detector_y[j]);
         		hFingerZ->Fill(Detector_z[j]);
@@ -441,7 +435,7 @@ TCanvas *plotC4 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] == Detector_Offset ) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 			  edep0tot += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == PrimaryParticleID && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
 				edep0tot += Detector_Ed[j];
 			       }
 			} 
@@ -449,7 +443,7 @@ TCanvas *plotC4 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 				edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == PrimaryParticleID && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
 					edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
 		     	       }
 			}
@@ -547,7 +541,7 @@ TCanvas *plotC5 (){
 	if (trigger) {
 		
 		counter++; // unused
-		if (Detector_id[j] == 1 + Detector_Offset && Detector_pdg[j] == PrimaryParticleID) {
+		if (Detector_id[j] == 1 + Detector_Offset && Detector_pdg[j] == 13) {
         		hAnaBarX->Fill(Detector_x[j]);
         		hAnaBarY->Fill(Detector_y[j]);
         		hAnaBarZ->Fill(Detector_z[j]);
@@ -646,7 +640,7 @@ TCanvas *plotC6 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] == Detector_Offset ) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 			  edep0tot += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == PrimaryParticleID && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
 				edep0tot += Detector_Ed[j];
 			       }
 			} 
@@ -654,7 +648,7 @@ TCanvas *plotC6 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 				edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == PrimaryParticleID && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
 					edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
 		     	       }
 			}
@@ -763,7 +757,7 @@ TCanvas *plotC7 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] == Detector_Offset ) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 			  edep0tot += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == PrimaryParticleID && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
 				edep0tot += Detector_Ed[j];
 			       }
 			} 
@@ -771,7 +765,7 @@ TCanvas *plotC7 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 				edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == PrimaryParticleID && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
 					edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
 		     	       }
 			}
@@ -907,7 +901,7 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 3.05, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 				edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == PrimaryParticleID && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
 					edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
 		     	       }
 			}
@@ -1094,7 +1088,7 @@ TCanvas *plotC9 (Float_t Theta_min_cut = 0.0, Float_t Edep_Threshold = 0.0, Int_
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 				edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == PrimaryParticleID && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
 					edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
 		     	       }
 			}
