@@ -1,7 +1,11 @@
 GenCosmics_C.d
 GenCosmics_C.so
+CDetOptical.e*
+CDetOptical.o*
 data/*.root
 *.wrl
 batch/data/*.root
+batch/*.mac
+batch/rootfiles/*.root
 *.*~
 *.pcm
