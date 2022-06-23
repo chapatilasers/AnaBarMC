@@ -263,7 +263,7 @@ void PhysicsList::ConstructOptical()
   }
 
   // geant 10.4.7
-  //auto theParticleIterator=GetParticleIterator();
+  auto theParticleIterator=GetParticleIterator();
   
   theParticleIterator->reset();
 
