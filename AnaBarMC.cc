@@ -19,7 +19,6 @@
 #include "G4VisExecutive.hh"
 #endif
 
-
 //---------------------------------------------------------------------------
 
 int main(int argc, char** argv)
