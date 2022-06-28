@@ -1,16 +1,18 @@
 #!/bin/bash
 
 export RUN_NUMBER=$1
+export homedir=$HOME
+export repodir=$homedir/CDetOptical
 
-source /home/nandhu/geant4_C8/G4setup_batch.sh
-export G4BINARY=/home/nandhu/geant4_C8/bin/Linux-g++/AnaBarMC
+source $homedir/geant4_C8/G4setup_batch.sh
+export G4BINARY=$homedir/geant4_C8/bin/Linux-g++/AnaBarMC
 
 export nevents=100
-export tempdir=/home/nandhu/CDetOptical/batch
+export tempdir=$repodir/batch
 
-export MACRO_PATH=/home/nandhu/CDetOptical/macros/
+export MACRO_PATH=$repodir/macros/
 export MCMACRO=$tempdir/AnaBarMC_$RUN_NUMBER.mac
-export OUTPUT_DIR=$tempdir
+export OUTPUT_DIR=$repodir/data
 
 echo "/control/macroPath $MACRO_PATH"	 	                         >   $MCMACRO
 echo "/AnaBarMC/physics/addPhysics standard_opt3"                        >>   $MCMACRO
@@ -23,7 +25,6 @@ echo "/AnaBarMC/analysis/setOutputFile $tempdir/rootfiles/AnaBarMC_$RUN_NUMBER.r
 
 cd $tempdir
 
-#source /home/nandhu/geant4/G4setup_batch.sh
 export ROOTSYS=/usr
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
 export PATH=$ROOTSYS/bin:$PATH
