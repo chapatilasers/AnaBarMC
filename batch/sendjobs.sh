@@ -6,7 +6,8 @@ if [[ $# -ne 1 ]]; then
 fi
 
 export runlist=$1
-export OUTPUT_DIR=/home/nandhu/CDetOptical/data
+export homedir = $HOME
+export OUTPUT_DIR=$homedir/CDetOptical/data
 
 echo "Reading runs from $runlist"
 

@@ -1,25 +1,26 @@
 #!/bin/bash
 #PBS -N CDetOptical
 #PBS -m n
-#PBS -M nandhu@jlabdaq.pcs.cnu.edu
+#PBS -M root@jlabdaq.pcs.cnu.edu
 #PBS -l walltime=40:00:00
 #PBS -V
 
 export CENTOS_VERSION=`rpm --eval '%{centos_ver}'`
+export homedir=$HOME
 
 if [ $CENTOS_VERSION == "7" ]
 then
-	source /home/nandhu/geant4_C7/G4setup_batch.sh
-	export G4BINARY=/home/nandhu/geant4_C7/bin/Linux-g++/AnaBarMC
+	source $homedir/geant4_C7/G4setup_batch.sh
+	export G4BINARY=$homedir/geant4_C7/bin/Linux-g++/AnaBarMC
 else
-	source /home/nandhu/geant4_C8/G4setup_batch.sh
-	export G4BINARY=/home/nandhu/geant4_C8/bin/Linux-g++/AnaBarMC
+	source $homedir/geant4_C8/G4setup_batch.sh
+	export G4BINARY=$homedir/geant4_C8/bin/Linux-g++/AnaBarMC
 fi
 
 export nevents=100
-export tempdir=/home/nandhu/CDetOptical/batch
+export tempdir=$homdir/CDetOptical/batch
 
-export MACRO_PATH=/home/nandhu/CDetOptical/macros/
+export MACRO_PATH=$homedir/CDetOptical/macros/
 export MCMACRO=$tempdir/AnaBarMC_$RUN_NUMBER.mac
 
 echo "/control/macroPath $MACRO_PATH"	 	                         >   $MCMACRO
@@ -33,7 +34,6 @@ echo "/AnaBarMC/analysis/setOutputFile $tempdir/rootfiles/AnaBarMC_$RUN_NUMBER.r
 
 cd $tempdir
 
-#source /home/nandhu/geant4/G4setup_batch.sh
 export ROOTSYS=/cern/root/pro
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
 export PATH=$ROOTSYS/bin:$PATH
