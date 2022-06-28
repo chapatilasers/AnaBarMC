@@ -50,8 +50,8 @@ Float_t         fIntRatio;
 
 // ------------------------------------------------------------------------------------------------
 
-void GenCosmics( ULong64_t nevents = 100, 
-		 ULong64_t run_number = 2000 ) 
+void GenCosmics( int nevents = 100, 
+		 int run_number = 2000 ) 
 {
   
   // Initialise random number generator
@@ -86,12 +86,12 @@ void GenCosmics( ULong64_t nevents = 100,
   fPhiDist       = (TH1*)phiFunc->GetHistogram()->Clone("PhiDist");
 
   // Initialise counters
-  ULong64_t   nTotal = 0;  
+  int   nTotal = 0;  
   TBenchmark* bench  = new TBenchmark();
   bench->Start("Statistics");
   
   // Main event loop
-  for( ULong64_t i = 0; i < nevents; i++ ) 
+  for( int i = 0; i < nevents; i++ ) 
     {
       nTotal++;
       
