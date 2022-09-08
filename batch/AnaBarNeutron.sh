@@ -18,7 +18,7 @@ else
 fi
 
 export nevents=100
-export tempdir=$homdir/CDetOptical/batch
+export tempdir=$homedir/CDetOptical/batch
 
 export MACRO_PATH=$homedir/CDetOptical/macros/
 export MCMACRO=$tempdir/AnaBarMC_$RUN_NUMBER.mac

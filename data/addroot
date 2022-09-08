@@ -1,0 +1,33 @@
+#!/bin/bash
+
+export homedir=$HOME
+export datadir=$homedir/CDetOptical/data
+
+export OUTPUT_FILE_NUMBER=$1
+export START_RUN=$2
+export END_RUN=$3
+
+export OUTPUT_FILE=AnaBarMC_$OUTPUT_FILE_NUMBER.root
+
+export ADD_SCRIPT_FILE=$datadir/add_script_temp
+
+echo "Creating script: $ADD_SCRIPT_FILE"
+
+echo "#!/bin/sh" > $ADD_SCRIPT_FILE
+echo "rm $OUTPUT_FILE" >> $ADD_SCRIPT_FILE
+
+counter=$START_RUN
+mycommand="hadd $OUTPUT_FILE"
+
+while [ $counter -le $END_RUN ]
+do
+   mycommand=$mycommand" AnaBarMC_$counter.root"
+   ((counter++))
+done
+
+echo "$mycommand" >> $ADD_SCRIPT_FILE
+chmod +x $ADD_SCRIPT_FILE
+echo "Executing script ..."
+$ADD_SCRIPT_FILE
+
+echo "All done ..."

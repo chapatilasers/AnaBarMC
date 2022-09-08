@@ -15,7 +15,7 @@
 
 // Functions
 void  InitOutput();
-void  GenerateOneNeutron();
+void  GenerateOneParticle(int fPDGCode);
 
 // Random number generator
 TRandom3*       fRand;
@@ -50,8 +50,8 @@ Float_t         fIntRatio;
 
 // ------------------------------------------------------------------------------------------------
 
-void GenNeutrons( int nevents = 100, 
-		 int run_number = 2000 ) 
+void GenParticles( int nevents = 100, 
+		    int run_number = 2000, int fPDGCode ) 
 {
   
   // Initialise random number generator
@@ -137,9 +137,8 @@ void InitOutput()
 
 // ------------------------------------------------------------------------------------------------
 
-void GenerateOneNeutron()
+void GenerateOneParticle(int fPDGCode)
 {
-  fPDGCode = 2112;
 
   // Generate vertex position in cm 
   fVx = fRand->Uniform(-4.5 , 4.5 );
