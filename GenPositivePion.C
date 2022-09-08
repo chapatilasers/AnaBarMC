@@ -15,7 +15,7 @@
 
 // Functions
 void  InitOutput();
-void  GenerateOneMuon();
+void  GenerateOnePositivePion();
 
 // Random number generator
 TRandom3*       fRand;
@@ -50,12 +50,12 @@ Float_t         fIntRatio;
 
 // ------------------------------------------------------------------------------------------------
 
-void GenCosmics( int nevents = 100, 
-		 int run_number = 2000 ) 
+void GenPositivePion( ULong64_t nevents = 50, 
+		 TString fname = "data/Gen_test1.root" ) 
 {
   
   // Initialise random number generator
-  fRand = new TRandom3( run_number );
+  fRand = new TRandom3( -1 );
   
   // Set up PDG Table
   fPDG             = new TDatabasePDG();
@@ -64,8 +64,6 @@ void GenCosmics( int nevents = 100,
   fPDG->ReadPDGTable( pdgtable );
 
   // Initialise output
-  TString fname;
-  fname.Form("~/CDetOptical/batch/data/AnaBarMC_Gen_%d.root",run_number);
   fOutFileName = fname;
   InitOutput();
 
@@ -86,16 +84,16 @@ void GenCosmics( int nevents = 100,
   fPhiDist       = (TH1*)phiFunc->GetHistogram()->Clone("PhiDist");
 
   // Initialise counters
-  int   nTotal = 0;  
+  ULong64_t   nTotal = 0;  
   TBenchmark* bench  = new TBenchmark();
   bench->Start("Statistics");
   
   // Main event loop
-  for( int i = 0; i < nevents; i++ ) 
+  for( ULong64_t i = 0; i < nevents; i++ ) 
     {
       nTotal++;
       
-      GenerateOneMuon();
+      GenerateOnePositivePion();
       fROOTTree->Fill();
       
       if( i % 10 == 0 )
@@ -137,15 +135,15 @@ void InitOutput()
 
 // ------------------------------------------------------------------------------------------------
 
-void GenerateOneMuon()
+void GenerateOnePositivePion()
 {
-  fPDGCode = 13;
+  fPDGCode = 211;
 
   // Generate vertex position in cm 
   fVx = fRand->Uniform(-4.5 , 4.5 );
   fVy = 5.0;
-  fVz = fRand->Uniform( -9.5 , 2.5 );
-  //fVx = fRand->Uniform(-0.01 , 0.01 );
+  fVz = fRand->Uniform(-9.5 , 2.5 );
+  //fVy = fRand->Uniform( -2.0, 2.0 );
   //fVy = fRand->Uniform( -.01, 0.01 );
   //fVz = 2.0;
 
@@ -166,8 +164,7 @@ void GenerateOneMuon()
   //fPy        = fP * TMath::Sin(th) * TMath::Sin(ph);
   //fPz        = fP * TMath::Cos(th);
   fM         = fPDG->GetParticle( fPDGCode )->Mass() * 1000;
-  fE         = TMath::Sqrt( (fP*fP + fM*fM) );
-  
+  fE         = TMath::Sqrt( (fP*fP + fM*fM) );  
 }
 
 // ------------------------------------------------------------------------------------------------

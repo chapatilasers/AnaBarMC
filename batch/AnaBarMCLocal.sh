@@ -1,27 +1,18 @@
 #!/bin/bash
-#PBS -N CDetOptical
-#PBS -m n
-#PBS -M root@jlabdaq.pcs.cnu.edu
-#PBS -l walltime=40:00:00
-#PBS -V
 
-export CENTOS_VERSION=`rpm --eval '%{centos_ver}'`
+export RUN_NUMBER=$1
 export homedir=$HOME
+export repodir=$homedir/CDetOptical
 
-if [ $CENTOS_VERSION == "7" ]
-then
-	source $homedir/geant4_C7/G4setup_batch.sh
-	export G4BINARY=$homedir/geant4_C7/bin/Linux-g++/AnaBarMC
-else
-	source $homedir/geant4_C8/G4setup_batch.sh
-	export G4BINARY=$homedir/geant4_C8/bin/Linux-g++/AnaBarMC
-fi
+source $homedir/geant4_C8/G4setup_batch.sh
+export G4BINARY=$homedir/geant4_C8/bin/Linux-g++/AnaBarMC
 
 export nevents=100
-export tempdir=$homedir/CDetOptical/batch
+export tempdir=$repodir/batch
 
-export MACRO_PATH=$homedir/CDetOptical/macros/
+export MACRO_PATH=$repodir/macros/
 export MCMACRO=$tempdir/AnaBarMC_$RUN_NUMBER.mac
+export OUTPUT_DIR=$repodir/data
 
 echo "/control/macroPath $MACRO_PATH"	 	                         >   $MCMACRO
 echo "/AnaBarMC/physics/addPhysics standard_opt3"                        >>   $MCMACRO
@@ -34,13 +25,13 @@ echo "/AnaBarMC/analysis/setOutputFile $tempdir/rootfiles/AnaBarMC_$RUN_NUMBER.r
 
 cd $tempdir
 
-export ROOTSYS=/cern/root/pro
+export ROOTSYS=/usr
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
 export PATH=$ROOTSYS/bin:$PATH
 export DISPLAY=jlabanalysis.pcs.cnu.edu:0.0
 #nohup root -l -q GenCosmics.C++\($nevents,$RUN_NUMBER\) #>& /dev/null
 nohup $G4BINARY $MCMACRO #>& /dev/null
-echo "****************** AnaBarMC Finished"
+echo "****************** AnaBarMCLocal Finished"
 
 cp    ${tempdir}/rootfiles/"AnaBarMC_$RUN_NUMBER.root"   ${OUTPUT_DIR}/
 rm -f ${tempdir}/rootfiles/"AnaBarMC_$RUN_NUMBER.root"

@@ -15,7 +15,7 @@
 
 // Functions
 void  InitOutput();
-void  GenerateOneMuon();
+void  GenerateOneParticle(int fPDGCode);
 
 // Random number generator
 TRandom3*       fRand;
@@ -50,8 +50,8 @@ Float_t         fIntRatio;
 
 // ------------------------------------------------------------------------------------------------
 
-void GenCosmics( int nevents = 100, 
-		 int run_number = 2000 ) 
+void GenParticles( int fPDGCode = 13, int nevents = 100, 
+		    int run_number = 2000) 
 {
   
   // Initialise random number generator
@@ -95,7 +95,7 @@ void GenCosmics( int nevents = 100,
     {
       nTotal++;
       
-      GenerateOneMuon();
+      GenerateOneParticle(fPDGCode);
       fROOTTree->Fill();
       
       if( i % 10 == 0 )
@@ -137,9 +137,8 @@ void InitOutput()
 
 // ------------------------------------------------------------------------------------------------
 
-void GenerateOneMuon()
+void GenerateOneParticle(int fPDGCode)
 {
-  fPDGCode = 13;
 
   // Generate vertex position in cm 
   fVx = fRand->Uniform(-4.5 , 4.5 );
@@ -150,10 +149,12 @@ void GenerateOneMuon()
   //fVz = 2.0;
 
   // Sample Momentum Distributions (flat from min to mean, p^-2.7 from mean to max)
-  if( fRand->Uniform(0.,1) < fIntRatio ) 
-    fP = 1000. * fMomFlatDist->GetRandom();
-  else 
-    fP = 1000. * fMomPowDist->GetRandom();
+  //if( fRand->Uniform(0.,1) < fIntRatio ) 
+  //  fP = 1000. * fMomFlatDist->GetRandom();
+  //else 
+  //  fP = 1000. * fMomPowDist->GetRandom();
+  
+  fP = 1000.*fRand->Uniform(1.0,5.0);
 
   // Sample Angular Distributions (cos^2(theta) and flat phi)
   Float_t th = fThetaDist->GetRandom();
