@@ -9,10 +9,10 @@ G4Allocator<DetectorHit> DetectorHitAllocator;
 
 DetectorHit::DetectorHit()
 {
-  fID   = 0;
-  fPDef = 0;
-  fTime = 0;
-  fEdep = 0;
+  fID       = 0;
+  fPDef     = 0;
+  fTime     = 0;
+  fEdep     = 0;
 }
 
 //---------------------------------------------------------------------------
@@ -26,12 +26,12 @@ DetectorHit::~DetectorHit()
 DetectorHit::DetectorHit(const DetectorHit& right)
   :G4VHit()
 {
-  fID   = right.fID;
-  fEdep = right.fEdep;
-  fPDef = right.fPDef;
-  fTime = right.fTime;
-  fMom  + right.fMom;
-  fPosPre  + right.fPosPre;
+  fID       = right.fID;
+  fEdep     = right.fEdep;
+  fPDef     = right.fPDef;
+  fTime     = right.fTime;
+  fMom      + right.fMom;
+  fPosPre   + right.fPosPre;
   fPosPost  + right.fPosPost;
 }
 
@@ -40,13 +40,13 @@ DetectorHit::DetectorHit(const DetectorHit& right)
 const DetectorHit& DetectorHit::operator=(const DetectorHit& right)
 {
 
-  fID   =right.fID;
-  fEdep =right.fEdep;
-  fPDef =right.fPDef;
-  fTime =right.fTime;
-  fMom  +right.fMom;
-  fPosPre  +right.fPosPre;
-  fPosPost  +right.fPosPost;
+  fID       = right.fID;
+  fEdep     = right.fEdep;
+  fPDef     = right.fPDef;
+  fTime     = right.fTime;
+  fMom      + right.fMom;
+  fPosPre   + right.fPosPre;
+  fPosPost  + right.fPosPost;
   return *this;
 }
 

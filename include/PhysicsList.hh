@@ -24,12 +24,16 @@ public:
 
   void AddPhysicsList(const G4String& name);
   void ConstructProcess();
+  void ConstructOptical();
 
   void AddPackage(const G4String& name);
   void ConstructPhotoNuclear();
+  inline void SetOpticalProcesses( G4int op) {fOptical = op; }
 
 private:
 
+  G4int fOptical;
+  G4int fMaxNumPhotonStep;
   G4EmConfigurator em_config;
 
   G4double cutForGamma;

@@ -19,7 +19,7 @@ public:
   
   void   Initialize(G4HCofThisEvent*);
   G4bool ProcessHits(G4Step* astep,G4TouchableHistory* ROHist);
-  G4bool ProcessHits_constStep(G4Step* astep,G4TouchableHistory* ROHist);
+  G4bool ProcessHits_constStep(const G4Step* astep,G4TouchableHistory* ROHist);
   void   EndOfEvent(G4HCofThisEvent*);
   
 private:

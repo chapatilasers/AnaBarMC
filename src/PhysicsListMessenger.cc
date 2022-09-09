@@ -4,6 +4,7 @@
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithAString.hh"
+#include "G4UIcmdWithAnInteger.hh"
 
 //---------------------------------------------------------------------------
 
@@ -45,6 +46,12 @@ PhysicsListMessenger::PhysicsListMessenger(PhysicsList* pPhys)
   fPListCmd->SetGuidance("Add physics list.");
   fPListCmd->SetParameterName("PList",false);
   fPListCmd->AvailableForStates(G4State_PreInit, G4State_Idle);
+
+  fOpticalCmd = new G4UIcmdWithAnInteger("/AnaBarMC/physics/optical",this);
+  fOpticalCmd->SetGuidance("Set whether optical processes should be on");
+  fOpticalCmd->SetParameterName("Optical",false);
+  fOpticalCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
 }
 
 //---------------------------------------------------------------------------
@@ -57,6 +64,7 @@ PhysicsListMessenger::~PhysicsListMessenger()
   delete fProtoCutCmd;
   delete fAllCutCmd;
   delete fPListCmd;
+  delete fOpticalCmd;
 }
 
 //---------------------------------------------------------------------------
@@ -83,6 +91,9 @@ void PhysicsListMessenger::SetNewValue(G4UIcommand* command,
 
   if( command == fPListCmd )
    { fPPhysicsList->AddPhysicsList(newValue);}
+
+  if( command == fOpticalCmd )
+    { fPPhysicsList->SetOpticalProcesses(fOpticalCmd->GetNewIntValue(newValue)); }
 }
 
 //---------------------------------------------------------------------------

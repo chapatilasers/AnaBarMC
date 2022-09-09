@@ -49,16 +49,20 @@ void AnalysisManager::InitOutput()
   fROOTtree->Branch("Prim_Ph",     &fPph,    "Prim_Ph/F"     );
   fROOTtree->Branch("Prim_pdg",    &fPpdg,   "Prim_pdg/I"    );
   
-  // Set Raw Phantom Step Hit Branches
-  fROOTtree->Branch("Phantom_Nhits", &fRAW_Nhits, "Phantom_Nhits/I");  
-  fROOTtree->Branch("Phantom_pdg",   fRAW_pdg,    "Phantom_pdg[Phantom_Nhits]/I");
-  fROOTtree->Branch("Phantom_id",    fRAW_id,     "Phantom_id[Phantom_Nhits]/I");
-  fROOTtree->Branch("Phantom_x",     fRAW_xpre,   "Phantom_x[Phantom_Nhits]/F"  );
-  fROOTtree->Branch("Phantom_y",     fRAW_ypre,   "Phantom_y[Phantom_Nhits]/F"  );
-  fROOTtree->Branch("Phantom_z",     fRAW_zpre,   "Phantom_z[Phantom_Nhits]/F"  );
-  fROOTtree->Branch("Phantom_t",     fRAW_time,   "Phantom_t[Phantom_Nhits]/F"  );
-  fROOTtree->Branch("Phantom_Ed",    fRAW_Edep,   "Phantom_Ed[Phantom_Nhits]/F" );
-  
+  // Set PMT Hit Branches
+  fROOTtree->Branch("PMT_id",     &fPMTNo,     "PMT_id/I   " );  
+  fROOTtree->Branch("PMT_Nphotons",  fNphotons,  "PMT_Nphotons[20]/I" );  
+  fROOTtree->Branch("PMT_KineticEnergy",  fPMTKineticEnergy,  "PMT_KineticEnergy[20][5000]/F" );  
+
+  // Set Raw Detector Step Hit Branches
+  fROOTtree->Branch("Detector_Nhits", &fRAW_Nhits, "Detector_Nhits/I");  
+  fROOTtree->Branch("Detector_pdg",   fRAW_pdg,    "Detector_pdg[Detector_Nhits]/I");
+  fROOTtree->Branch("Detector_id",    fRAW_id,     "Detector_id[Detector_Nhits]/I");
+  fROOTtree->Branch("Detector_x",     fRAW_xpre,   "Detector_x[Detector_Nhits]/F"  );
+  fROOTtree->Branch("Detector_y",     fRAW_ypre,   "Detector_y[Detector_Nhits]/F"  );
+  fROOTtree->Branch("Detector_z",     fRAW_zpre,   "Detector_z[Detector_Nhits]/F"  );
+  fROOTtree->Branch("Detector_t",     fRAW_time,   "Detector_t[Detector_Nhits]/F"  );
+  fROOTtree->Branch("Detector_Ed",    fRAW_Edep,   "Detector_Ed[Detector_Nhits]/F" );
 }
 
 //---------------------------------------------------------------------------
@@ -74,6 +78,15 @@ void AnalysisManager::ZeroArray()
   fPTime  = 9999;
   fPPDef  = NULL;
   fPpdg   = 9999;
+
+  // PMT
+  fPMTNo    = -1;
+  for ( Int_t i = 0; i < fMaxPMTNo; i++) {
+	fNphotons[i]=0;
+ 	for (Int_t j = 0; j < fMaxPMTHits; j++) {
+		fPMTKineticEnergy[i][j] = 0;
+	}	
+  }
 
   // Raw Hits
   fRAW_Nhits  = 0;
@@ -144,7 +157,7 @@ void AnalysisManager::FillTree()
   fPph    = (Float_t)fPdir.getPhi();                                                      
   fPEne   = (Float_t)fPEne;                         
   fPpdg   = (Int_t)  fPPDef->GetPDGEncoding();
-  
+
   fROOTtree->Fill();
 }
 
