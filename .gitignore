@@ -5,3 +5,4 @@ data/*.root
 batch/data/*.root
 *.*~
 *.pcm
+.ipynb_checkpoints/*
