@@ -36,7 +36,7 @@ Float_t         fPz;
 Float_t         fP;
 Float_t         fM;
 Float_t         fE;
-Int_t           fPDGCode;
+Int_t           fPDGCodeTree;
 
 // Sampling Functions
 TH1*            fMomFlatDist;
@@ -99,7 +99,7 @@ void GenParticles( int fPDGCode = 13, int nevents = 100,
       fROOTTree->Fill();
       
       if( i % 10 == 0 )
-	cout << i << endl;
+	cout << i << " " << fPDGCode << endl;
     }
   
   // Write output and close file
@@ -130,8 +130,10 @@ void InitOutput()
   fROOTTree->Branch("Py_p",    &fPy, "Py_p/F",  basket );
   fROOTTree->Branch("Pz_p",    &fPz, "Pz_p/F",  basket );
   fROOTTree->Branch("En_p",    &fE,  "En_p/F",  basket );
+  
+  fROOTTree->Branch("Mass",    &fM,  "Mass/F",  basket );
 
-  fROOTTree->Branch("PDG", &fPDGCode, "PDG/I",  basket );
+  fROOTTree->Branch("PDG", &fPDGCodeTree, "PDG/I",  basket );
 
 }
 
@@ -168,6 +170,7 @@ void GenerateOneParticle(int fPDGCode)
   //fPz        = fP * TMath::Cos(th);
   fM         = fPDG->GetParticle( fPDGCode )->Mass() * 1000;
   fE         = TMath::Sqrt( (fP*fP + fM*fM) );
+  fPDGCodeTree = fPDGCode;
   
 }
 
