@@ -147,7 +147,7 @@ TCanvas *plotC1(){
 	if (trigger) {
 		
 		counter++; // unused
-		if (Detector_id[j] == Detector_Offset && Detector_pdg[j] == 13) {
+		if (Detector_id[j] == Detector_Offset && Detector_pdg[j] == Prim_pdg) {
 			hFingerX->Fill(Detector_x[j]);
         		hFingerY->Fill(Detector_y[j]);
         		hFingerZ->Fill(Detector_z[j]);
@@ -200,7 +200,20 @@ TCanvas *plotC2 (){
 
     tree1->GetEntry(i); 
 
-    Float_t fMass = 105.70; 
+    Float_t fMass;
+    if (Prim_pdg == 11) {
+	fMass = 0.511;
+    } else {
+	if (Prim_pdg == 13) {
+	    fMass = 105.7;
+	} else {
+	    if (Prim_pdg == 2212) {
+		fMass = 938.28;
+	    } else {
+		fMass = 939.5;
+	    }
+        }
+    } 
     Float_t fMomentum = sqrt(Prim_E*Prim_E - fMass*fMass); 
     Float_t fPx        = fMomentum * TMath::Sin(Prim_Th) * TMath::Cos(Prim_Ph); // NOTE: Prim_Th and Prim_Ph are not the theta and phi of the CDet
     Float_t fPy        = fMomentum * TMath::Sin(Prim_Th) * TMath::Sin(Prim_Ph); // coordinate system. They are the traditional spherical theta and 
@@ -378,7 +391,20 @@ TCanvas *plotC4 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
     float edep0tot = 0.0;
     tree1->GetEntry(i); 
 
-    Float_t fMass = 105.70; 
+    Float_t fMass;
+    if (Prim_pdg == 11) {
+	fMass = 0.511;
+    } else {
+	if (Prim_pdg == 13) {
+	    fMass = 105.7;
+	} else {
+	    if (Prim_pdg == 2212) {
+		fMass = 938.28;
+	    } else {
+		fMass = 939.5;
+	    }
+        }
+    } 
     Float_t fMomentum = sqrt(Prim_E*Prim_E - fMass*fMass); 
     Float_t fPy        = fMomentum * TMath::Sin(Prim_Th) * TMath::Sin(Prim_Ph);
     Float_t fNewTheta = TMath::ACos(fPy/fMomentum); 
@@ -435,7 +461,7 @@ TCanvas *plotC4 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] == Detector_Offset ) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 			  edep0tot += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == Prim_pdg && fNewTheta > Theta_min_cut) {
 				edep0tot += Detector_Ed[j];
 			       }
 			} 
@@ -443,7 +469,7 @@ TCanvas *plotC4 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 				edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == Prim_pdg && fNewTheta > Theta_min_cut) {
 					edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
 		     	       }
 			}
@@ -541,7 +567,7 @@ TCanvas *plotC5 (){
 	if (trigger) {
 		
 		counter++; // unused
-		if (Detector_id[j] == 1 + Detector_Offset && Detector_pdg[j] == 13) {
+		if (Detector_id[j] == 1 + Detector_Offset && Detector_pdg[j] == Prim_pdg) {
         		hAnaBarX->Fill(Detector_x[j]);
         		hAnaBarY->Fill(Detector_y[j]);
         		hAnaBarZ->Fill(Detector_z[j]);
@@ -595,7 +621,20 @@ TCanvas *plotC6 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
     float edep0tot = 0.0; 
     tree1->GetEntry(i); 
 
-    Float_t fMass = 105.70; 
+    Float_t fMass;
+    if (Prim_pdg == 11) {
+	fMass = 0.511;
+    } else {
+	if (Prim_pdg == 13) {
+	    fMass = 105.7;
+	} else {
+	    if (Prim_pdg == 2212) {
+		fMass = 938.28;
+	    } else {
+		fMass = 939.5;
+	    }
+        }
+    } 
     Float_t fMomentum = sqrt(Prim_E*Prim_E - fMass*fMass); 
     Float_t fPy        = fMomentum * TMath::Sin(Prim_Th) * TMath::Sin(Prim_Ph);
     Float_t fNewTheta = TMath::ACos(fPy/fMomentum); 
@@ -640,7 +679,7 @@ TCanvas *plotC6 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] == Detector_Offset ) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 			  edep0tot += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == Prim_pdg && fNewTheta > Theta_min_cut) {
 				edep0tot += Detector_Ed[j];
 			       }
 			} 
@@ -648,7 +687,7 @@ TCanvas *plotC6 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 				edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == Prim_pdg && fNewTheta > Theta_min_cut) {
 					edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
 		     	       }
 			}
@@ -706,7 +745,20 @@ TCanvas *plotC7 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
     float edep0tot = 0.0; 
     tree1->GetEntry(i); 
 
-    Float_t fMass = 105.70; 
+    Float_t fMass;
+    if (Prim_pdg == 11) {
+	fMass = 0.511;
+    } else {
+	if (Prim_pdg == 13) {
+	    fMass = 105.7;
+	} else {
+	    if (Prim_pdg == 2212) {
+		fMass = 938.28;
+	    } else {
+		fMass = 939.5;
+	    }
+        }
+    } 
     Float_t fMomentum = sqrt(Prim_E*Prim_E - fMass*fMass); 
     Float_t fPy        = fMomentum * TMath::Sin(Prim_Th) * TMath::Sin(Prim_Ph);
     Float_t fNewTheta = TMath::ACos(fPy/fMomentum); 
@@ -757,7 +809,7 @@ TCanvas *plotC7 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] == Detector_Offset ) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 			  edep0tot += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == Prim_pdg && fNewTheta > Theta_min_cut) {
 				edep0tot += Detector_Ed[j];
 			       }
 			} 
@@ -765,7 +817,7 @@ TCanvas *plotC7 (Float_t Theta_min_cut = 0.0, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 				edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == Prim_pdg && fNewTheta > Theta_min_cut) {
 					edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
 		     	       }
 			}
@@ -850,7 +902,20 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 3.05, Int_t Analyse_Secondaries = 1){
     }
     tree1->GetEntry(i); 
 
-    Float_t fMass = 105.70; 
+    Float_t fMass;
+    if (Prim_pdg == 11) {
+	fMass = 0.511;
+    } else {
+	if (Prim_pdg == 13) {
+	    fMass = 105.7;
+	} else {
+	    if (Prim_pdg == 2212) {
+		fMass = 938.28;
+	    } else {
+		fMass = 939.5;
+	    }
+        }
+    } 
     Float_t fMomentum = sqrt(Prim_E*Prim_E - fMass*fMass); 
     Float_t fPy        = fMomentum * TMath::Sin(Prim_Th) * TMath::Sin(Prim_Ph);
     Float_t fNewTheta = TMath::ACos(fPy/fMomentum); 
@@ -901,7 +966,7 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 3.05, Int_t Analyse_Secondaries = 1){
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 				edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == Prim_pdg && fNewTheta > Theta_min_cut) {
 					edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
 		     	       }
 			}
@@ -1033,7 +1098,20 @@ TCanvas *plotC9 (Float_t Theta_min_cut = 0.0, Float_t Edep_Threshold = 0.0, Int_
     }
     tree1->GetEntry(i); 
 
-    Float_t fMass = 105.70; 
+    Float_t fMass;
+    if (Prim_pdg == 11) {
+	fMass = 0.511;
+    } else {
+	if (Prim_pdg == 13) {
+	    fMass = 105.7;
+	} else {
+	    if (Prim_pdg == 2212) {
+		fMass = 938.28;
+	    } else {
+		fMass = 939.5;
+	    }
+        }
+    } 
     Float_t fMomentum = sqrt(Prim_E*Prim_E - fMass*fMass); 
     Float_t fPy        = fMomentum * TMath::Sin(Prim_Th) * TMath::Sin(Prim_Ph);
     Float_t fNewTheta = TMath::ACos(fPy/fMomentum); 
@@ -1088,7 +1166,7 @@ TCanvas *plotC9 (Float_t Theta_min_cut = 0.0, Float_t Edep_Threshold = 0.0, Int_
 		if (Detector_id[j] > Detector_Offset && Detector_id[j] <= NMaxPMT+Detector_Offset) {
 			if (Analyse_Secondaries == 1 && fNewTheta > Theta_min_cut) {
 				edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
-			}else{ if (Detector_pdg[j] == 13 && fNewTheta > Theta_min_cut) {
+			}else{ if (Detector_pdg[j] == Prim_pdg && fNewTheta > Theta_min_cut) {
 					edeptot[Detector_id[j]-1-Detector_Offset] += Detector_Ed[j];
 		     	       }
 			}
@@ -1334,7 +1412,20 @@ TCanvas *plotC12 (){
 
     tree1->GetEntry(i); 
 
-    Float_t fMass = 105.70; 
+    Float_t fMass;
+    if (Prim_pdg == 11) {
+	fMass = 0.511;
+    } else {
+	if (Prim_pdg == 13) {
+	    fMass = 105.7;
+	} else {
+	    if (Prim_pdg == 2212) {
+		fMass = 938.28;
+	    } else {
+		fMass = 939.5;
+	    }
+        }
+    } 
     Float_t fMomentum = sqrt(Prim_E*Prim_E - fMass*fMass); 
     Float_t fPx        = fMomentum * TMath::Sin(Prim_Th) * TMath::Cos(Prim_Ph); // NOTE: Prim_Th and Prim_Ph are not the theta and phi of the CDet
     Float_t fPy        = fMomentum * TMath::Sin(Prim_Th) * TMath::Sin(Prim_Ph); // coordinate system. They are the traditional spherical theta and 
