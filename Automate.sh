@@ -31,7 +31,7 @@ ssh jlabanalysis << EOF
 cd CDetOptical/batch
 ./sendjobs.sh runlist_test
 EOF
-echo "Done"
+#echo "Done"
 
 
 
