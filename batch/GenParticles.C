@@ -159,7 +159,8 @@ void GenerateOneParticle(int fPDGCode)
   fP = 1000.*fRand->Uniform(1.0,5.0);
 
   // Sample Angular Distributions (cos^2(theta) and flat phi)
-  Float_t th = fThetaDist->GetRandom();
+  //Float_t th = fThetaDist->GetRandom();
+  Float_t th = TMath::Pi()-fRand->Uniform(0.0,0.15);
   Float_t ph = fPhiDist->GetRandom();
   //Float_t th = 3.14159265;
   //Float_t ph = 0.0;
