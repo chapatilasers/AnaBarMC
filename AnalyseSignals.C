@@ -103,7 +103,9 @@ TCanvas *plotC1(){
   const int NMaxPMT=14; 
 
   for (Int_t i = 0; i < nentries; i++) { 
+  //for (Int_t i = 0; i < 3; i++) { 
 
+    //cout << "Event Number: " << i << endl;
     bool anabar_hit_paddle[NMaxPMT]; 
     for (Int_t j=0; j<NMaxPMT; j++) {
     	    anabar_hit_paddle[j]=false; 
@@ -122,14 +124,15 @@ TCanvas *plotC1(){
 	if (Detector_id[j] == Detector_Offset && !finger_hit) {
 		finger_hit = true;
 		j_finger = j;
-		//cout<<"hit in finger";
+		//cout<<"hit in finger\n";
 	}
 	for (Int_t ibar = 1; ibar<15; ibar++){
+                //cout << Detector_id[j+Detector_Offset] << " " << (ibar+Detector_Offset) << endl;
 		if (Detector_id[j+Detector_Offset] == ibar+Detector_Offset) {
 		  anabar_hit = true;
 		  anabar_hit_paddle[ibar-1]=true;
 		  j_anabar = j;
-		  //cout << "hit in anabar " << j << endl;
+		  //cout << "hit in anabar" << j << endl;
 		}
 	}
 	//if (Detector_id[j] == 14 && !anabar_bottom_hit) {
@@ -142,12 +145,14 @@ TCanvas *plotC1(){
     //if (finger_hit && anabar_top_hit) trigger = true; 
     if (finger_hit && anabar_hit) trigger = true; 
 
-    for (Int_t j=0; j < Detector_Nhits ; j++) {
+    for (Int_t j=0; j < Detector_Nhits ; j++) {    
 
 	if (trigger) {
+                //cout << "Trigger" << endl;
 		
-		counter++; // unused
 		if (Detector_id[j] == Detector_Offset && Detector_pdg[j] == Prim_pdg) {
+		        //cout << "Correct id and pdg type" << endl;
+                        counter++; // unused
 			hFingerX->Fill(Detector_x[j]);
         		hFingerY->Fill(Detector_y[j]);
         		hFingerZ->Fill(Detector_z[j]);
@@ -155,6 +160,7 @@ TCanvas *plotC1(){
 		}
 	}
     }
+    //cout << "Counter = " << counter << endl;
 
   }
 
