@@ -1215,7 +1215,7 @@ TCanvas *plotC9 (Float_t Theta_min_cut = 3.05, Float_t Edep_Threshold = 4.0, Int
 
   	gPad->SetLogy();
   	hAnaBarPMTNphot[i]->Draw();
- 	//hAnaBarPMTNoiseCutNphot[i]->Draw("SAME");
+ 	hAnaBarPMTNoiseCutNphot[i]->Draw("SAME");
   	fr[0]=0.7*hAnaBarPMTNphot[i]->GetMean();
   	fr[1]=25.0*hAnaBarPMTNphot[i]->GetMean();
   	TF1 *fitsnr = langaufit(hAnaBarPMTNphot[i],fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
