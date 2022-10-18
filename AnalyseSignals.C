@@ -1062,7 +1062,7 @@ TCanvas *plotC8 (Float_t Theta_min_cut = 3.05, Int_t Analyse_Secondaries = 1){
 }
 
 
-TCanvas *plotC9 (Float_t Theta_min_cut = 0.0, Float_t Edep_Threshold = 0.0, Int_t Analyse_Secondaries = 1){
+TCanvas *plotC9 (Float_t Theta_min_cut = 3.05, Float_t Edep_Threshold = 4.0, Int_t Analyse_Secondaries = 1){
 
   //-------------------------------------------------------------------
   //Create histograms
@@ -1152,7 +1152,7 @@ TCanvas *plotC9 (Float_t Theta_min_cut = 0.0, Float_t Edep_Threshold = 0.0, Int_
 
     //if (finger_hit && anabar_top_hit && anabar_bottom_hit) trigger = true; 
     //if (finger_hit && anabar_top_hit) trigger = true; 
-    if (finger_hit && anabar_hit && fNewTheta > 2.524) trigger = true; 
+    if (finger_hit && anabar_hit && fNewTheta > 3.05) trigger = true; 
     //if (finger_hit && anabar_hit) trigger = true; 
 
     if (trigger) {
@@ -1220,7 +1220,7 @@ TCanvas *plotC9 (Float_t Theta_min_cut = 0.0, Float_t Edep_Threshold = 0.0, Int_
   	fr[1]=25.0*hAnaBarPMTNphot[i]->GetMean();
   	TF1 *fitsnr = langaufit(hAnaBarPMTNphot[i],fr,sv,pllo,plhi,fp,fpe,&chisqr,&ndf);
   	langaupro(fp,SNRPeak,SNRFWHM);
-  	//fitsnr->Draw("SAME");
+  	fitsnr->Draw("SAME");
   }
 
   return c9;
