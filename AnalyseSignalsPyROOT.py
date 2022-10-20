@@ -595,7 +595,10 @@ c8.Print("plots/c8.pdf")
 #start = 4.0
 #gf = root.TF1("gf", "gaus", start, AnaBar_Edep_Max)
 #hAnaBarEdAllCut[2].Fit(gf, "R")
+
 cEdOne.Draw()
+cEdOne.Print("plots/cEdOne.pdf")
+
 #function = hAnaBarEdAllCut[2].GetFunction("gf")
 #print(function.GetParameter(0))
 
@@ -664,7 +667,7 @@ c9.Print("plots/c9.pdf")
 
 c9Single.SetLogy()
 c9Single.Draw()
-c9Single.Draw("plots/c9Single.pdf")
+c9Single.Print("plots/c9Single.pdf")
 
 
 # In[35]:
