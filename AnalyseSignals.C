@@ -1286,15 +1286,16 @@ TCanvas *plotC10 (){
 
     if (trigger) {
 
-	for (Int_t jq=0; jq<PMT_Nphotons[14]; jq++){
-		//std::cout << "Processing Finger hit = " << jq << std::endl; 
-		hFingerPMTKE->Fill(1240.0/PMT_KineticEnergy[14][jq]);
-	}
 	for (Int_t iq=1; iq < NUMPADDLE; iq++){
 		for (Int_t jq=0; jq<PMT_Nphotons[iq]; jq++){
 			//std::cout << "Processing Anabar pmt = " << iq << " hit = " << jq << " Energy = " << PMT_KineticEnergy[iq][jq] << std::endl;
 			hAnaBarPMTKEA1->Fill(1240.0/PMT_KineticEnergy[iq][jq]);
 		}
+	}
+
+	for (Int_t jq=0; jq<PMT_Nphotons[14]; jq++){
+		//std::cout << "Processing Finger hit = " << jq << " " << PMT_KineticEnergy[14][jq] << std::endl; 
+		hFingerPMTKE->Fill(1240.0/PMT_KineticEnergy[14][jq]);
 	}
     }
 
