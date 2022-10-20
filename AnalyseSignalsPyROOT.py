@@ -6,6 +6,8 @@
 
 import ROOT as root
 import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
 import random
 
 
@@ -47,64 +49,6 @@ PMT_KineticEnergy = np.array([[0 for i in range(MaxPMTNo)] for j in range(MaxPMT
 
 
 # In[4]:
-
-
-"""
-def langaufun(x, par):
-    invsq2pi = 0.3989422804014
-    mpshift  = -0.22278298
-    
-    np = 100.0
-    sc =   5.0
-    
-    summ = 0.0
-    
-    mpc = par[1] - mpshift * par[0]
-    xlow = x[0] - sc * par[3]
-    xupp = x[0] + sc * par[3]
-    
-    step = (xupp-xlow) / np
-    
-    for i in range(np//2):
-        xx = xlow + (i-.5) * step
-        
-        fland = TMath.Landau(xx,mpc,par[0]) / par[0]
-        summ += fland * TMath.Gaus(x[0],xx,par[3])
-        xx = xupp - (i-.5) * step
-        
-        fland = TMath.Landau(xx,mpc,par[0]) / par[0]
-        summ += fland * TMath.Gaus(x[0],xx,par[3])
-    return (par[2] * step * summ * invsq2pi / par[3])
-
-
-def langaufit(his, fitrange, startvalues, parlimitslo, parlimitshi, fitparams, fiterrors, ChiSqr, NDF):
-    funname = np.array('' for i in range(100),dtype=str)
-    
-    sprintf(FunName,"Fitfcn_%s",his.GetName())
-    
-    ffitold = (TF1)gROOT.GetListOfFunctions().FindObject(FunName)
-    if (ffitold):
-        delete ffitold
-    
-    ffit = root.TF1(FunName,langaufun,fitrange[0],fitrange[1],4)
-    ffit.SetParameters(startvalues)
-    ffit.SetParNames("Width","MP","Area","GSigma")
-    
-    for i in range(4):
-        ffit.SetParLimits(i, parlimitslo[i], parlimitshi[i])
-        
-    his.Fit(FunName,"RB0")
-    
-    ffit.GetParameters(fitparams)
-    
-    for i in range(4):
-        fiterrors[i] = ffit.GetParError(i)
-        
-    ChiSqr[0] = ffit.GetChisquare()
-    NDF[0] = ffit.GetNDF()
-    
-    return ffit
-"""
 
 
 # In[12]:
@@ -199,7 +143,7 @@ hAnaBarMult = root.TH1F("AnaBarMult","Anabar PMT Multiplicity",12,0,12)
 
 hPrimPx = root.TH1F("PrimPx","Primary Px", 100, -2000, 2000)
 hPrimPz = root.TH1F("PrimPz","Primary Pz", 100, -2000, 2000)
-hPrimPy = root.TH1F("PrimPy","Primary Py", 100, -25000, 0)
+hPrimPy = root.TH1F("PrimPy","Primary Py", 100, -2000, 0)
 
 counter = 0
 
@@ -414,6 +358,7 @@ hFingerT.Draw()
 
 
 c1.Draw()
+c1.Print("plots/c1.pdf")
 
 
 # In[14]:
@@ -436,6 +381,7 @@ hPrimPdg.Draw()
 
 
 c2.Draw()
+c2.Print("plots/c2.pdf")
 
 
 # In[16]:
@@ -458,6 +404,7 @@ hPMTID.Draw()
 
 
 c3.Draw()
+c3.Print("plots/c3.pdf")
 
 
 # In[18]:
@@ -480,6 +427,7 @@ hAnaBarPMTNphot[0].Draw()
 
 
 c4.Draw()
+c4.Print("plots/c4.pdf")
 
 
 # In[20]:
@@ -502,6 +450,7 @@ hAnaBarT.Draw()
 
 
 c5.Draw()
+c5.Print("plots/c5.pdf")
 
 
 # In[22]:
@@ -518,6 +467,7 @@ hE1vsE2.Draw("COLZ")
 
 
 c6.Draw()
+c6.Print("plots/c6.pdf")
 
 
 # In[24]:
@@ -549,18 +499,21 @@ hAnaBar_Edep_vs_Nphot.Draw("COLZ")
 
 
 c7.Draw()
+c7.Print("plots/c7.pdf")
 
 
 # In[26]:
 
 
 c7PE_MeV.Draw()
+c7PE_MeV.Print("plots/c7PE_MeV.pdf")
 
 
 # In[27]:
 
 
 c7Profile.Draw()
+c7Profile.Print("plots/c7Profile.pdf")
 
 
 # In[28]:
@@ -632,6 +585,7 @@ print("Mean peak Edep uncertainty: " + str(meanMeanErr) + " Mev")
 
 
 c8.Draw()
+c8.Print("plots/c8.pdf")
 
 
 # In[30]:
@@ -650,6 +604,7 @@ cEdOne.Draw()
 
 
 cEd.Draw()
+cEd.Print("plots/cEd.pdf")
 
 
 # In[32]:
@@ -701,6 +656,7 @@ for i in range(NUMPADDLE):
 
 
 c9.Draw()
+c9.Print("plots/c9.pdf")
 
 
 # In[34]:
@@ -708,6 +664,7 @@ c9.Draw()
 
 c9Single.SetLogy()
 c9Single.Draw()
+c9Single.Draw("plots/c9Single.pdf")
 
 
 # In[35]:
@@ -726,6 +683,7 @@ hAnaBarPMTKEA1.Draw()
 
 
 c10.Draw()
+c10.Print("plots/c10.pdf")
 
 
 # In[37]:
@@ -742,6 +700,7 @@ hAnaBarMult.Draw()
 
 
 c11.Draw()
+c11.Print("plots/c11.pdf")
 
 
 # In[39]:
@@ -762,6 +721,7 @@ hPrimPz.Draw()
 
 
 c12.Draw()
+c12.Print("plots/c12.pdf")
 
 
 # In[ ]:
@@ -777,7 +737,6 @@ c12.Draw()
 
 
 # In[ ]:
-
 
 
 
