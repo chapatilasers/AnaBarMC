@@ -6,3 +6,4 @@ batch/data/*.root
 *.*~
 *.pcm
 .ipynb_checkpoints/*
+__pycache__/
