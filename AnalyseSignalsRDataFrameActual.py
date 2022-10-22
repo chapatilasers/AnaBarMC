@@ -41,33 +41,125 @@ PMT_Nphotons_Noise = np.array([0 for i in range(MaxPMTNo)],dtype=int)
 
 PMT_KineticEnergy = np.array([[0 for i in range(MaxPMTNo)] for j in range(MaxPMTHits)],dtype=float)
 
-fileName = "data/AnaBarMC_777777.root"
+fileName = "data/AnaBarMC_77777.root"
 treeName = "T"
 
 f = root.TFile(fileName)
 myTree = f.Get(treeName)
-myTree.GetEntry(0)
-particleType = myTree.Prim_pdg
-
-if (particleType == 11):
-    fMass = 0.511
-else:
-    if (particleType == 13):
-        fMass = 105.7
-    else:
-        if (particleType == 2212):
-            fMass = 938.28
-        else:
-            fMass = 939.5
-
-print ("Incident particle mass = ",fMass)
 
 d = root.RDataFrame(treeName,fileName)
 
-cut1 = '
+triggerCode = '''
+bool getTrigger(int Detector_Nhits, int* Detector_id) {
+    int Detector_Offset = 0;
+    bool fhit = false;
+    bool ahit = false;
+    bool trigger = false;
+    for (int j=0; j<Detector_Nhits; j++) {
+        if (Detector_id[j] == Detector_Offset && !fhit) {
+            fhit = true;
+        }
+        for (int ibar=1; ibar<15; ibar++){
+            if (Detector_id[j+Detector_Offset] == ibar+Detector_Offset) {
+                ahit = true;
+            }
+        }
+        if (fhit && ahit) {
+            trigger = true;
+        }
+    }
+    return trigger;
+}
+
+float getMass(int Prim_pdg) {
+    float fMass;
+    if (Prim_pdg == 11) {
+        fMass = 0.511;
+    } else {
+        if (Prim_pdg == 13) {
+            fMass = 105.7;
+        } else {
+            if (Prim_pdg == 2212) {
+                fMass = 938.28;
+            } else {
+                fMass = 939.65;
+            }
+        }
+    }
+    return fMass;
+}
+
+float getMomentum(float Prim_E, float fMass) {
+    return sqrt(Prim_E*Prim_E - fMass*fMass);
+}
+
+float getPx(float fMomentum, float Prim_Th, float Prim_Ph) {
+    return fMomentum*TMath::Sin(Prim_Th)*TMath::Cos(Prim_Ph);
+}
+
+float getPy(float fMomentum, float Prim_Th, float Prim_Ph) {
+    return fMomentum*TMath::Sin(Prim_Th)*TMath::Sin(Prim_Ph);
+}
+
+float getPz(float fMomentum, float Prim_Th, float Prim_Ph) {
+    return fMomentum*TMath::Cos(Prim_Th);
+}
+
+float getNewTheta(float fMomentum, float fPy) {
+    return TMath::ACos(fPy/fMomentum);
+}
+
+float getNewPhi(float fMomentum, float fPx, float fPz) {
+    float fNewPhi;
+    if (fPx < 0.0) {
+        fNewPhi = TMath::ATan(fPz/fPx) + TMath::Pi();
+    } else {
+        if (fPx > 0.0 && fPz < 0.0) {
+            fNewPhi = TMath::ATan(fPz/fPx) + TMath::TwoPi();
+        } else {
+            fNewPhi = TMath::ATan(fPz/fPx);
+        }
+    }
+    return fNewPhi;
+}
+'''
+
+root.gInterpreter.Declare(triggerCode)
+
+fdf = d.Define("trigger", "getTrigger(Detector_Nhits, &Detector_id[0])") \
+       .Define("fMass", "getMass(Prim_pdg)") \
+       .Define("fMomentum","getMomentum(Prim_E,fMass)") \
+       .Define("fPx", "getPx(fMomentum,Prim_Th,Prim_Ph)") \
+       .Define("fPy", "getPy(fMomentum,Prim_Th,Prim_Ph)") \
+       .Define("fPz", "getPz(fMomentum,Prim_Th,Prim_Ph)") \
+       .Define("fNewTheta", "getNewTheta(fMomentum,fPy)") \
+       .Define("fNewPhi", "getNewPhi(fMomentum,fPx,fPz)")
+
+triggers = fdf.Filter("trigger==true").Count()
+print('{} entries passed trigger'.format(triggers.GetValue()))
+
+hPrimE = fdf.Filter("trigger==true").Histo1D('Prim_E')
+hPrimTh = fdf.Filter("trigger==true").Histo1D('fNewTheta')
+hPrimPh = fdf.Filter("trigger==true").Histo1D('fNewPhi')
+hPrimPdg = fdf.Filter("trigger==true").Histo1D('Prim_pdg')
+
+c2 = root.TCanvas("c1","c1",800,800)
+c2.Divide(2,2,0.01,0.01,0)
+
+c2.cd(1)
+hPrimE.Draw()
+c2.cd(2)
+hPrimTh.Draw()
+c2.cd(3)
+hPrimPh.Draw()
+c2.cd(4)
+hPrimPdg.Draw()
 
 
+# In[ ]:
 
 
+c2.Draw()
+c2.Print("plots/c2RA.pdf")
 
-
+t.stop()

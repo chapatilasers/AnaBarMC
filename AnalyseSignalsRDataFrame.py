@@ -53,7 +53,7 @@ PMT_KineticEnergy = np.array([[0 for i in range(MaxPMTNo)] for j in range(MaxPMT
 # In[ ]:
 
 
-f = root.TFile("data/AnaBarMC_777777.root")
+f = root.TFile("data/AnaBarMC_77777.root")
 f.ls()
 
 myTree = f.Get("T")
@@ -71,8 +71,8 @@ hPrimPdg = root.TH1F("PrimPdg","Primary PDG ID", 30, 0, 30)
 
 # In[ ]:
 
-
-for i in range(5000):
+print (entries)
+for i in range(entries):
     
     if (i%100 == 0):
         print("Event Number: %d" % i)
