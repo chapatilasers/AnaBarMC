@@ -138,10 +138,12 @@ fdf = d.Define("trigger", "getTrigger(Detector_Nhits, &Detector_id[0])") \
 triggers = fdf.Filter("trigger==true").Count()
 print('{} entries passed trigger'.format(triggers.GetValue()))
 
-hPrimE = fdf.Filter("trigger==true").Histo1D('Prim_E')
-hPrimTh = fdf.Filter("trigger==true").Histo1D('fNewTheta')
-hPrimPh = fdf.Filter("trigger==true").Histo1D('fNewPhi')
-hPrimPdg = fdf.Filter("trigger==true").Histo1D('Prim_pdg')
+fdft = fdf.Filter("trigger==true")
+
+hPrimE = fdft.Histo1D('Prim_E')
+hPrimTh = fdft.Histo1D('fNewTheta')
+hPrimPh = fdft.Histo1D('fNewPhi')
+hPrimPdg = fdft.Histo1D('Prim_pdg')
 
 c2 = root.TCanvas("c1","c1",800,800)
 c2.Divide(2,2,0.01,0.01,0)
