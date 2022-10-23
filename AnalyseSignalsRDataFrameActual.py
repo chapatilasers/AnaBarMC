@@ -122,6 +122,55 @@ float getNewPhi(float fMomentum, float fPx, float fPz) {
     }
     return fNewPhi;
 }
+
+std::vector<float> getFingerXVec(bool trigger, int Detector_Nhits, int* Detector_id, int* Detector_pdg, float* Detector_x, int Prim_pdg) {
+    std::vector<float> v;
+    int Detector_Offset = 0;
+    for (int j=0; j < Detector_Nhits; j++) {
+        if (trigger) {
+            if (Detector_id[j] == Detector_Offset && Detector_pdg[j] == Prim_pdg) {
+                v.push_back(Detector_x[j]);
+            }
+        }
+    }
+    return v;
+}
+std::vector<float> getFingerYVec(bool trigger, int Detector_Nhits, int* Detector_id, int* Detector_pdg, float* Detector_y, int Prim_pdg) {
+    std::vector<float> v;
+    int Detector_Offset = 0;
+    for (int j=0; j < Detector_Nhits; j++) {
+        if (trigger) {
+            if (Detector_id[j] == Detector_Offset && Detector_pdg[j] == Prim_pdg) {
+                v.push_back(Detector_y[j]);
+            }
+        }
+    }
+    return v;
+}
+std::vector<float> getFingerZVec(bool trigger, int Detector_Nhits, int* Detector_id, int* Detector_pdg, float* Detector_z, int Prim_pdg) {
+    std::vector<float> v;
+    int Detector_Offset = 0;
+    for (int j=0; j < Detector_Nhits; j++) {
+        if (trigger) {
+            if (Detector_id[j] == Detector_Offset && Detector_pdg[j] == Prim_pdg) {
+                v.push_back(Detector_z[j]);
+            }
+        }
+    }
+    return v;
+}
+std::vector<float> getFingerTVec(bool trigger, int Detector_Nhits, int* Detector_id, int* Detector_pdg, float* Detector_t, int Prim_pdg) {
+    std::vector<float> v;
+    int Detector_Offset = 0;
+    for (int j=0; j < Detector_Nhits; j++) {
+        if (trigger) {
+            if (Detector_id[j] == Detector_Offset && Detector_pdg[j] == Prim_pdg) {
+                v.push_back(Detector_t[j]);
+            }
+        }
+    }
+    return v;
+}
 '''
 
 root.gInterpreter.Declare(triggerCode)
@@ -133,19 +182,47 @@ fdf = d.Define("trigger", "getTrigger(Detector_Nhits, &Detector_id[0])") \
        .Define("fPy", "getPy(fMomentum,Prim_Th,Prim_Ph)") \
        .Define("fPz", "getPz(fMomentum,Prim_Th,Prim_Ph)") \
        .Define("fNewTheta", "getNewTheta(fMomentum,fPy)") \
-       .Define("fNewPhi", "getNewPhi(fMomentum,fPx,fPz)")
+       .Define("fNewPhi", "getNewPhi(fMomentum,fPx,fPz)") \
+       .Define("fingerXVec","getFingerXVec(trigger,Detector_Nhits,&Detector_id[0],&Detector_pdg[0],&Detector_x[0],Prim_pdg)") \
+       .Define("fingerYVec","getFingerYVec(trigger,Detector_Nhits,&Detector_id[0],&Detector_pdg[0],&Detector_y[0],Prim_pdg)") \
+       .Define("fingerZVec","getFingerZVec(trigger,Detector_Nhits,&Detector_id[0],&Detector_pdg[0],&Detector_z[0],Prim_pdg)") \
+       .Define("fingerTVec","getFingerTVec(trigger,Detector_Nhits,&Detector_id[0],&Detector_pdg[0],&Detector_t[0],Prim_pdg)")
 
 triggers = fdf.Filter("trigger==true").Count()
 print('{} entries passed trigger'.format(triggers.GetValue()))
 
 fdft = fdf.Filter("trigger==true")
 
+# Canvas 1
+
+hFingerX = fdft.Histo1D('fingerXVec')
+hFingerY = fdft.Histo1D('fingerYVec')
+hFingerZ = fdft.Histo1D('fingerZVec')
+hFingerT = fdft.Histo1D('fingerTVec')
+
+c1 = root.TCanvas("c1","c1",800,800)
+c1.Divide(2,2,0.01,0.01,0)
+
+c1.cd(1)
+hFingerX.Draw()
+c1.cd(2)
+hFingerY.Draw()
+c1.cd(3)
+hFingerZ.Draw()
+c1.cd(4)
+hFingerT.Draw()
+
+#c1.Draw()
+c1.Print("plots/c1RA.pdf");
+
+# Canvas 2
+
 hPrimE = fdft.Histo1D('Prim_E')
 hPrimTh = fdft.Histo1D('fNewTheta')
 hPrimPh = fdft.Histo1D('fNewPhi')
 hPrimPdg = fdft.Histo1D('Prim_pdg')
 
-c2 = root.TCanvas("c1","c1",800,800)
+c2 = root.TCanvas("c2","c2",800,800)
 c2.Divide(2,2,0.01,0.01,0)
 
 c2.cd(1)
@@ -157,11 +234,7 @@ hPrimPh.Draw()
 c2.cd(4)
 hPrimPdg.Draw()
 
-
-# In[ ]:
-
-
-c2.Draw()
+#c2.Draw()
 c2.Print("plots/c2RA.pdf")
 
 t.stop()
