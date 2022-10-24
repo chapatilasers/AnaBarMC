@@ -10,3 +10,4 @@ batch/rootfiles/*.root
 *.*~
 *.pcm
 .ipynb_checkpoints/*
+__pycache__/
