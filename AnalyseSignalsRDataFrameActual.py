@@ -28,6 +28,7 @@ treeName = "T"
 f = root.TFile(fileName)
 myTree = f.Get(treeName)
 
+root.EnableImplicitMT()
 d = root.RDataFrame(treeName,fileName)
 
 
