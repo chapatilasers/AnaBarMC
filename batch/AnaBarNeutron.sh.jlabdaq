@@ -5,7 +5,17 @@
 #PBS -l walltime=40:00:00
 #PBS -V
 
+export CENTOS_VERSION=`rpm --eval '%{centos_ver}'`
 export homedir=$HOME
+
+if [ $CENTOS_VERSION == "7" ]
+then
+	source $homedir/geant4_C7/G4setup_batch.sh
+	export G4BINARY=$homedir/geant4_C7/bin/Linux-g++/AnaBarMC
+else
+	source $homedir/geant4_C8/G4setup_batch.sh
+	export G4BINARY=$homedir/geant4_C8/bin/Linux-g++/AnaBarMC
+fi
 
 export nevents=100
 export tempdir=$homedir/CDetOptical/batch
@@ -25,8 +35,12 @@ echo "/AnaBarMC/analysis/setOutputFile $tempdir/rootfiles/AnaBarMC_$RUN_NUMBER.r
 
 cd $tempdir
 
+export ROOTSYS=/cern/root/pro
+export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
 export PATH=$ROOTSYS/bin:$PATH
-AnaBarMC $MCMACRO #>& /dev/null
+export DISPLAY=jlabanalysis.pcs.cnu.edu:0.0
+#nohup root -l -q GenCosmics.C++\($nevents,$RUN_NUMBER\) #>& /dev/null
+nohup $G4BINARY $MCMACRO #>& /dev/null
 echo "****************** AnaBarMC Finished"
 
 cp    ${tempdir}/rootfiles/"AnaBarMC_$RUN_NUMBER.root"   ${OUTPUT_DIR}/
