@@ -34,6 +34,7 @@ private:
   G4UIcmdWithADoubleAndUnit* fAllCutCmd;    
   G4UIcmdWithAString*        fPListCmd;
   G4UIcmdWithAnInteger*        fOpticalCmd;
+  G4UIcmdWithAnInteger*        fHadronicCmd;
     
 };
 

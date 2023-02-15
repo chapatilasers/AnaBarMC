@@ -10,6 +10,7 @@ export MCMACRO=$tempdir/AnaBarMC_$RUN_NUMBER.mac
 echo "/control/macroPath $MACRO_PATH"	 	                         >   $MCMACRO
 echo "/AnaBarMC/physics/addPhysics standard_opt3"                        >>   $MCMACRO
 echo "/AnaBarMC/physics/optical 1"	                                 >>  $MCMACRO
+echo "/AnaBarMC/physics/hadronic 1"	                                 >>  $MCMACRO
 echo "/AnaBarMC/detector/AnaBarXpos 0.00"	                         >>  $MCMACRO
 echo "/run/initialize"                                                   >>  $MCMACRO
 echo "/AnaBarMC/generator/Mode 1"                              >>  $MCMACRO

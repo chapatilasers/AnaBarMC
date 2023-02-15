@@ -58,6 +58,7 @@ PhysicsList::PhysicsList() : G4VModularPhysicsList()
 {
 
   fOptical = 0;
+  fHadronic = 0;
   fMaxNumPhotonStep = 50;
 
   pMessenger     = new PhysicsListMessenger(this);
@@ -122,8 +123,10 @@ void PhysicsList::ConstructProcess()
   raddecayList->ConstructProcess();
 
   // hadronic physics lists
-  for(size_t i=0; i<hadronPhys.size(); i++) {
+  if( fHadronic == 1 ) {
+   for(size_t i=0; i<hadronPhys.size(); i++) {
     hadronPhys[i] -> ConstructProcess();
+   }
   }
   
   // optical
