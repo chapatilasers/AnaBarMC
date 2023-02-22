@@ -76,7 +76,7 @@ private:
 
   // PMT
   Int_t                 fPMTNo;
-  static const Int_t	fMaxPMTNo = 20;
+  static const Int_t	fMaxPMTNo = 20000;
   static const Int_t    fMaxPMTHits = 5000;
   Int_t			fNphotons[fMaxPMTNo];
   Float_t 		fPMTKineticEnergy[fMaxPMTNo][fMaxPMTHits];

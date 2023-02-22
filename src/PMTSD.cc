@@ -67,9 +67,9 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
   G4double energy=theTrack->GetKineticEnergy()*1.0E6;
   //std::cout << "PMT No. = " << pmtNumber << ", Photon kinetic energy = " << energy << std::endl;
 
-  //for (G4int iii = 0; iii<100; iii++){
+  //for (G4int iii = 0; iii<10000; iii++){
   //	std::cout << " iii = " << iii << "  fhitID[iii] = " << fhitID[iii] << std::endl;
-  //}
+  //} 
  
   // if this PMT hasn't been hit in this event
   if ( fhitID[pmtNumber] == -1 && energy > 0.1) {

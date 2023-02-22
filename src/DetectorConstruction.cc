@@ -61,7 +61,16 @@ DetectorConstruction::DetectorConstruction()
   fTumourHeight = 0.0;
   fAnaBarXpos	= 0.0;
 
+  // There are 14 Layers in One Bar
   fNumberOfLayers = 14;
+  // There are 14 Bars in One Half Module
+  fNumberOfBars = 14;
+  // There are 2 sides to a Modules
+  fNumberOfSides = 1;
+  // There are 3 Modules in a Plane 
+  fNumberOfModules = 1;
+  // There are 2 Planes in the Detector
+  fNumberOfPlanes = 1;
   
   fMirrorThickness = 0.20;
   fMylarThickness = 0.02;
@@ -76,7 +85,7 @@ DetectorConstruction::DetectorConstruction()
   //fFingerThickness = 1.7;
   //fFingerZoffset = -1.0;
   fFingerLength = 10.0;
-  fFingerWidth = fNumberOfLayers*(fAnaBarThickness+2.0*fMylarThickness)+20.0;
+  fFingerWidth = fNumberOfBars*(2.0*fMylarThickness)+fNumberOfBars*fNumberOfLayers*(fAnaBarThickness+2.0*fMylarThickness)+20.0;
   fFingerThickness = 1.0;
   fFingerZoffset = -(fFingerWidth-20.0)/2.0;
   fFingerYoffset = fAnaBarWidth/2.0+fFingerThickness/2.0+1.0;
@@ -111,6 +120,18 @@ DetectorConstruction::~DetectorConstruction()
 
 //---------------------------------------------------------------------------
 
+G4int DetectorConstruction::SetDetectorID(G4int iLayer, G4int iBar, G4int iModule, G4int iSide, G4int iPlane){
+  G4int fDetectorID = 0;
+  fDetectorID = fDetectorID + iLayer;
+  fDetectorID = fDetectorID + iBar*fNumberOfLayers; 
+  fDetectorID = fDetectorID + iSide*fNumberOfBars;
+  fDetectorID = fDetectorID + iModule*fNumberOfSides;
+  fDetectorID = fDetectorID + iPlane*fNumberOfModules;
+std::cout<<"setting detector id: "<<fDetectorID<<", iLayer: "<<iLayer<<", iBar: "<<iBar<<", iModule: "<<iModule<<", iSide: "<<iSide<<", iPlane: "<<iPlane<<std::endl;
+  return fDetectorID;
+}
+
+//---------------------------------------------------------------------------
 G4VPhysicalVolume* DetectorConstruction::Construct()
 { 
   G4GeometryManager::GetInstance()->OpenGeometry();
@@ -216,8 +237,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Create Experimental Hall
   //---------------------------------------------------------------------------
 
-  G4Box* expHall_box           = new G4Box("expHall_box", // @suppress("Abstract class cannot be instantiated")
-					   1.5 *m, 1.5 *m, 1.5 *m );
+  G4Box* expHall_box           = new G4Box("expHall_box",
+					   5.0*m, 5.0 *m, 5.0 *m );
   
   //G4LogicalVolume* expHall_log = new G4LogicalVolume(expHall_box,
   //						     FindMaterial("G4_AIR"),
@@ -225,9 +246,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4LogicalVolume* expHall_log = new G4LogicalVolume(expHall_box,
 						     Air,
 						     "expHall_log", 0, 0, 0);
-  
   fExpHall                     = new G4PVPlacement(0, G4ThreeVector(),
-						   expHall_log, "expHall", 0, false, 0);
+						   expHall_log, "expHall", 0, false,0);
 
   //----------------- Create Mylar Layers and Sides ----------------------
 
@@ -259,43 +279,97 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   new G4LogicalSkinSurface("MylarSurfaceSide",logicMylarSide,mylarSurface);
 
   //----------------- Create Mylar surrounding Finger PMT  ----------------------
-
+//TODO
+// Top Left trigger
   G4VSolid* solidMylarFinger = new G4Box("MylarFinger",fFingerLength/2.0*cm,fMylarThickness/2.0*cm,fFingerWidth/2.0*cm);
-  
   G4LogicalVolume* logicMylarFinger = new G4LogicalVolume(solidMylarFinger,FindMaterial("G4_Al"), "MylarFinger");
-  
   G4VSolid* solidMylarFingerSide = new G4Box("MylarFingerSide",fMylarThickness/2.0*cm,fFingerThickness/2.0*cm,fFingerWidth/2.0*cm);
-  
   G4LogicalVolume* logicMylarFingerSide = new G4LogicalVolume(solidMylarFingerSide,FindMaterial("G4_Al"), "MylarFingerSide");
-
   new G4LogicalSkinSurface("MylarSurfaceFinger",logicMylarFinger,mylarSurface);
   new G4LogicalSkinSurface("MylarSurfaceFingerSide",logicMylarFingerSide,mylarSurface);
+ G4ThreeVector MylarFinger_pos1(0.0*cm , (fFingerYoffset-fFingerThickness/2.0-fMylarThickness/2.0)*cm , fFingerZoffset*cm);
+  	MylarFingerFront    =  new G4PVPlacement(0, MylarFinger_pos1 , logicMylarFinger , "MylarFinger" , expHall_log , false , 2582);
+ G4ThreeVector MylarFinger_pos2(0.0*cm , (fFingerYoffset+fFingerThickness/2.0+fMylarThickness/2.0)*cm , fFingerZoffset*cm);
+  	MylarFingerBack    =  new G4PVPlacement(0, MylarFinger_pos2 , logicMylarFinger , "MylarFinger" , expHall_log , false , 2583);
+ G4ThreeVector MylarFinger_pos3((fFingerLength/2.0+fMylarThickness/2.0)*cm , fFingerYoffset*cm , fFingerZoffset*cm);
+  	MylarFingerSide1    =  new G4PVPlacement(0, MylarFinger_pos3 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 2584);
+ G4ThreeVector MylarFinger_pos4(-1.0*(fFingerLength/2.0+fMylarThickness/2.0)*cm , fFingerYoffset*cm , fFingerZoffset*cm);
+  	MylarFingerSide2    =  new G4PVPlacement(0, MylarFinger_pos4 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 2585);
+// Top Right trigger
+ G4double xoffset = 1.0*fFingerLength; 
+ G4ThreeVector MylarFinger_pos21((0.0+xoffset)*cm , (fFingerYoffset-fFingerThickness/2.0-fMylarThickness/2.0)*cm , fFingerZoffset*cm);
+  	MylarFingerFront    =  new G4PVPlacement(0, MylarFinger_pos21 , logicMylarFinger , "MylarFinger" , expHall_log , false , 2592);
+ G4ThreeVector MylarFinger_pos22((0.0+xoffset)*cm , (fFingerYoffset+fFingerThickness/2.0+fMylarThickness/2.0)*cm , fFingerZoffset*cm);
+  	MylarFingerBack    =  new G4PVPlacement(0, MylarFinger_pos22 , logicMylarFinger , "MylarFinger" , expHall_log , false , 2593);
+ G4ThreeVector MylarFinger_pos23((xoffset+fFingerLength/2.0+fMylarThickness/2.0)*cm , fFingerYoffset*cm , fFingerZoffset*cm);
+  	MylarFingerSide1    =  new G4PVPlacement(0, MylarFinger_pos23 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 2594);
+ G4ThreeVector MylarFinger_pos24((xoffset-1.0*(fFingerLength/2.0+fMylarThickness/2.0))*cm , fFingerYoffset*cm , fFingerZoffset*cm);
+  	MylarFingerSide2    =  new G4PVPlacement(0, MylarFinger_pos24 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 2595);
+// Bottom Left trigger
+ //G4double yoffset = -1.0*(fFingerYoffset+fAnaBarWidth/2.0+fFingerThickness/2.0);    //This should be the bottom of the detector
+ //yoffset = yoffset - 20;                                                        //This should create a 20cm gap between the detector and bottom triggers  
+ G4double yoffset = -1.0*(fFingerYoffset+fAnaBarWidth/2.0+fFingerThickness/2.0);    //This should be the bottom of the detector
+ yoffset = yoffset - 20;                                                        //This should create a 20cm gap between the detector and bottom triggers  
+ yoffset = yoffset - 234;    //Hopfully this is good  
+ 
+ G4ThreeVector MylarFinger_pos31(0.0*cm ,(yoffset+fFingerYoffset-fFingerThickness/2.0-fMylarThickness/2.0)*cm , fFingerZoffset*cm);
+  	MylarFingerFront    =  new G4PVPlacement(0, MylarFinger_pos31 , logicMylarFinger , "MylarFinger" , expHall_log , false , 2602);
+ G4ThreeVector MylarFinger_pos32(0.0*cm ,(yoffset+fFingerYoffset+fFingerThickness/2.0+fMylarThickness/2.0)*cm , fFingerZoffset*cm);
+  	MylarFingerBack    =  new G4PVPlacement(0, MylarFinger_pos32 , logicMylarFinger , "MylarFinger" , expHall_log , false , 2603);
+ G4ThreeVector MylarFinger_pos33((fFingerLength/2.0+fMylarThickness/2.0)*cm ,(yoffset+fFingerYoffset)*cm , fFingerZoffset*cm);
+  	MylarFingerSide1    =  new G4PVPlacement(0, MylarFinger_pos33 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 2604);
+ G4ThreeVector MylarFinger_pos34(-1.0*(fFingerLength/2.0+fMylarThickness/2.0)*cm ,(yoffset+fFingerYoffset)*cm , fFingerZoffset*cm);
+  	MylarFingerSide2    =  new G4PVPlacement(0, MylarFinger_pos34 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 2605);
+// Bottom Right trigger
+ G4ThreeVector MylarFinger_pos41((0.0+xoffset)*cm ,(yoffset+fFingerYoffset-fFingerThickness/2.0-fMylarThickness/2.0)*cm , fFingerZoffset*cm);
+  	MylarFingerFront    =  new G4PVPlacement(0, MylarFinger_pos41 , logicMylarFinger , "MylarFinger" , expHall_log , false , 2612);
+ G4ThreeVector MylarFinger_pos42((0.0+xoffset)*cm ,(yoffset+fFingerYoffset+fFingerThickness/2.0+fMylarThickness/2.0)*cm , fFingerZoffset*cm);
+  	MylarFingerBack    =  new G4PVPlacement(0, MylarFinger_pos42 , logicMylarFinger , "MylarFinger" , expHall_log , false , 2613);
+ G4ThreeVector MylarFinger_pos43((xoffset+fFingerLength/2.0+fMylarThickness/2.0)*cm ,(yoffset+fFingerYoffset)*cm , fFingerZoffset*cm);
+  	MylarFingerSide1    =  new G4PVPlacement(0, MylarFinger_pos43 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 2614);
+ G4ThreeVector MylarFinger_pos44((xoffset-1.0*(fFingerLength/2.0+fMylarThickness/2.0))*cm ,(yoffset+fFingerYoffset)*cm , fFingerZoffset*cm);
+  	MylarFingerSide2    =  new G4PVPlacement(0, MylarFinger_pos44 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 2615);
+
+//  G4ThreeVector MylarFinger_pos1(0.0*cm , (fFingerYoffset-fFingerThickness/2.0-fMylarThickness/2.0)*cm , fFingerZoffset*cm);
+//   	MylarFingerFront    =  new G4PVPlacement(0, MylarFinger_pos1 , logicMylarFinger , "MylarFinger" , expHall_log , false , 82);
   
-  G4ThreeVector MylarFinger_pos1(0.0*cm , (fFingerYoffset-fFingerThickness/2.0-fMylarThickness/2.0)*cm , fFingerZoffset*cm);
-   	MylarFingerFront    =  new G4PVPlacement(0, MylarFinger_pos1 , logicMylarFinger , "MylarFinger" , expHall_log , false , 82);
+//  G4ThreeVector MylarFinger_pos2(0.0*cm , (fFingerYoffset+fFingerThickness/2.0+fMylarThickness/2.0)*cm , fFingerZoffset*cm);
+//   	MylarFingerBack    =  new G4PVPlacement(0, MylarFinger_pos2 , logicMylarFinger , "MylarFinger" , expHall_log , false , 83);
+  
+//  G4ThreeVector MylarFinger_pos3((fFingerLength/2.0+fMylarThickness/2.0)*cm , fFingerYoffset*cm , fFingerZoffset*cm);
+//   	MylarFingerSide1    =  new G4PVPlacement(0, MylarFinger_pos3 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 84);
 
-
-  G4ThreeVector MylarFinger_pos2(0.0*cm , (fFingerYoffset+fFingerThickness/2.0+fMylarThickness/2.0)*cm , fFingerZoffset*cm);
-   	MylarFingerBack    =  new G4PVPlacement(0, MylarFinger_pos2 , logicMylarFinger , "MylarFinger" , expHall_log , false , 83);
-
-  G4ThreeVector MylarFinger_pos3((fFingerLength/2.0+fMylarThickness/2.0)*cm , fFingerYoffset*cm , fFingerZoffset*cm);
-   	MylarFingerSide1    =  new G4PVPlacement(0, MylarFinger_pos3 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 84);
-
-  G4ThreeVector MylarFinger_pos4(-1.0*(fFingerLength/2.0+fMylarThickness/2.0)*cm , fFingerYoffset*cm , fFingerZoffset*cm);
-   	MylarFingerSide2    =  new G4PVPlacement(0, MylarFinger_pos4 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 85);
+//  G4ThreeVector MylarFinger_pos4(-1.0*(fFingerLength/2.0+fMylarThickness/2.0)*cm , fFingerYoffset*cm , fFingerZoffset*cm);
+//   	MylarFingerSide2    =  new G4PVPlacement(0, MylarFinger_pos4 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 85);
 
 
   //---------------------------------------------------------------------------
   // Create Detectors
   //---------------------------------------------------------------------------
-
+// TODO
+   //----------------------------
+   // Creating Trigger Paddles
+   //---------------------------
+   // Top Left Trigger
    G4Box* fingercounter_solid  = new G4Box("fingercounter_solid", fFingerLength/2.0*cm , fFingerThickness/2.0*cm , fFingerWidth/2.0*cm);
-   //G4LogicalVolume* fingercounter_log = new G4LogicalVolume(fingercounter_solid, FindMaterial("Polystyrene"), "fingercounter_log");
    G4LogicalVolume* fingercounter_log = new G4LogicalVolume(fingercounter_solid, Pscint, "fingercounter_log");
-   G4ThreeVector fingercounter_pos(0.0*cm , fFingerYoffset*cm , fFingerZoffset*cm);
-   FingerCounter=  new G4PVPlacement(0, fingercounter_pos , fingercounter_log , "FingerCounter" , expHall_log , false , 0);
+   G4ThreeVector fingercounter_pos0(0.0*cm , fFingerYoffset*cm , fFingerZoffset*cm);
+   FingerCounter=  new G4PVPlacement(0, fingercounter_pos0 , fingercounter_log , "FingerCounter" , expHall_log , false , 2560);
+   // Top Right Trigger
+   G4ThreeVector fingercounter_pos1(xoffset+0.0*cm , fFingerYoffset*cm , fFingerZoffset*cm);
+   FingerCounter=  new G4PVPlacement(0, fingercounter_pos1 , fingercounter_log , "FingerCounter" , expHall_log , false , 2561);
+   // Bottom Left Trigger
+   G4ThreeVector fingercounter_pos2(0.0*cm ,yoffset+ fFingerYoffset*cm , fFingerZoffset*cm);
+   FingerCounter=  new G4PVPlacement(0, fingercounter_pos2 , fingercounter_log , "FingerCounter" , expHall_log , false , 2562);
+   // Bottom Right Trigger
+   G4ThreeVector fingercounter_pos3(xoffset+0.0*cm ,yoffset+ fFingerYoffset*cm , fFingerZoffset*cm);
+   FingerCounter=  new G4PVPlacement(0, fingercounter_pos3 , fingercounter_log , "FingerCounter" , expHall_log , false , 2563);
+std::cout<<"The xoffset is: "<<xoffset<<" and the yoffset is: "<<yoffset<<std::endl;
 
    
+   //----------------------------
+   // Creating Detector itself
+   //---------------------------
    G4VSolid* AnaBar_outer  = new G4Box("AnaBar_solid_outer", fAnaBarLength/2.0*cm , fAnaBarWidth/2.0*cm , fAnaBarThickness/2.0*cm);
    G4VSolid* AnaBar_inner = new G4Tubs("AnaBar_solid_inner", 0.*cm,fHoleDiameter/2.0*cm, fAnaBarLength/2.0*cm, 0.*deg, 360.0*deg);
    
@@ -306,26 +380,39 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    G4VSolid* AnaBar_solid  = new G4SubtractionSolid("AnaBar_solid", AnaBar_outer, AnaBar_inner, anabar_rm,fibre_pos);
 
    G4LogicalVolume* AnaBar_log = new G4LogicalVolume(AnaBar_solid, Pscint, "AnaBar_log");
-   
-   for (G4int iii=0; iii<fNumberOfLayers; iii++){ 
-   	G4ThreeVector AnaBar_pos(fAnaBarXpos*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iii*cm);
-   	AnaBar      =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , iii+1);
+  
+   for (G4int iPlane=0; iPlane<fNumberOfPlanes; iPlane++){
+   for (G4int iSide=0; iSide<fNumberOfSides; iSide++){
+   for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
+   for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
+     for (G4int iLayer=0; iLayer<fNumberOfLayers; iLayer++){ 
+     	  G4ThreeVector AnaBar_pos(fAnaBarXpos*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
+   	  AnaBar      =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , SetDetectorID(iLayer, iBar, iModule, iSide, iPlane ));
 
-   	G4ThreeVector Mylar_pos1(fAnaBarXpos*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iii*cm-fAnaBarThickness/2.0*cm-fMylarThickness/2.0*cm);
-   	MylarTop    =  new G4PVPlacement(0, Mylar_pos1 , logicMylar , "Mylar" , expHall_log , false , 50+iii+1);
+   	  G4ThreeVector Mylar_pos1(fAnaBarXpos*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm-fAnaBarThickness/2.0*cm-fMylarThickness/2.0*cm + iBar*( -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm-fAnaBarThickness/2.0*cm-fMylarThickness/2.0*cm) );
+   	  MylarTop    =  new G4PVPlacement(0, Mylar_pos1 , logicMylar , "Mylar" , expHall_log , false , 8001 + SetDetectorID(iLayer, iBar, iModule, iSide, iPlane));
+   	//MylarTop    =  new G4PVPlacement(0, Mylar_pos1 , logicMylar , "Mylar" , expHall_log , false , 51 + SetDetectorID(iLayer, iBar, iModule, iSide, iPlane));
 
-   	G4ThreeVector Mylar_pos2(fAnaBarXpos*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iii*cm+fAnaBarThickness/2.0*cm+fMylarThickness/2.0*cm);
-   	MylarBottom =  new G4PVPlacement(0, Mylar_pos2 , logicMylar , "Mylar" , expHall_log , false , 70+iii+1);
+   	  G4ThreeVector Mylar_pos2(fAnaBarXpos*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm+fAnaBarThickness/2.0*cm+fMylarThickness/2.0*cm + iBar*( -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm+fAnaBarThickness/2.0*cm+fMylarThickness/2.0*cm));
+   	  MylarBottom =  new G4PVPlacement(0, Mylar_pos2 , logicMylar , "Mylar" , expHall_log , false , 11001 + SetDetectorID(iLayer, iBar, iModule, iSide, iPlane));
+   	//MylarBottom =  new G4PVPlacement(0, Mylar_pos2 , logicMylar , "Mylar" , expHall_log , false , 71 + SetDetectorID(iLayer, iBar, iModule, iSide, iPlane));
+     }
+     G4ThreeVector Mylar_pos3(fAnaBarXpos*cm , 1.0*(fAnaBarWidth/2.0+fMylarThickness/2.0)*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm + iBar*( -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm));
+     G4ThreeVector Mylar_pos4(fAnaBarXpos*cm , -1.0*(fAnaBarWidth/2.0+fMylarThickness/2.0)*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm)); 
+      MylarSideFront =  new G4PVPlacement(0, Mylar_pos3 , logicMylarSide , "MylarSide" , expHall_log , false , 13501 +2*SetDetectorID(0,iBar,iModule,iSide,iPlane));
+    //MylarSideFront =  new G4PVPlacement(0, Mylar_pos3 , logicMylarSide , "MylarSide" , expHall_log , false , 80);
+      MylarSideBack =  new G4PVPlacement(0, Mylar_pos4 , logicMylarSide , "MylarSide" , expHall_log , false , 13502 +2*SetDetectorID(0,iBar,iModule,iSide,iPlane));
+    //MylarSideBack =  new G4PVPlacement(0, Mylar_pos4 , logicMylarSide , "MylarSide" , expHall_log , false , 81);
+   }
+   }
+   }
    }
 
-   G4ThreeVector Mylar_pos3(fAnaBarXpos*cm , 1.0*(fAnaBarWidth/2.0+fMylarThickness/2.0)*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm );
-   G4ThreeVector Mylar_pos4(fAnaBarXpos*cm , -1.0*(fAnaBarWidth/2.0+fMylarThickness/2.0)*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm ); 
-   	MylarSideFront =  new G4PVPlacement(0, Mylar_pos3 , logicMylarSide , "MylarSide" , expHall_log , false , 80);
-   	MylarSideBack =  new G4PVPlacement(0, Mylar_pos4 , logicMylarSide , "MylarSide" , expHall_log , false , 81);
+std::cout<<"ALL PADDLES SHOULD BE CREATED"<<std::endl;
 
   //----------------- Create Mirror on non-phototube end ----------------------
 
-  G4VSolid* solidMirror = new G4Box("Mirror",fMirrorThickness/2.0*cm,fAnaBarWidth/2.0*cm,fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm);
+  G4VSolid* solidMirror = new G4Box("Mirror",fMirrorThickness/2.0*cm,fAnaBarWidth/2.0*cm,fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm);
 
   G4LogicalVolume* Mirror_log = new G4LogicalVolume(solidMirror,FindMaterial("G4_Al"), "Mirror");
 
@@ -345,10 +432,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   mirrorSurface -> SetMaterialPropertiesTable(mirrorSurfaceProperty);
 
-  Mirror = new G4PVPlacement(0,G4ThreeVector(fAnaBarXpos*cm-fAnaBarLength/2.0*cm-fMirrorThickness/2.0*cm, 0.0*cm, -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm),Mirror_log,"Mirror",expHall_log,false,40);
-
+  Mirror = new G4PVPlacement(0,G4ThreeVector(fAnaBarXpos*cm-fAnaBarLength/2.0*cm-fMirrorThickness/2.0*cm, 0.0*cm, -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm + (fNumberOfBars-1)*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm)),Mirror_log,"Mirror",expHall_log,false,2700);
+// Mirror = new G4PVPlacement(0,G4ThreeVector(fAnaBarXpos*cm-fAnaBarLength/2.0*cm-fMirrorThickness/2.0*cm, 0.0*cm, -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm + (fNumberOfBars-1)*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm)),Mirror_log,"Mirror",expHall_log,false,40);
   new G4LogicalSkinSurface("MirrorSurface",Mirror_log,mirrorSurface);
 
+std::cout<<"Mirror has been created"<<std::endl;
   //---------------------------------------------------------------------------
   // Create Fibre ... first cladding, and then WLS fibre itself.
   //---------------------------------------------------------------------------
@@ -370,18 +458,35 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   logicWLSfiber->SetUserLimits(new G4UserLimits(DBL_MAX,DBL_MAX,10*ms));
 
-  for (G4int iii=0; iii<fNumberOfLayers; iii++){ 
-  	G4ThreeVector Global_fibre_pos(fAnaBarXpos*cm + (fFibreLength-fAnaBarLength)/2.0*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iii*cm);
+  for (G4int iPlane=0; iPlane<fNumberOfPlanes; iPlane++){
+  for (G4int iSide=0; iSide<fNumberOfSides; iSide++){
+  for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
+  for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
+    for (G4int iLayer=0; iLayer<fNumberOfLayers; iLayer++){ 
+  	G4ThreeVector Global_fibre_pos(fAnaBarXpos*cm + (fFibreLength-fAnaBarLength)/2.0*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
 
-  	physiClad = new G4PVPlacement(anabar_rm,Global_fibre_pos,logicClad1,"Clad1",expHall_log,false,15+2.0*iii);
-  	physiWLSfiber = new G4PVPlacement(anabar_rm,
-                                       Global_fibre_pos,
-                                       logicWLSfiber,
-                                       "WLSFiber",
-                                       expHall_log,
-                                       false,
-                                       16+2.0*iii);
+   	physiClad = new G4PVPlacement(anabar_rm,Global_fibre_pos,logicClad1,"Clad1",expHall_log,false,3001+2*SetDetectorID(iLayer,iBar,iModule,iSide,iPlane));
+   	physiWLSfiber = new G4PVPlacement(anabar_rm,
+                                        Global_fibre_pos,
+                                        logicWLSfiber,
+                                        "WLSFiber",
+                                        expHall_log,
+                                        false,
+                                        3002+2*SetDetectorID(iLayer,iBar,iModule,iSide,iPlane));
+//	physiClad = new G4PVPlacement(anabar_rm,Global_fibre_pos,logicClad1,"Clad1",expHall_log,false,15+2*SetDetectorID(iLayer,iBar,iModule,iSide,iPlane));
+//	physiWLSfiber = new G4PVPlacement(anabar_rm,
+//                                     Global_fibre_pos,
+//                                     logicWLSfiber,
+//                                     "WLSFiber",
+//                                     expHall_log,
+//                                     false,
+//                                     16+2*SetDetectorID(iLayer,iBar,iModule,iSide,iPlane));
+    }
   }
+  }
+  }
+  }
+std::cout<<"Fibbers and Fibber Claddings have been created" <<std::endl; 
 
   //---------------------------------------------------------------------------
   // Create AnaBar PMT
@@ -394,17 +499,27 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   
   G4LogicalVolume* det1_log = new G4LogicalVolume(det1_tubs,
 						  Glass,
-						  "det1_log", 0, 0, 0);
-  for (G4int iii=0; iii<fNumberOfLayers; iii++){
-  
-  	fDetVol                  = new G4PVPlacement(anabar_rm, G4ThreeVector(fFibreLength/2.0*cm+fAnaBarXpos*cm+fPhotoCathodeThickness/2.0*cm+(fFibreLength/2.0-fAnaBarLength/2.0)*cm, 0., -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iii*cm),
-						det1_log, "det1", expHall_log, false, iii);
+  						  "det1_log", 0, 0, 0);
+
+  for (G4int iPlane=0; iPlane<fNumberOfPlanes; iPlane++){
+  for (G4int iSide=0; iSide<fNumberOfSides; iSide++){
+  for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
+  for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
+    for (G4int iLayer=0; iLayer<fNumberOfLayers; iLayer++){
+    	fDetVol                  = new G4PVPlacement(anabar_rm, G4ThreeVector(fFibreLength/2.0*cm+fAnaBarXpos*cm+fPhotoCathodeThickness/2.0*cm+(fFibreLength/2.0-fAnaBarLength/2.0)*cm, 0., -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm)),
+						det1_log, "det1", expHall_log, false, SetDetectorID(iLayer, iBar, iModule, iSide, iPlane));
+	std::cout<<"Creaing fDetVol for paddle id: "<<SetDetectorID(iLayer,iBar,iModule,iSide,iPlane)<<std::endl;
+    }
   }
+  }
+  }
+  }
+std::cout<<"The paddles have been set as the fDetCol things" <<std::endl;
 
   //---------------------------------------------------------------------------
   // Create Finger PMT
   //---------------------------------------------------------------------------
-
+// TODO 
   G4RotationMatrix* finger_rm  = new G4RotationMatrix();
   finger_rm->rotateX(0. *deg);
   
@@ -413,9 +528,23 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4LogicalVolume* det2_log = new G4LogicalVolume(det2_tubs,
 						  Glass,
 						  "det2_log", 0, 0, 0);
-  
-  fDet15Vol                  = new G4PVPlacement(finger_rm, G4ThreeVector(0.0,fFingerYoffset*cm,fFingerZoffset*cm+fFingerWidth/2.0*cm+fPhotoCathodeThickness/20*cm),
-						det2_log, "det2", expHall_log, false, 14);
+  // Top Left Trigger Volume
+   fDet15Vol                  = new G4PVPlacement(finger_rm, G4ThreeVector(0.0,fFingerYoffset*cm,fFingerZoffset*cm+fFingerWidth/2.0*cm+fPhotoCathodeThickness/20*cm),
+  						det2_log, "det2", expHall_log, false, 2500);
+//  fDet15Vol                  = new G4PVPlacement(finger_rm, G4ThreeVector(0.0,fFingerYoffset*cm,fFingerZoffset*cm+fFingerWidth/2.0*cm+fPhotoCathodeThickness/20*cm),
+//						det2_log, "det2", expHall_log, false, 14);
+
+  // Top Right Trigger Volume
+   fDet15Vol                  = new G4PVPlacement(finger_rm, G4ThreeVector(xoffset+0.0,fFingerYoffset*cm,fFingerZoffset*cm+fFingerWidth/2.0*cm+fPhotoCathodeThickness/20*cm),
+  						det2_log, "det2", expHall_log, false, 2501);
+  // Bottom Left Trigger Volume
+   fDet15Vol                  = new G4PVPlacement(finger_rm, G4ThreeVector(0.0,yoffset - fFingerYoffset*cm,fFingerZoffset*cm+fFingerWidth/2.0*cm+fPhotoCathodeThickness/20*cm),
+  						det2_log, "det2", expHall_log, false, 2502);
+  // Bottom Right Trigger Volume
+   fDet15Vol                  = new G4PVPlacement(finger_rm, G4ThreeVector(xoffset+0.0,yoffset - fFingerYoffset*cm,fFingerZoffset*cm+fFingerWidth/2.0*cm+fPhotoCathodeThickness/20*cm),
+  						det2_log, "det2", expHall_log, false, 2503);
+
+std::cout<<"The finger paddle has been set as the fDet15Vol thing"<<std::endl;
 
   //---------------------------------------------------------------------------
   // Create Optical Surface
@@ -447,7 +576,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   fingercounter_log->SetSensitiveDetector( fDetSD );
   AnaBar_log->SetSensitiveDetector( fDetSD );
 
-  fPMTSD = new PMTSD("PMTSD", 100);
+  fPMTSD = new PMTSD("PMTSD", 15000);
   SDman->AddNewDetector( fPMTSD );
   det1_log->SetSensitiveDetector( fPMTSD );
   det2_log->SetSensitiveDetector( fPMTSD );
@@ -468,6 +597,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   logicMylarFingerSide->SetVisAttributes(red);
   det1_log->SetVisAttributes(yellow);
   det2_log->SetVisAttributes(yellow);
+
+std::cout<<"Returning the Experimental Hall"<<std::endl;
 
   return fExpHall;
 }

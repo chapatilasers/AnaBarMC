@@ -32,6 +32,7 @@ AnalysisManager::~AnalysisManager()
 {
    fROOTtree->Write();
    fROOTfile->Close();
+//std::cout<<"Tree has been writen and closed bc analysis manager has been deconstructed"<<std::endl;
 }
 
 //---------------------------------------------------------------------------
@@ -42,7 +43,7 @@ void AnalysisManager::InitOutput()
   fROOTfile = new TFile(fOutFileName,"RECREATE","fROOTfile",1);
   fROOTtree = new TTree("T","Output Tree");
   fROOTtree->SetAutoSave();
-
+//std::cout<<"Tree has been created"<<std::endl;
   // Set Primary Branches
   fROOTtree->Branch("Prim_E",      &fPEne,   "Prim_E/F"      );
   fROOTtree->Branch("Prim_Th",     &fPth,    "Prim_Th/F"     );
@@ -50,7 +51,7 @@ void AnalysisManager::InitOutput()
   fROOTtree->Branch("Prim_pdg",    &fPpdg,   "Prim_pdg/I"    );
   
   // Set PMT Hit Branches
-  fROOTtree->Branch("PMT_id",     &fPMTNo,     "PMT_id/I   " );  
+  fROOTtree->Branch("PMT_id",     &fPMTNo,     "PMT_id/I" );  
   fROOTtree->Branch("PMT_Nphotons",  fNphotons,  "PMT_Nphotons[20]/I" );  
   fROOTtree->Branch("PMT_KineticEnergy",  fPMTKineticEnergy,  "PMT_KineticEnergy[20][5000]/F" );  
 
@@ -63,12 +64,14 @@ void AnalysisManager::InitOutput()
   fROOTtree->Branch("Detector_z",     fRAW_zpre,   "Detector_z[Detector_Nhits]/F"  );
   fROOTtree->Branch("Detector_t",     fRAW_time,   "Detector_t[Detector_Nhits]/F"  );
   fROOTtree->Branch("Detector_Ed",    fRAW_Edep,   "Detector_Ed[Detector_Nhits]/F" );
+//std::cout<<"branches have been created"<<std::endl;
 }
 
 //---------------------------------------------------------------------------
 
 void AnalysisManager::ZeroArray()
 {
+//std::cout<<"Start of ZeroArray"<<std::endl;
   // Primary
   G4ThreeVector zero(0.,0.,0.);
   fPEne   = 9999;
@@ -116,12 +119,14 @@ void AnalysisManager::ZeroArray()
     fRAW_zpost[i]   = 9999;
     fRAW_Energy[i]  = 9999;
   }
+//std::cout<<"End of ZeroArray"<<std::endl;
 }
 
 //---------------------------------------------------------------------------
 
 void AnalysisManager::FillArray( Int_t hitn ) 
 {
+//std::cout<<"The arrays are about to be filled"<<std::endl;
     fRAW_Nhits++;
     fRAW_id[hitn]     = (Int_t)fStepid;
     fRAW_pdg[hitn]    = (Int_t)fSteppdef->GetPDGEncoding();
@@ -144,13 +149,14 @@ void AnalysisManager::FillArray( Int_t hitn )
     fRAW_xpre[hitn]   = (fRAW_xpre[hitn] + fRAW_xpost[hitn])/2.;
     fRAW_ypre[hitn]   = (fRAW_ypre[hitn] + fRAW_ypost[hitn])/2.;
     fRAW_zpre[hitn]   = (fRAW_zpre[hitn] + fRAW_zpost[hitn])/2.;
-
+//std::cout<<"The arrays have been filled"<<std::endl;
 }
 
 //---------------------------------------------------------------------------
 
 void AnalysisManager::FillTree()
 {
+//std::cout<<"Tree is about to be filled with primary variables"<<std::endl;
   // Primary Variables
   fPTime  = (Float_t)fPTime;
   fPth    = (Float_t)fPdir.getTheta();                         
@@ -159,6 +165,7 @@ void AnalysisManager::FillTree()
   fPpdg   = (Int_t)  fPPDef->GetPDGEncoding();
 
   fROOTtree->Fill();
+//std::cout<<"Tree has been filled with primary variables"<<std::endl;
 }
 
 //---------------------------------------------------------------------------
