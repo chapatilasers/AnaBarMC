@@ -66,7 +66,7 @@ DetectorConstruction::DetectorConstruction()
   // There are 14 Bars in One Half Module
   fNumberOfBars = 14;
   // There are 2 sides to a Modules
-  fNumberOfSides = 1;
+  fNumberOfSides = 2;
   // There are 3 Modules in a Plane 
   fNumberOfModules = 1;
   // There are 2 Planes in the Detector
@@ -383,22 +383,24 @@ std::cout<<"The xoffset is: "<<xoffset<<" and the yoffset is: "<<yoffset<<std::e
   
    for (G4int iPlane=0; iPlane<fNumberOfPlanes; iPlane++){
    for (G4int iSide=0; iSide<fNumberOfSides; iSide++){
+	G4double iSideA = 2.0*iSide;
+	G4double fAnaBarXposA = fAnaBarXpos-iSideA*(fAnaBarLength/2.0-fMirrorThickness/2.0);
    for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
    for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
      for (G4int iLayer=0; iLayer<fNumberOfLayers; iLayer++){ 
-     	  G4ThreeVector AnaBar_pos(fAnaBarXpos*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
+     	  G4ThreeVector AnaBar_pos(fAnaBarXposA*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
    	  AnaBar      =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , SetDetectorID(iLayer, iBar, iModule, iSide, iPlane ));
 
-   	  G4ThreeVector Mylar_pos1(fAnaBarXpos*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm-fAnaBarThickness/2.0*cm-fMylarThickness/2.0*cm + iBar*( -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm-fAnaBarThickness/2.0*cm-fMylarThickness/2.0*cm) );
+   	  G4ThreeVector Mylar_pos1(fAnaBarXposA*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm-fAnaBarThickness/2.0*cm-fMylarThickness/2.0*cm + iBar*( -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm-fAnaBarThickness/2.0*cm-fMylarThickness/2.0*cm) );
    	  MylarTop    =  new G4PVPlacement(0, Mylar_pos1 , logicMylar , "Mylar" , expHall_log , false , 8001 + SetDetectorID(iLayer, iBar, iModule, iSide, iPlane));
    	//MylarTop    =  new G4PVPlacement(0, Mylar_pos1 , logicMylar , "Mylar" , expHall_log , false , 51 + SetDetectorID(iLayer, iBar, iModule, iSide, iPlane));
 
-   	  G4ThreeVector Mylar_pos2(fAnaBarXpos*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm+fAnaBarThickness/2.0*cm+fMylarThickness/2.0*cm + iBar*( -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm+fAnaBarThickness/2.0*cm+fMylarThickness/2.0*cm));
+   	  G4ThreeVector Mylar_pos2(fAnaBarXposA*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm+fAnaBarThickness/2.0*cm+fMylarThickness/2.0*cm + iBar*( -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm+fAnaBarThickness/2.0*cm+fMylarThickness/2.0*cm));
    	  MylarBottom =  new G4PVPlacement(0, Mylar_pos2 , logicMylar , "Mylar" , expHall_log , false , 11001 + SetDetectorID(iLayer, iBar, iModule, iSide, iPlane));
    	//MylarBottom =  new G4PVPlacement(0, Mylar_pos2 , logicMylar , "Mylar" , expHall_log , false , 71 + SetDetectorID(iLayer, iBar, iModule, iSide, iPlane));
      }
-     G4ThreeVector Mylar_pos3(fAnaBarXpos*cm , 1.0*(fAnaBarWidth/2.0+fMylarThickness/2.0)*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm + iBar*( -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm));
-     G4ThreeVector Mylar_pos4(fAnaBarXpos*cm , -1.0*(fAnaBarWidth/2.0+fMylarThickness/2.0)*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm)); 
+     G4ThreeVector Mylar_pos3(fAnaBarXposA*cm , 1.0*(fAnaBarWidth/2.0+fMylarThickness/2.0)*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm + iBar*( -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm));
+     G4ThreeVector Mylar_pos4(fAnaBarXposA*cm , -1.0*(fAnaBarWidth/2.0+fMylarThickness/2.0)*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0-0.5)*cm)); 
       MylarSideFront =  new G4PVPlacement(0, Mylar_pos3 , logicMylarSide , "MylarSide" , expHall_log , false , 13501 +2*SetDetectorID(0,iBar,iModule,iSide,iPlane));
     //MylarSideFront =  new G4PVPlacement(0, Mylar_pos3 , logicMylarSide , "MylarSide" , expHall_log , false , 80);
       MylarSideBack =  new G4PVPlacement(0, Mylar_pos4 , logicMylarSide , "MylarSide" , expHall_log , false , 13502 +2*SetDetectorID(0,iBar,iModule,iSide,iPlane));
@@ -460,10 +462,13 @@ std::cout<<"Mirror has been created"<<std::endl;
 
   for (G4int iPlane=0; iPlane<fNumberOfPlanes; iPlane++){
   for (G4int iSide=0; iSide<fNumberOfSides; iSide++){
+	G4double iSideA = 2.0*iSide;
+	G4double iSideF = 1.0-2.0*iSide;
+	G4double fAnaBarXposA = fAnaBarXpos-iSideA*(fAnaBarLength/2.0-fMirrorThickness/2.0);
   for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
   for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
     for (G4int iLayer=0; iLayer<fNumberOfLayers; iLayer++){ 
-  	G4ThreeVector Global_fibre_pos(fAnaBarXpos*cm + (fFibreLength-fAnaBarLength)/2.0*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
+  	G4ThreeVector Global_fibre_pos(fAnaBarXposA*cm + isideF*(fFibreLength-fAnaBarLength)/2.0*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
 
    	physiClad = new G4PVPlacement(anabar_rm,Global_fibre_pos,logicClad1,"Clad1",expHall_log,false,3001+2*SetDetectorID(iLayer,iBar,iModule,iSide,iPlane));
    	physiWLSfiber = new G4PVPlacement(anabar_rm,
