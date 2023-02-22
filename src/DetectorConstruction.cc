@@ -64,7 +64,7 @@ DetectorConstruction::DetectorConstruction()
   // There are 14 Layers in One Bar
   fNumberOfLayers = 14;
   // There are 14 Bars in One Half Module
-  fNumberOfBars = 2;
+  fNumberOfBars = 4;
   // There are 2 sides to a Modules
   fNumberOfSides = 2;
   // There are 3 Modules in a Plane 
@@ -389,7 +389,8 @@ std::cout<<"The xoffset is: "<<xoffset<<" and the yoffset is: "<<yoffset<<std::e
    for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
    for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
      for (G4int iLayer=0; iLayer<fNumberOfLayers; iLayer++){ 
-     	  G4ThreeVector AnaBar_pos(fAnaBarXposA*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
+     	  //G4ThreeVector AnaBar_pos(fAnaBarXposA*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
+     	  G4ThreeVector AnaBar_pos(fAnaBarXposA*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
    	  AnaBar      =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , SetDetectorID(iLayer, iBar, iModule, iSide, iPlane ));
 
    	  G4ThreeVector Mylar_pos1(fAnaBarXposA*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm-fAnaBarThickness/2.0*cm-fMylarThickness/2.0*cm + iBar*( -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm-fAnaBarThickness/2.0*cm-fMylarThickness/2.0*cm) );
