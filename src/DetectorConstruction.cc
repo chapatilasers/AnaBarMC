@@ -468,7 +468,7 @@ std::cout<<"Mirror has been created"<<std::endl;
   for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
   for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
     for (G4int iLayer=0; iLayer<fNumberOfLayers; iLayer++){ 
-  	G4ThreeVector Global_fibre_pos(fAnaBarXposA*cm + isideF*(fFibreLength-fAnaBarLength)/2.0*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
+  	G4ThreeVector Global_fibre_pos(fAnaBarXposA*cm + iSideF*(fFibreLength-fAnaBarLength)/2.0*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
 
    	physiClad = new G4PVPlacement(anabar_rm,Global_fibre_pos,logicClad1,"Clad1",expHall_log,false,3001+2*SetDetectorID(iLayer,iBar,iModule,iSide,iPlane));
    	physiWLSfiber = new G4PVPlacement(anabar_rm,
