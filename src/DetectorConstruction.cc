@@ -64,7 +64,7 @@ DetectorConstruction::DetectorConstruction()
   // There are 14 Layers in One Bar
   fNumberOfLayers = 14;
   // There are 14 Bars in One Half Module
-  fNumberOfBars = 14;
+  fNumberOfBars = 2;
   // There are 2 sides to a Modules
   fNumberOfSides = 2;
   // There are 3 Modules in a Plane 
@@ -73,7 +73,8 @@ DetectorConstruction::DetectorConstruction()
   fNumberOfPlanes = 1;
   
   fMirrorThickness = 0.20;
-  fMylarThickness = 0.02;
+  //fMylarThickness = 0.02;
+  fMylarThickness = 0.5;
 
   fAnaBarLength = 50.0;
   fAnaBarWidth = 4.0;
