@@ -64,7 +64,7 @@ DetectorConstruction::DetectorConstruction()
   // There are 14 Layers in One Bar
   fNumberOfLayers = 14;
   // There are 14 Bars in One Half Module
-  fNumberOfBars = 4;
+  fNumberOfBars = 2;
   // There are 2 sides to a Modules
   fNumberOfSides = 2;
   // There are 3 Modules in a Plane 
@@ -470,7 +470,7 @@ std::cout<<"Mirror has been created"<<std::endl;
   for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
   for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
     for (G4int iLayer=0; iLayer<fNumberOfLayers; iLayer++){ 
-  	G4ThreeVector Global_fibre_pos(fAnaBarXposA*cm + iSideF*(fFibreLength-fAnaBarLength)/2.0*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
+  	G4ThreeVector Global_fibre_pos(fAnaBarXposA*cm + iSideF*(fFibreLength-fAnaBarLength)/2.0*cm , 0.0*cm , -1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
 
    	physiClad = new G4PVPlacement(anabar_rm,Global_fibre_pos,logicClad1,"Clad1",expHall_log,false,3001+2*SetDetectorID(iLayer,iBar,iModule,iSide,iPlane));
    	physiWLSfiber = new G4PVPlacement(anabar_rm,
