@@ -308,7 +308,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   	MylarFingerSide2    =  new G4PVPlacement(0, MylarFinger_pos24 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 2595);
 
 // Bottom Left trigger
- G4double yoffset = -30;                                                        //This should create a 30cm gap between the top and bottom triggers  
+ G4double yoffset = -70;                                                        //This should create a 30cm gap between the top and bottom triggers  
  
  G4ThreeVector MylarFinger_pos31(0.0*cm ,(yoffset+fFingerYoffset-fFingerThickness/2.0-fMylarThickness/2.0)*cm , fFingerZoffset*cm);
   	MylarFingerFront    =  new G4PVPlacement(0, MylarFinger_pos31 , logicMylarFinger , "MylarFinger" , expHall_log , false , 2602);
@@ -394,7 +394,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	if (iPlane==0) {
 		yoff=0.0*cm;
 	} else {
-		yoff=-100.0*cm;
+		yoff=-30.0*cm;
 	}
    for (G4int iSide=0; iSide<fNumberOfSides; iSide++){
 	G4double iSideA = 2.0*iSide;
@@ -470,7 +470,7 @@ std::cout<<"ALL PADDLES SHOULD BE CREATED"<<std::endl;
 	if (iPlane==0) {
 		yoff=0.0*cm;
 	} else {
-		yoff=-100.0*cm;
+		yoff=-30.0*cm;
 	}
    for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
 	if (iModule==0) {
@@ -517,7 +517,7 @@ std::cout<<"ALL PADDLES SHOULD BE CREATED"<<std::endl;
 	if (iPlane==0) {
 		yoff=0.0*cm;
 	} else {
-		yoff=-100.0*cm;
+		yoff=-30.0*cm;
 	}
   for (G4int iSide=0; iSide<fNumberOfSides; iSide++){
 	G4double iSideA = 2.0*iSide;
@@ -572,7 +572,7 @@ std::cout<<"Fibbers and Fibber Claddings have been created" <<std::endl;
 	if (iPlane==0) {
 		yoff=0.0*cm;
 	} else {
-		yoff=-100.0*cm;
+		yoff=-30.0*cm;
 	}
   for (G4int iSide=0; iSide<fNumberOfSides; iSide++){
 
