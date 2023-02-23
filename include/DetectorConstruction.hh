@@ -76,6 +76,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4VPhysicalVolume* fDet15Vol;
   G4VPhysicalVolume* FingerCounter;
   G4VPhysicalVolume* AnaBar;
+  G4VPhysicalVolume* AnaBarMylar;
   G4VPhysicalVolume* MylarTop;
   G4VPhysicalVolume* MylarBottom;
   G4VPhysicalVolume* MylarSideFront;
