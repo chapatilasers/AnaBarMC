@@ -82,6 +82,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4VPhysicalVolume* MylarSideBack;
   G4VPhysicalVolume* MylarFingerFront;
   G4VPhysicalVolume* MylarFingerBack;
+  G4VPhysicalVolume* MylarFingerEnd;
   G4VPhysicalVolume* MylarFingerSide1;
   G4VPhysicalVolume* MylarFingerSide2;
   G4VPhysicalVolume* Mirror;

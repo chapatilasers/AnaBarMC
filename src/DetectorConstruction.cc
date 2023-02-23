@@ -64,13 +64,13 @@ DetectorConstruction::DetectorConstruction()
   // There are 14 Layers in One Bar
   fNumberOfLayers = 14;
   // There are 14 Bars in One Half Module
-  fNumberOfBars = 14;
+  fNumberOfBars = 1;
   // There are 2 sides to a Modules
-  fNumberOfSides = 2;
+  fNumberOfSides = 1;
   // There are 3 Modules in a Plane 
-  fNumberOfModules = 3;
+  fNumberOfModules = 1;
   // There are 2 Planes in the Detector
-  fNumberOfPlanes = 2;
+  fNumberOfPlanes = 1;
   
   fMirrorThickness = 0.20;
   fMylarThickness = 0.02;
@@ -275,9 +275,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4VSolid* solidMylarFinger = new G4Box("MylarFinger",fFingerLength/2.0*cm,fMylarThickness/2.0*cm,fFingerWidth/2.0*cm);
   G4LogicalVolume* logicMylarFinger = new G4LogicalVolume(solidMylarFinger,FindMaterial("G4_Al"), "MylarFinger");
   G4VSolid* solidMylarFingerSide = new G4Box("MylarFingerSide",fMylarThickness/2.0*cm,fFingerThickness/2.0*cm,fFingerWidth/2.0*cm);
+  G4VSolid* solidMylarFingerEnd = new G4Box("MylarFingerEnd",fFingerLength/2.0*cm,fFingerThickness/2.0*cm,fMylarThickness/2.0*cm);
   G4LogicalVolume* logicMylarFingerSide = new G4LogicalVolume(solidMylarFingerSide,FindMaterial("G4_Al"), "MylarFingerSide");
+  G4LogicalVolume* logicMylarFingerEnd = new G4LogicalVolume(solidMylarFingerEnd,FindMaterial("G4_Al"), "MylarFingerEnd");
   new G4LogicalSkinSurface("MylarSurfaceFinger",logicMylarFinger,mylarSurface);
   new G4LogicalSkinSurface("MylarSurfaceFingerSide",logicMylarFingerSide,mylarSurface);
+  new G4LogicalSkinSurface("MylarSurfaceFingerEnd",logicMylarFingerEnd,mylarSurface);
 
 
 
@@ -290,6 +293,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   	MylarFingerSide1    =  new G4PVPlacement(0, MylarFinger_pos3 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 2584);
  G4ThreeVector MylarFinger_pos4(-1.0*(fFingerLength/2.0+fMylarThickness/2.0)*cm , fFingerYoffset*cm , fFingerZoffset*cm);
   	MylarFingerSide2    =  new G4PVPlacement(0, MylarFinger_pos4 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 2585);
+ 
 
 
 // Top Right trigger
@@ -340,18 +344,26 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    // Top Left Trigger
    G4ThreeVector fingercounter_pos0(0.0*cm , fFingerYoffset*cm , fFingerZoffset*cm);
    FingerCounter=  new G4PVPlacement(0, fingercounter_pos0 , fingercounter_log , "FingerCounter" , expHall_log , false , 2560);
+   G4ThreeVector MylarFinger_pos5(0.0*cm, fFingerYoffset*cm , fFingerZoffset*cm-fFingerLength*cm-fMylarThickness*cm-2.5*cm);
+   MylarFingerEnd    =  new G4PVPlacement(0, MylarFinger_pos5 , logicMylarFingerEnd , "MylarFingerEnd" , expHall_log , false , 2586);
    
    // Top Right Trigger
    G4ThreeVector fingercounter_pos1(xoffset*cm+0.0*cm , fFingerYoffset*cm , fFingerZoffset*cm);
    FingerCounter=  new G4PVPlacement(0, fingercounter_pos1 , fingercounter_log , "FingerCounter" , expHall_log , false , 2561);
+   G4ThreeVector MylarFinger_pos6(xoffset*cm+0.0*cm, fFingerYoffset*cm , fFingerZoffset*cm-fFingerLength*cm-fMylarThickness*cm-2.5*cm);
+   MylarFingerEnd    =  new G4PVPlacement(0, MylarFinger_pos6 , logicMylarFingerEnd , "MylarFingerEnd" , expHall_log , false , 2587);
    
    // Bottom Left Trigger
    G4ThreeVector fingercounter_pos2(0.0*cm ,yoffset*cm + fFingerYoffset*cm , fFingerZoffset*cm);
    FingerCounter=  new G4PVPlacement(0, fingercounter_pos2 , fingercounter_log , "FingerCounter" , expHall_log , false , 2562);
+   G4ThreeVector MylarFinger_pos7(0.0*cm, yoffset*cm + fFingerYoffset*cm , fFingerZoffset*cm-fFingerLength*cm-fMylarThickness*cm-2.5*cm);
+   MylarFingerEnd    =  new G4PVPlacement(0, MylarFinger_pos7 , logicMylarFingerEnd , "MylarFingerEnd" , expHall_log , false , 2588);
    
    // Bottom Right Trigger
    G4ThreeVector fingercounter_pos3(xoffset*cm+0.0*cm ,yoffset*cm + fFingerYoffset*cm , fFingerZoffset*cm);
    FingerCounter=  new G4PVPlacement(0, fingercounter_pos3 , fingercounter_log , "FingerCounter" , expHall_log , false , 2563);
+   G4ThreeVector MylarFinger_pos8(xoffset+0.0*cm, yoffset*cm + fFingerYoffset*cm , fFingerZoffset*cm-fFingerLength*cm-fMylarThickness*cm-2.5*cm);
+   MylarFingerEnd    =  new G4PVPlacement(0, MylarFinger_pos8 , logicMylarFingerEnd , "MylarFingerEnd" , expHall_log , false , 2589);
 
    std::cout<<"The xoffset is: "<<xoffset<<" and the yoffset is: "<<yoffset<<std::endl;
    
