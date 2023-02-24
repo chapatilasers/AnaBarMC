@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N CDetOptical
 #PBS -m n
-#PBS -M root@jlabdaq.pcs.cnu.edu
+#PBS -M root@jlabdaq.cnuadmin.cnu.edu
 #PBS -l walltime=40:00:00
 #PBS -V
 
