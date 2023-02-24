@@ -82,7 +82,7 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
     fhitID[pmtNumber] = fCollection->insert(OpHit) - 1;
     fHits[fNhits++] = pmtNumber;
   }
-  else // this is not a new hit
+  // this is not a new hit
     (*fCollection)[fhitID[pmtNumber]]->IncPhotonCount();
     G4int current_hit_number = (*fCollection)[fhitID[pmtNumber]]->GetPhotonCount();
     //std::cout << "Not a new hit ... pmtNumber = " << pmtNumber << " hitNumber = " << current_hit_number << " energy = " << energy << std::endl; 
