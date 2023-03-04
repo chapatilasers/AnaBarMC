@@ -143,9 +143,9 @@ void GenerateOneParticle(int fPDGCode)
 {
 
   // Generate vertex position in cm 
-  fVx = fRand->Uniform(-4.5 , 4.5 );
-  fVy = 5.0;
-  fVz = fRand->Uniform( -9.5 , 2.5 );
+  fVx = fRand->Uniform(-12.5 , 12.5 );
+  fVy = 25.0;
+  fVz = fRand->Uniform( -320.0 , 2.5 );
   //fVx = fRand->Uniform(-0.01 , 0.01 );
   //fVy = fRand->Uniform( -.01, 0.01 );
   //fVz = 2.0;
