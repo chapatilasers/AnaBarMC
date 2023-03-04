@@ -80,10 +80,10 @@ DetectorConstruction::DetectorConstruction()
   fAnaBarThickness = 0.50;
 
   fFingerLength = 10.0;
-  fFingerWidth = fNumberOfBars*fNumberOfLayers*(fAnaBarThickness+2.0*fMylarThickness)+20.0;
+  fFingerWidth = fNumberOfModules*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness+2.0*fMylarThickness)+20.0;
   fFingerThickness = 1.0;
   fFingerZoffset = -(fFingerWidth-20.0)/2.0;
-  fFingerYoffset = fAnaBarWidth/2.0+fFingerThickness/2.0+1.0;
+  fFingerYoffset = fAnaBarWidth/2.0+fFingerThickness/2.0+20.0;
 
   fHoleDiameter = 0.19;
   fHoleLength = fAnaBarLength;
@@ -308,7 +308,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   	MylarFingerSide2    =  new G4PVPlacement(0, MylarFinger_pos24 , logicMylarFingerSide , "MylarFingerSide" , expHall_log , false , 2595);
 
 // Bottom Left trigger
- G4double yoffset = -70;                                                        //This should create a 30cm gap between the top and bottom triggers  
+ G4double yoffset = -80;   //Create(approx) 100cm gap between the top and bottom triggers  
  
  G4ThreeVector MylarFinger_pos31(0.0*cm ,(yoffset+fFingerYoffset-fFingerThickness/2.0-fMylarThickness/2.0)*cm , fFingerZoffset*cm);
   	MylarFingerFront    =  new G4PVPlacement(0, MylarFinger_pos31 , logicMylarFinger , "MylarFinger" , expHall_log , false , 2602);
