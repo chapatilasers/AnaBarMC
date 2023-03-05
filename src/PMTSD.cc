@@ -72,6 +72,7 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
   //} 
  
   // if this PMT hasn't been hit in this event
+  //std::cout << "Accessing fhitID ... " << fhitID[pmtNumber] << " " << energy << std::endl; 
   if ( fhitID[pmtNumber] == -1 && energy > 0.1) {
     //std::cout << "First PMT hit ... pmtNumber = " << pmtNumber << " energy = " << energy << std::endl; 
     PMTHit* OpHit = new PMTHit;
@@ -82,12 +83,13 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
     fhitID[pmtNumber] = fCollection->insert(OpHit) - 1;
     fHits[fNhits++] = pmtNumber;
   }
+  //std::cout << "Accessing fhitID through fCollection... " << std::endl; 
   // this is not a new hit
     (*fCollection)[fhitID[pmtNumber]]->IncPhotonCount();
     G4int current_hit_number = (*fCollection)[fhitID[pmtNumber]]->GetPhotonCount();
     //std::cout << "Not a new hit ... pmtNumber = " << pmtNumber << " hitNumber = " << current_hit_number << " energy = " << energy << std::endl; 
     (*fCollection)[fhitID[pmtNumber]]->SetPMTKineticEnergy(current_hit_number-1,energy);
-  
+    //std::cout << "Returning from PMTSD::ProcessHits_constStep" << std::endl; 
   return true;
 }
 //---------------------------------------------------------------------------

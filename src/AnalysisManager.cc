@@ -52,8 +52,8 @@ void AnalysisManager::InitOutput()
   
   // Set PMT Hit Branches
   fROOTtree->Branch("PMT_id",     &fPMTNo,     "PMT_id/I" );  
-  fROOTtree->Branch("PMT_Nphotons",  fNphotons,  "PMT_Nphotons[20]/I" );  
-  fROOTtree->Branch("PMT_KineticEnergy",  fPMTKineticEnergy,  "PMT_KineticEnergy[20][5000]/F" );  
+  fROOTtree->Branch("PMT_Nphotons",  fNphotons,  "PMT_Nphotons[50000]/I" );  
+  fROOTtree->Branch("PMT_KineticEnergy",  fPMTKineticEnergy,  "PMT_KineticEnergy[50000][1000]/F" );  
 
   // Set Raw Detector Step Hit Branches
   fROOTtree->Branch("Detector_Nhits", &fRAW_Nhits, "Detector_Nhits/I");  
@@ -165,7 +165,10 @@ void AnalysisManager::FillTree()
   fPpdg   = (Int_t)  fPPDef->GetPDGEncoding();
 
   fROOTtree->Fill();
-//std::cout<<"Tree has been filled with primary variables"<<std::endl;
+  //for (G4int i=0; i<3000;i++){
+  //	  std::cout << i << ": " << fNphotons[i] << std::endl;
+  //}
+  //std::cout<<"Tree has been filled with primary variables"<<std::endl;
 }
 
 //---------------------------------------------------------------------------

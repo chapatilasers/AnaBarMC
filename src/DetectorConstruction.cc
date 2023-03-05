@@ -112,14 +112,14 @@ DetectorConstruction::~DetectorConstruction()
 
 //---------------------------------------------------------------------------
 
-G4int DetectorConstruction::SetDetectorID(G4int iLayer, G4int iBar, G4int iModule, G4int iSide, G4int iPlane){
-  G4int fDetectorID = 0;
+G4int DetectorConstruction::SetDetectorID(G4int iOffset, G4int iLayer, G4int iBar, G4int iModule, G4int iSide, G4int iPlane){
+  G4int fDetectorID = iOffset;
   fDetectorID = fDetectorID + iLayer;
   fDetectorID = fDetectorID + iBar*fNumberOfLayers; 
-  fDetectorID = fDetectorID + iSide*fNumberOfBars;
-  fDetectorID = fDetectorID + iModule*fNumberOfSides;
-  fDetectorID = fDetectorID + iPlane*fNumberOfModules;
-std::cout<<"setting detector id: "<<fDetectorID<<", iLayer: "<<iLayer<<", iBar: "<<iBar<<", iModule: "<<iModule<<", iSide: "<<iSide<<", iPlane: "<<iPlane<<std::endl;
+  fDetectorID = fDetectorID + iSide*fNumberOfBars*fNumberOfLayers;
+  fDetectorID = fDetectorID + iModule*fNumberOfSides*fNumberOfBars*fNumberOfLayers;
+  fDetectorID = fDetectorID + iPlane*fNumberOfModules*fNumberOfSides*fNumberOfBars*fNumberOfLayers;
+  std::cout<<"setting detector id: "<<fDetectorID<<", iLayer: "<<iLayer<<", iBar: "<<iBar<<", iModule: "<<iModule<<", iSide: "<<iSide<<", iPlane: "<<iPlane<<std::endl;
   return fDetectorID;
 }
 
@@ -419,21 +419,21 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	  G4double fAnaBarZposA = zoff-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm); 
      	  
 	  G4ThreeVector AnaBar_pos(xoff+fAnaBarXposA*cm , yoff+0.0*cm , fAnaBarZposA);
-   	  AnaBar      =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , SetDetectorID(iLayer, iBar, iModule, iSide, iPlane ));
+   	  AnaBar      =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , SetDetectorID(30000,iLayer, iBar, iModule, iSide, iPlane ));
      	  
 	  G4ThreeVector AnaBarMylar_pos(xoff+fAnaBarXposM*cm , yoff+0.0*cm , fAnaBarZposA);
-   	  AnaBarMylar      =  new G4PVPlacement(0, AnaBarMylar_pos , AnaBarMylar_log , "AnaBarMylar" , expHall_log , false , 13700 + 2*SetDetectorID(iLayer, iBar, iModule, iSide, iPlane ));
+   	  AnaBarMylar      =  new G4PVPlacement(0, AnaBarMylar_pos , AnaBarMylar_log , "AnaBarMylar" , expHall_log , false , SetDetectorID(32500,iLayer, iBar, iModule, iSide, iPlane ));
 
    	  G4ThreeVector Mylar_pos1(xoff+fAnaBarXposA*cm , yoff+0.0*cm , fAnaBarZposA - fAnaBarThickness/2.0*cm-fMylarThickness/2.0*cm);
-   	  MylarTop    =  new G4PVPlacement(0, Mylar_pos1 , logicMylar , "Mylar" , expHall_log , false , 8001 + SetDetectorID(iLayer, iBar, iModule, iSide, iPlane));
+   	  MylarTop    =  new G4PVPlacement(0, Mylar_pos1 , logicMylar , "Mylar" , expHall_log , false , SetDetectorID(35000,iLayer, iBar, iModule, iSide, iPlane));
 
    	  G4ThreeVector Mylar_pos2(xoff+fAnaBarXposA*cm , yoff+0.0*cm , fAnaBarZposA + fAnaBarThickness/2.0*cm+fMylarThickness/2.0*cm);
-   	  MylarBottom =  new G4PVPlacement(0, Mylar_pos2 , logicMylar , "Mylar" , expHall_log , false , 11001 + SetDetectorID(iLayer, iBar, iModule, iSide, iPlane));
+   	  MylarBottom =  new G4PVPlacement(0, Mylar_pos2 , logicMylar , "Mylar" , expHall_log , false , SetDetectorID(37500,iLayer, iBar, iModule, iSide, iPlane));
      }
      G4ThreeVector Mylar_pos3(xoff+fAnaBarXposA*cm , yoff+1.0*(fAnaBarWidth/2.0+fMylarThickness/2.0)*cm , zoff-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0)*cm + iBar*(-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers)*cm));
      G4ThreeVector Mylar_pos4(xoff+fAnaBarXposA*cm , yoff+-1.0*(fAnaBarWidth/2.0+fMylarThickness/2.0)*cm , zoff-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers/2.0)*cm + iBar*(-(fAnaBarThickness+2.0*fMylarThickness)*(fNumberOfLayers)*cm)); 
-      MylarSideFront =  new G4PVPlacement(0, Mylar_pos3 , logicMylarSide , "MylarSide" , expHall_log , false , 13501 +2*SetDetectorID(0,iBar,iModule,iSide,iPlane));
-      MylarSideBack =  new G4PVPlacement(0, Mylar_pos4 , logicMylarSide , "MylarSide" , expHall_log , false , 13502 +2*SetDetectorID(0,iBar,iModule,iSide,iPlane));
+      MylarSideFront =  new G4PVPlacement(0, Mylar_pos3 , logicMylarSide , "MylarSide" , expHall_log , false , SetDetectorID(40000,0,iBar,iModule,iSide,iPlane));
+      MylarSideBack =  new G4PVPlacement(0, Mylar_pos4 , logicMylarSide , "MylarSide" , expHall_log , false , SetDetectorID(42500,0,iBar,iModule,iSide,iPlane));
    }
    }
    }
@@ -540,14 +540,14 @@ std::cout<<"ALL PADDLES SHOULD BE CREATED"<<std::endl;
     for (G4int iLayer=0; iLayer<fNumberOfLayers; iLayer++){ 
   	G4ThreeVector Global_fibre_pos(xoff+fAnaBarXposA*cm + iSideF*(fFibreLength-fAnaBarLength)/2.0*cm , yoff+0.0*cm , zoff-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
 
-   	physiClad = new G4PVPlacement(anabar_rm,Global_fibre_pos,logicClad1,"Clad1",expHall_log,false,3001+2*SetDetectorID(iLayer,iBar,iModule,iSide,iPlane));
+   	physiClad = new G4PVPlacement(anabar_rm,Global_fibre_pos,logicClad1,"Clad1",expHall_log,false,SetDetectorID(5000,iLayer,iBar,iModule,iSide,iPlane));
    	physiWLSfiber = new G4PVPlacement(anabar_rm,
                                         Global_fibre_pos,
                                         logicWLSfiber,
                                         "WLSFiber",
                                         expHall_log,
                                         false,
-                                        3002+2*SetDetectorID(iLayer,iBar,iModule,iSide,iPlane));
+                                        SetDetectorID(7500,iLayer,iBar,iModule,iSide,iPlane));
     }
   }
   }
@@ -600,15 +600,15 @@ std::cout<<"Fibbers and Fibber Claddings have been created" <<std::endl;
   	
     	
 	fDetVol = new G4PVPlacement(anabar_rm, G4ThreeVector(xoff+fAnaBarXposP*cm, yoff+0., zoff-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm)),
-						det1_log, "det1", expHall_log, false, SetDetectorID(iLayer, iBar, iModule, iSide, iPlane));
+						det1_log, "det1", expHall_log, false, SetDetectorID(0,iLayer, iBar, iModule, iSide, iPlane));
 	
-	std::cout<<"Creaing fDetVol for paddle id: "<<SetDetectorID(iLayer,iBar,iModule,iSide,iPlane)<<std::endl;
+	std::cout<<"Creaing fDetVol for paddle id: "<<SetDetectorID(0,iLayer,iBar,iModule,iSide,iPlane)<<std::endl;
     }
   }
   }
   }
   }
-std::cout<<"The paddles have been set as the fDetCol things" <<std::endl;
+std::cout<<"The AnaBar PMTs have been set as the fDetVol things - logical volume = det1_log" <<std::endl;
 
   //---------------------------------------------------------------------------
   // Create Finger PMT
@@ -636,7 +636,7 @@ std::cout<<"The paddles have been set as the fDetCol things" <<std::endl;
    fDet15Vol                  = new G4PVPlacement(finger_rm, G4ThreeVector(xoffset*cm+0.0*cm,yoffset*cm + fFingerYoffset*cm,fFingerZoffset*cm+fFingerWidth/2.0*cm+fPhotoCathodeThickness/20*cm),
   						det2_log, "det2", expHall_log, false, 2503);
 
-std::cout<<"The finger paddle has been set as the fDet15Vol thing"<<std::endl;
+std::cout<<"The finger PMTs has been set as the fDet15Vol things - logical volume = det2_log"<<std::endl;
 
   //---------------------------------------------------------------------------
   // Create Optical Surface
@@ -663,12 +663,12 @@ std::cout<<"The finger paddle has been set as the fDet15Vol thing"<<std::endl;
 
   G4SDManager* SDman = G4SDManager::GetSDMpointer();
 
-  fDetSD = new DetectorSD("DetSD", 20);
+  fDetSD = new DetectorSD("DetSD", 50000);
   SDman->AddNewDetector( fDetSD );
   fingercounter_log->SetSensitiveDetector( fDetSD );
   AnaBar_log->SetSensitiveDetector( fDetSD );
 
-  fPMTSD = new PMTSD("PMTSD", 15000);
+  fPMTSD = new PMTSD("PMTSD", 50000);
   SDman->AddNewDetector( fPMTSD );
   det1_log->SetSensitiveDetector( fPMTSD );
   det2_log->SetSensitiveDetector( fPMTSD );

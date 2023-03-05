@@ -19,7 +19,7 @@ DetectorSD::DetectorSD(G4String name, G4int)
 {
   collectionName.insert(name+G4String("Collection"));
   fCollection = NULL;
-  fNelements  = 10000;
+  fNelements  = 50000;
   fNhits      = 0;
   fhitID      = new G4int[fNelements];
   fHits       = new G4int[fNelements];

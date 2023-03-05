@@ -24,7 +24,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
   G4Material* Materials();
   G4VPhysicalVolume* Construct();
-  G4int SetDetectorID(G4int iLayer, G4int iBar, G4int iModule, G4int iSide, G4int iPlane);
+  G4int SetDetectorID(G4int iOffset, G4int iLayer, G4int iBar, G4int iModule, G4int iSide, G4int iPlane);
 
   void UpdateGeometry();
 
