@@ -110,7 +110,7 @@ void EventAction::EndOfEventAction(const G4Event* evt)
         //std::cout << "Point 1" << std::endl;
 	PMTHit* hit2 = static_cast<PMTHit*>( PHC->GetHit(j) );
         //std::cout << "Point 2" << std::endl;
-	fAnaManager->SetPMTKE( hit2 );
+	//fAnaManager->SetPMTKE( hit2 );
         //std::cout << "Point 3" << std::endl;
 	fAnaManager->SetPhotonCount( (G4int) hit2->GetPMTNumber(), (G4int) hit2->GetPhotonCount() );
         //std::cout << "Point 4" << std::endl;

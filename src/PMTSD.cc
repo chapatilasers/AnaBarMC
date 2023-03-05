@@ -64,7 +64,7 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
   
   // Try to get kinetic energy
   G4Track* theTrack = aStep->GetTrack();
-  G4double energy=theTrack->GetKineticEnergy()*1.0E6;
+  //G4double energy=theTrack->GetKineticEnergy()*1.0E6;
   //std::cout << "PMT No. = " << pmtNumber << ", Photon kinetic energy = " << energy << std::endl;
 
   //for (G4int iii = 0; iii<10000; iii++){
@@ -73,11 +73,12 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
  
   // if this PMT hasn't been hit in this event
   //std::cout << "Accessing fhitID ... " << fhitID[pmtNumber] << " " << energy << std::endl; 
-  if ( fhitID[pmtNumber] == -1 && energy > 0.1) {
+  //if ( fhitID[pmtNumber] == -1 && energy > 0.1) {
+  if ( fhitID[pmtNumber] == -1 ) {
     //std::cout << "First PMT hit ... pmtNumber = " << pmtNumber << " energy = " << energy << std::endl; 
     PMTHit* OpHit = new PMTHit;
     OpHit->SetPMTNumber(pmtNumber);
-    OpHit->SetPMTKineticEnergy(0,energy);
+    //OpHit->SetPMTKineticEnergy(0,energy);
     OpHit->IncPhotonCount();
 
     fhitID[pmtNumber] = fCollection->insert(OpHit) - 1;
@@ -88,7 +89,7 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
     (*fCollection)[fhitID[pmtNumber]]->IncPhotonCount();
     G4int current_hit_number = (*fCollection)[fhitID[pmtNumber]]->GetPhotonCount();
     //std::cout << "Not a new hit ... pmtNumber = " << pmtNumber << " hitNumber = " << current_hit_number << " energy = " << energy << std::endl; 
-    (*fCollection)[fhitID[pmtNumber]]->SetPMTKineticEnergy(current_hit_number-1,energy);
+    //(*fCollection)[fhitID[pmtNumber]]->SetPMTKineticEnergy(current_hit_number-1,energy);
     //std::cout << "Returning from PMTSD::ProcessHits_constStep" << std::endl; 
   return true;
 }

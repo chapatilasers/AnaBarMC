@@ -43,6 +43,7 @@ public:
 		fNphotons[pno]    = snp; 
 	}
   
+  /*
   inline void SetPMTKE ( PMTHit* hit2 ) {
 		G4int snp = hit2->GetPhotonCount();
 		G4int pno = hit2->GetPMTNumber();
@@ -51,6 +52,7 @@ public:
 			fPMTKineticEnergy[pno][iii] = hit2->GetPMTKineticEnergy(iii); 
 		}
 	}
+  */
 
   inline void SetStepPDef        ( G4ParticleDefinition* sp )  { fSteppdef = sp;       }
   inline void SetStepPosPre      ( G4ThreeVector  spos )       { fSteppospre  = spos;  }
@@ -81,7 +83,7 @@ private:
   static const Int_t	fMaxPMTNo = 50000;
   static const Int_t    fMaxPMTHits = 1000;
   Int_t			fNphotons[fMaxPMTNo];
-  Float_t 		fPMTKineticEnergy[fMaxPMTNo][fMaxPMTHits];
+  //Float_t 		fPMTKineticEnergy[fMaxPMTNo][fMaxPMTHits];
 
   // Detector (step information) 
   G4ParticleDefinition* fSteppdef;
