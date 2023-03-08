@@ -1,0 +1,8 @@
+#!/bin/sh
+cp src/PhysicsList.cc.Centos7 src/PhysicsList.cc
+make
+ssh jlabvis1 << EOF
+cd ~/CDetOptical
+cp src/PhysicsList.cc.Centos8 src/PhysicsList.cc
+make
+EOF
