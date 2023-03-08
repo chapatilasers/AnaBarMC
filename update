@@ -1,4 +1,4 @@
 #!/bin/sh
-echo "Branch: $1"
+echo "Branch: cdet_batch_full"
 git commit -am "Updates"
-git push origin $1
+git push origin cdet_batch_full
