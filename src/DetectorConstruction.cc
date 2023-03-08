@@ -60,6 +60,8 @@ DetectorConstruction::DetectorConstruction()
   fTumourRadius = 0.5;
   fTumourHeight = 0.0;
   fAnaBarXpos	= 0.0;
+  fAnaBarYpos	= 0.0;
+  fAnaBarZpos	= 0.0;
 
   // There are 14 Layers in One Bar
   fNumberOfLayers = 14;
@@ -392,9 +394,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   
    for (G4int iPlane=0; iPlane<fNumberOfPlanes; iPlane++){
 	if (iPlane==0) {
-		yoff=0.0*cm;
+		yoff=fAnaBarYpos*cm;
 	} else {
-		yoff=-30.0*cm;
+		yoff=fAnaBarYpos*cm-30.0*cm;
 	}
    for (G4int iSide=0; iSide<fNumberOfSides; iSide++){
 	G4double iSideA = 2.0*iSide;
@@ -404,14 +406,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
 	if (iModule==0) {
 		xoff=0.0*cm;
-		zoff=0.0*cm;
+		zoff=fAnaBarZpos*cm;
 	} else {
 		if (iModule == 1) {
 			xoff = -20.0*cm;
-			zoff = -2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
+			zoff = fAnaBarZpos*cm-2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		} else {
 			xoff = 0.0*cm;
-			zoff = -4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
+			zoff = fAnaBarZpos*cm-4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		}
 	}
    for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
@@ -468,21 +470,21 @@ std::cout<<"ALL PADDLES SHOULD BE CREATED"<<std::endl;
    
    for (G4int iPlane=0; iPlane<fNumberOfPlanes; iPlane++){
 	if (iPlane==0) {
-		yoff=0.0*cm;
+		yoff=fAnaBarYpos*cm;
 	} else {
-		yoff=-30.0*cm;
+		yoff=fAnaBarYpos*cm-30.0*cm;
 	}
    for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
 	if (iModule==0) {
 		xoff=0.0*cm;
-		zoff=0.0*cm;
+		zoff=fAnaBarZpos*cm;
 	} else {
 		if (iModule == 1) {
 			xoff = -20.0*cm;
-			zoff = -2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
+			zoff = fAnaBarZpos*cm-2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		} else {
 			xoff = 0.0*cm;
-			zoff = -4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
+			zoff = fAnaBarZpos*cm-4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		}
 	}
   
@@ -515,9 +517,9 @@ std::cout<<"ALL PADDLES SHOULD BE CREATED"<<std::endl;
 
   for (G4int iPlane=0; iPlane<fNumberOfPlanes; iPlane++){
 	if (iPlane==0) {
-		yoff=0.0*cm;
+		yoff=fAnaBarYpos*cm;
 	} else {
-		yoff=-30.0*cm;
+		yoff=fAnaBarYpos*cm-30.0*cm;
 	}
   for (G4int iSide=0; iSide<fNumberOfSides; iSide++){
 	G4double iSideA = 2.0*iSide;
@@ -526,14 +528,14 @@ std::cout<<"ALL PADDLES SHOULD BE CREATED"<<std::endl;
    for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
 	if (iModule==0) {
 		xoff=0.0*cm;
-		zoff=0.0*cm;
+		zoff=fAnaBarZpos*cm;
 	} else {
 		if (iModule == 1) {
 			xoff = -20.0*cm;
-			zoff = -2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
+			zoff = fAnaBarZpos*cm-2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		} else {
 			xoff = 0.0*cm;
-			zoff = -4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
+			zoff = fAnaBarZpos*cm-4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		}
 	}
   for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
@@ -570,9 +572,9 @@ std::cout<<"Fibbers and Fibber Claddings have been created" <<std::endl;
 
   for (G4int iPlane=0; iPlane<fNumberOfPlanes; iPlane++){
 	if (iPlane==0) {
-		yoff=0.0*cm;
+		yoff=fAnaBarYpos*cm;
 	} else {
-		yoff=-30.0*cm;
+		yoff=fAnaBarYpos*cm-30.0*cm;
 	}
   for (G4int iSide=0; iSide<fNumberOfSides; iSide++){
 
@@ -585,14 +587,14 @@ std::cout<<"Fibbers and Fibber Claddings have been created" <<std::endl;
   for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
 	if (iModule==0) {
 		xoff=0.0*cm;
-		zoff=0.0*cm;
+		zoff=fAnaBarZpos*cm;
 	} else {
 		if (iModule == 1) {
 			xoff = -20.0*cm;
-			zoff = -2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
+			zoff = fAnaBarZpos*cm-2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		} else {
 			xoff = 0.0*cm;
-			zoff = -4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
+			zoff = fAnaBarZpos*cm-4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		}
 	}
   for (G4int iBar=0; iBar<fNumberOfBars; iBar++){

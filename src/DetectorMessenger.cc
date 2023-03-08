@@ -26,6 +26,10 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Detect)
 
   fAnaBarXposCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarXpos",this);
   fAnaBarXposCmd->SetGuidance("Set Anabar x position in cm.");
+  fAnaBarYposCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarYpos",this);
+  fAnaBarYposCmd->SetGuidance("Set Anabar x position in cm.");
+  fAnaBarZposCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarZpos",this);
+  fAnaBarZposCmd->SetGuidance("Set Anabar x position in cm.");
   fAnaBarLengthCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarLength",this);
   fAnaBarLengthCmd->SetGuidance("Set Anabar Length in cm.");
   fNumberOfLayersCmd = new G4UIcmdWithAnInteger("/AnaBarMC/detector/NumberOfLayers",this);
@@ -76,6 +80,8 @@ DetectorMessenger::~DetectorMessenger()
   delete fTumourRadiusCmd;
   delete fTumourHeightCmd;
   delete fAnaBarXposCmd;
+  delete fAnaBarYposCmd;
+  delete fAnaBarZposCmd;
   delete fNumberOfLayersCmd;
   delete fAnaBarLengthCmd;
   delete fAnaBarWidthCmd;
@@ -111,6 +117,10 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
     fDetector->SetTumourHeight(fTumourHeightCmd->GetNewDoubleValue(newValue));
   if (command == fAnaBarXposCmd)
     fDetector->SetAnaBarXpos(fAnaBarXposCmd->GetNewDoubleValue(newValue));
+  if (command == fAnaBarYposCmd)
+    fDetector->SetAnaBarYpos(fAnaBarYposCmd->GetNewDoubleValue(newValue));
+  if (command == fAnaBarZposCmd)
+    fDetector->SetAnaBarZpos(fAnaBarZposCmd->GetNewDoubleValue(newValue));
   
   if (command == fNumberOfLayersCmd)
     fDetector->SetNumberOfLayers(fNumberOfLayersCmd->GetNewIntValue(newValue));

@@ -42,6 +42,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline void SetTumourRadius ( G4double radius )  { fTumourRadius = radius; }
   inline void SetTumourHeight ( G4double height )  { fTumourHeight = height; }
   inline void SetAnaBarXpos   ( G4double AnaBarXpos )    { fAnaBarXpos   = AnaBarXpos; }
+  inline void SetAnaBarYpos   ( G4double AnaBarYpos )    { fAnaBarYpos   = AnaBarYpos; }
+  inline void SetAnaBarZpos   ( G4double AnaBarZpos )    { fAnaBarZpos   = AnaBarZpos; }
   inline void SetNumberOfLayers   ( G4int NumberOfLayers )    { fNumberOfLayers   = NumberOfLayers; }
   inline void SetAnaBarLength   ( G4double AnaBarLength )    { fAnaBarLength   = AnaBarLength; }
   inline void SetAnaBarWidth   ( G4double AnaBarWidth )    { fAnaBarWidth   = AnaBarWidth; }
@@ -97,6 +99,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4double           fTumourRadius;
   G4double           fTumourHeight;
   G4double           fAnaBarXpos;
+  G4double           fAnaBarYpos;
+  G4double           fAnaBarZpos;
 
   G4int		     fNumberOfPlanes;
   G4int		     fNumberOfSides;
