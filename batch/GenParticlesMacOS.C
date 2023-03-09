@@ -36,7 +36,7 @@ Float_t         fPz;
 Float_t         fP;
 Float_t         fM;
 Float_t         fE;
-Int_t           fPDGCode;
+Int_t           fPDGCodeTree;
 
 // Sampling Functions
 TH1*            fMomFlatDist;
@@ -50,8 +50,8 @@ Float_t         fIntRatio;
 
 // ------------------------------------------------------------------------------------------------
 
-void GenParticles( int nevents = 100, 
-		    int run_number = 2000, int fPDGCode ) 
+void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100, 
+		    int run_number = 2000) 
 {
   
   // Initialise random number generator
@@ -60,7 +60,7 @@ void GenParticles( int nevents = 100,
   // Set up PDG Table
   fPDG             = new TDatabasePDG();
   TString pdgtable = gSystem->Getenv( "ROOTSYS" );
-  pdgtable.Append( "/etc/pdg_table.txt" );
+  pdgtable.Append( "/etc/root/pdg_table.txt" );
   fPDG->ReadPDGTable( pdgtable );
 
   // Initialise output
@@ -95,11 +95,11 @@ void GenParticles( int nevents = 100,
     {
       nTotal++;
       
-      GenerateOneNeutron();
+      GenerateOneParticle(fPDGCode);
       fROOTTree->Fill();
       
       if( i % 10 == 0 )
-	cout << i << endl;
+	cout << i << " " << fPDGCode << endl;
     }
   
   // Write output and close file
@@ -130,8 +130,10 @@ void InitOutput()
   fROOTTree->Branch("Py_p",    &fPy, "Py_p/F",  basket );
   fROOTTree->Branch("Pz_p",    &fPz, "Pz_p/F",  basket );
   fROOTTree->Branch("En_p",    &fE,  "En_p/F",  basket );
+  
+  fROOTTree->Branch("Mass",    &fM,  "Mass/F",  basket );
 
-  fROOTTree->Branch("PDG", &fPDGCode, "PDG/I",  basket );
+  fROOTTree->Branch("PDG", &fPDGCodeTree, "PDG/I",  basket );
 
 }
 
@@ -141,9 +143,9 @@ void GenerateOneParticle(int fPDGCode)
 {
 
   // Generate vertex position in cm 
-  fVx = fRand->Uniform(-4.5 , 4.5 );
-  fVy = 5.0;
-  fVz = fRand->Uniform( -9.5 , 2.5 );
+  fVx = fRand->Uniform(-12.5 , 12.5 );
+  fVy = 25.0;
+  fVz = fRand->Uniform( -320.0 , 2.5 );
   //fVx = fRand->Uniform(-0.01 , 0.01 );
   //fVy = fRand->Uniform( -.01, 0.01 );
   //fVz = 2.0;
@@ -157,7 +159,8 @@ void GenerateOneParticle(int fPDGCode)
   fP = 1000.*fRand->Uniform(1.0,5.0);
 
   // Sample Angular Distributions (cos^2(theta) and flat phi)
-  Float_t th = fThetaDist->GetRandom();
+  //Float_t th = fThetaDist->GetRandom();
+  Float_t th = TMath::Pi()-fRand->Uniform(0.0,0.15);
   Float_t ph = fPhiDist->GetRandom();
   //Float_t th = 3.14159265;
   //Float_t ph = 0.0;
@@ -168,6 +171,7 @@ void GenerateOneParticle(int fPDGCode)
   //fPz        = fP * TMath::Cos(th);
   fM         = fPDG->GetParticle( fPDGCode )->Mass() * 1000;
   fE         = TMath::Sqrt( (fP*fP + fM*fM) );
+  fPDGCodeTree = fPDGCode;
   
 }
 

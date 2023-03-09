@@ -1,7 +1,15 @@
 GenCosmics_C.d
 GenCosmics_C.so
+CDetOptical.e*
+CDetOptical.o*
 data/*.root
+macros/*.root
+plots/*.pdf
 *.wrl
 batch/data/*.root
+batch/*.mac
+batch/rootfiles/*.root
 *.*~
 *.pcm
+.ipynb_checkpoints/*
+__pycache__/

@@ -22,7 +22,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   DetectorConstruction();
   ~DetectorConstruction();
 
+  G4Material* Materials();
   G4VPhysicalVolume* Construct();
+  G4int SetDetectorID(G4int iOffset, G4int iLayer, G4int iBar, G4int iModule, G4int iSide, G4int iPlane);
 
   void UpdateGeometry();
 
@@ -40,6 +42,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline void SetTumourRadius ( G4double radius )  { fTumourRadius = radius; }
   inline void SetTumourHeight ( G4double height )  { fTumourHeight = height; }
   inline void SetAnaBarXpos   ( G4double AnaBarXpos )    { fAnaBarXpos   = AnaBarXpos; }
+  inline void SetAnaBarYpos   ( G4double AnaBarYpos )    { fAnaBarYpos   = AnaBarYpos; }
+  inline void SetAnaBarZpos   ( G4double AnaBarZpos )    { fAnaBarZpos   = AnaBarZpos; }
   inline void SetNumberOfLayers   ( G4int NumberOfLayers )    { fNumberOfLayers   = NumberOfLayers; }
   inline void SetAnaBarLength   ( G4double AnaBarLength )    { fAnaBarLength   = AnaBarLength; }
   inline void SetAnaBarWidth   ( G4double AnaBarWidth )    { fAnaBarWidth   = AnaBarWidth; }
@@ -74,12 +78,14 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4VPhysicalVolume* fDet15Vol;
   G4VPhysicalVolume* FingerCounter;
   G4VPhysicalVolume* AnaBar;
+  G4VPhysicalVolume* AnaBarMylar;
   G4VPhysicalVolume* MylarTop;
   G4VPhysicalVolume* MylarBottom;
   G4VPhysicalVolume* MylarSideFront;
   G4VPhysicalVolume* MylarSideBack;
   G4VPhysicalVolume* MylarFingerFront;
   G4VPhysicalVolume* MylarFingerBack;
+  G4VPhysicalVolume* MylarFingerEnd;
   G4VPhysicalVolume* MylarFingerSide1;
   G4VPhysicalVolume* MylarFingerSide2;
   G4VPhysicalVolume* Mirror;
@@ -93,7 +99,13 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4double           fTumourRadius;
   G4double           fTumourHeight;
   G4double           fAnaBarXpos;
+  G4double           fAnaBarYpos;
+  G4double           fAnaBarZpos;
 
+  G4int		     fNumberOfPlanes;
+  G4int		     fNumberOfSides;
+  G4int		     fNumberOfModules;
+  G4int		     fNumberOfBars;
   G4int		     fNumberOfLayers;
   G4double           fAnaBarLength;
   G4double           fAnaBarWidth;

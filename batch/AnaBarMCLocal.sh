@@ -28,7 +28,7 @@ cd $tempdir
 export ROOTSYS=/usr
 export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
 export PATH=$ROOTSYS/bin:$PATH
-export DISPLAY=jlabanalysis.pcs.cnu.edu:0.0
+export DISPLAY=jlabanalysis.cnuadmin.cnu.edu:0.0
 #nohup root -l -q GenCosmics.C++\($nevents,$RUN_NUMBER\) #>& /dev/null
 nohup $G4BINARY $MCMACRO #>& /dev/null
 echo "****************** AnaBarMCLocal Finished"

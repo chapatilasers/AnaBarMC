@@ -1,0 +1,3 @@
+#!/bin/sh
+runNumber=$1
+scp brash@jlabdaq:~/CDetOptical/batch/data/AnaBarMC_Gen_${runNumber}.root ./batch/data/.

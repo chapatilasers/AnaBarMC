@@ -32,6 +32,8 @@ private:
   G4UIcmdWithADouble*          fTumourRadiusCmd;
   G4UIcmdWithADouble*          fTumourHeightCmd;
   G4UIcmdWithADouble*          fAnaBarXposCmd;
+  G4UIcmdWithADouble*          fAnaBarYposCmd;
+  G4UIcmdWithADouble*          fAnaBarZposCmd;
   G4UIcmdWithAnInteger*          fNumberOfLayersCmd;
   G4UIcmdWithADouble*          fAnaBarLengthCmd;
   G4UIcmdWithADouble*          fAnaBarWidthCmd;

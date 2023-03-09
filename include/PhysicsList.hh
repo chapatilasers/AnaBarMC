@@ -29,10 +29,12 @@ public:
   void AddPackage(const G4String& name);
   void ConstructPhotoNuclear();
   inline void SetOpticalProcesses( G4int op) {fOptical = op; }
+  inline void SetHadronicProcesses( G4int had) {fHadronic = had; }
 
 private:
 
   G4int fOptical;
+  G4int fHadronic;
   G4int fMaxNumPhotonStep;
   G4EmConfigurator em_config;
 

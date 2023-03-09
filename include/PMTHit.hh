@@ -30,13 +30,13 @@ public:
   inline void SetPMTNumber(G4int n) { pmtNumber = n; }
   inline G4int GetPMTNumber() { return pmtNumber; }
 
-  inline void SetPMTKineticEnergy(G4int photonhits, G4double energy) { pmtKineticEnergy[photonhits] = energy; }
-  inline G4double GetPMTKineticEnergy(G4int photonhits) { return pmtKineticEnergy[photonhits]; }
+  //inline void SetPMTKineticEnergy(G4int photonhits, G4double energy) { pmtKineticEnergy[photonhits] = energy; }
+  //inline G4double GetPMTKineticEnergy(G4int photonhits) { return pmtKineticEnergy[photonhits]; }
 
 private:
   G4int pmtNumber;
   G4int photons;
-  G4double pmtKineticEnergy[10000];
+  //G4double pmtKineticEnergy[50000];
 };
 
 typedef G4THitsCollection<PMTHit> PMTHitsCollection;
