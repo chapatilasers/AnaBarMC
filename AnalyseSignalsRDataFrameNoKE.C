@@ -459,7 +459,7 @@ std::vector<float> getAnaBarEdTotal(bool trigger, float fNewTheta, int Detector_
 
 RNode AnalyseSignalsRDataFrameNoKE() {
 
-	auto fileName = "data/AnaBarMC_7777.root";
+	auto fileName = "data/AnaBarMC_77777.root";
 	auto treeName = "T";
 
 	ROOT::RDataFrame d(treeName,fileName);
@@ -699,9 +699,9 @@ TCanvas* plotC7(){
 
 	RNode fdft = AnalyseSignalsRDataFrameNoKE();
 
-	auto hFinger_Edep_vs_Nphot = fdft.Filter("trigger2").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 250.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
+	auto hFinger_Edep_vs_Nphot = fdft.Filter("trigger2").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 500.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
 	auto hAnaBar_Edep_vs_Nphot = fdft.Filter("trigger2").Histo2D({"h4", "AnaBar Edep vs NphotTotal", 100, 0.01, 30.0, 100, 0.01, 500.0},"anaBarEdTotal","anaBarNPhotonsTotal");
-	auto hNphot0_vs_Nphot1 = fdft.Filter("trigger2").Histo2D({"h5", "AnaBar NphotTotal vs Finger Nphot", 100, 0.01, 500.0, 100, 0.01, 100.0},"anaBarNPhotonsTotal","fingerPMTNPhotons");
+	auto hNphot0_vs_Nphot1 = fdft.Filter("trigger2").Histo2D({"h5", "AnaBar NphotTotal vs Finger Nphot", 100, 0.01, 500.0, 100, 0.01, 500.0},"anaBarNPhotonsTotal","fingerPMTNPhotons");
 
 	TCanvas *c7 = new TCanvas("c7","c7",800,800);
 	c7->Divide(2,2,0.01,0.01,0);
@@ -727,9 +727,9 @@ TCanvas* plotC8(){
 
 	RNode fdft = AnalyseSignalsRDataFrameNoKE();
 
-	auto hFinger_Edep_vs_NphotCut = fdft.Filter("trigger3").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 250.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
+	auto hFinger_Edep_vs_NphotCut = fdft.Filter("trigger3").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 500.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
 	auto hAnaBar_Edep_vs_NphotCut = fdft.Filter("trigger3").Histo2D({"h4", "AnaBar Edep vs NphotTotal", 100, 0.01, 30.0, 100, 0.01, 500.0},"anaBarEdTotal","anaBarNPhotonsTotal");
-	auto hNphot0_vs_Nphot1Cut = fdft.Filter("trigger3").Histo2D({"h5", "AnaBar NphotTotal vs Finger Nphot", 100, 0.01, 500.0, 100, 0.01, 100.0},"anaBarNPhotonsTotal","fingerPMTNPhotons");
+	auto hNphot0_vs_Nphot1Cut = fdft.Filter("trigger3").Histo2D({"h5", "AnaBar NphotTotal vs Finger Nphot", 100, 0.01, 500.0, 100, 0.01, 500.0},"anaBarNPhotonsTotal","fingerPMTNPhotons");
 
 	TCanvas *c8 = new TCanvas("c8","c8",800,800);
 	c8->Divide(2,2,0.01,0.01,0);
