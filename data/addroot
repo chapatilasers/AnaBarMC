@@ -30,4 +30,5 @@ chmod +x $ADD_SCRIPT_FILE
 echo "Executing script ..."
 $ADD_SCRIPT_FILE
 
+rm $ADD_SCRIPT_FILE
 echo "All done ..."

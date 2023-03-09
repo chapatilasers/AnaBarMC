@@ -3,6 +3,7 @@ GenCosmics_C.so
 CDetOptical.e*
 CDetOptical.o*
 data/*.root
+macros/*.root
 plots/*.pdf
 *.wrl
 batch/data/*.root
