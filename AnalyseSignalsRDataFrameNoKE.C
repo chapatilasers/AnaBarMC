@@ -350,6 +350,38 @@ std::vector<float> getAnaBarPMTNPhotons(bool trigger, int* PMT_Nphotons) {
     return v;
 }
 
+std::vector<float> getFingerPMTID(bool trigger, int* PMT_Nphotons) {
+
+    std::vector<float> v;
+
+    if (trigger) {
+        for (Int_t icount = Detector_PMT_Offset;icount<Detector_PMT_Offset+2;icount++){
+            if (PMT_Nphotons[icount]>0) {
+                //std::cout << "getFingerPMTID: " << icount << " " << PMT_Nphotons[icount] << std::endl;
+                v.push_back(icount);
+            }
+        }
+    }
+
+    return v;
+}
+
+std::vector<float> getAnaBarPMTID(bool trigger, int* PMT_Nphotons) {
+
+    std::vector<float> v;
+
+    if (trigger) {
+        for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
+            if (PMT_Nphotons[icount]>0) {
+                //std::cout << "getAnaBarPMTID: " << icount << " " << PMT_Nphotons[icount] << std::endl;
+                v.push_back(icount);
+            }
+        }
+    }
+
+    return v;
+}
+
 std::vector<float> getAnaBarNPhotonsTotal(bool trigger, int* PMT_Nphotons) {
 
     std::vector<float> v;
@@ -459,7 +491,7 @@ std::vector<float> getAnaBarEdTotal(bool trigger, float fNewTheta, int Detector_
 
 RNode AnalyseSignalsRDataFrameNoKE() {
 
-	auto fileName = "data/AnaBarMC_77777.root";
+	auto fileName = "data/AnaBarMC_7777.root";
 	auto treeName = "T";
 
 	ROOT::RDataFrame d(treeName,fileName);
@@ -489,7 +521,9 @@ RNode AnalyseSignalsRDataFrameNoKE() {
        			.Define("fingerPDG","getFingerPDG(trigger,Detector_Nhits,&Detector_id[0],&Detector_pdg[0])")
        			.Define("anaBarID","getAnaBarID(trigger,Detector_Nhits,&Detector_id[0],&Detector_pdg[0])")
        			.Define("anaBarPDG","getAnaBarPDG(trigger,Detector_Nhits,&Detector_id[0],&Detector_pdg[0])")
-       			.Define("fingerPMTNPhotons","getFingerPMTNPhotons(trigger,&PMT_Nphotons[0])")
+                        .Define("anaBarPMTID","getAnaBarPMTID(trigger,&PMT_Nphotons[0])") \
+                        .Define("fingerPMTID","getFingerPMTID(trigger,&PMT_Nphotons[0])") \
+                        .Define("fingerPMTNPhotons","getFingerPMTNPhotons(trigger,&PMT_Nphotons[0])")
        			.Define("anaBarPMTNPhotons","getAnaBarPMTNPhotons(trigger,&PMT_Nphotons[0])")
        			.Define("anaBarNPhotonsTotal","getAnaBarNPhotonsTotal(trigger,&PMT_Nphotons[0])")
        			.Define("imult","getAnaBarMult(trigger,&PMT_Nphotons[0])")
@@ -575,9 +609,11 @@ TCanvas* plotC3(){
 	auto hFingerPdg = fdft.Histo1D("fingerPDG");
 	auto hFingerID = fdft.Histo1D("fingerID");
 	auto hPMTID = fdft.Histo1D("PMT_id");
+	auto hAnaBarPMTID = fdft.Histo1D("anaBarPMTID");
+	auto hFingerPMTID = fdft.Histo1D("fingerPMTID");
 
 	TCanvas *c3 = new TCanvas("c3","c3",800,800);
-	c3->Divide(3,2,0.01,0.01,0);
+	c3->Divide(3,3,0.01,0.01,0);
 
 	c3->cd(1);
 	hDetectorNhits->Draw();
@@ -591,6 +627,10 @@ TCanvas* plotC3(){
 	hDetectorID->Draw();
 	c3->cd(6);
 	hPMTID->Draw();
+	c3->cd(7);
+	hFingerPMTID->Draw();
+	c3->cd(8);
+	hAnaBarPMTID->Draw();
 
 	c3->DrawClone();
 	c3->Print("plots/c3RA.pdf");
