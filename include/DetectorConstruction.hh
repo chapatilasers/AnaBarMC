@@ -45,6 +45,10 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline void SetAnaBarYpos   ( G4double AnaBarYpos )    { fAnaBarYpos   = AnaBarYpos; }
   inline void SetAnaBarZpos   ( G4double AnaBarZpos )    { fAnaBarZpos   = AnaBarZpos; }
   inline void SetNumberOfLayers   ( G4int NumberOfLayers )    { fNumberOfLayers   = NumberOfLayers; }
+  inline void SetNumberOfBars   ( G4int NumberOfBars )    { fNumberOfBars   = NumberOfBars; }
+  inline void SetNumberOfSides   ( G4int NumberOfSides )    { fNumberOfSides   = NumberOfSides; }
+  inline void SetNumberOfModules   ( G4int NumberOfModules )    { fNumberOfModules   = NumberOfModules; }
+  inline void SetNumberOfPlanes   ( G4int NumberOfPlanes )    { fNumberOfPlanes   = NumberOfPlanes; }
   inline void SetAnaBarLength   ( G4double AnaBarLength )    { fAnaBarLength   = AnaBarLength; }
   inline void SetAnaBarWidth   ( G4double AnaBarWidth )    { fAnaBarWidth   = AnaBarWidth; }
   inline void SetAnaBarThickness   ( G4double AnaBarThickness )    { fAnaBarThickness   = AnaBarThickness; }

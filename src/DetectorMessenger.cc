@@ -32,8 +32,18 @@ DetectorMessenger::DetectorMessenger(DetectorConstruction* Detect)
   fAnaBarZposCmd->SetGuidance("Set Anabar x position in cm.");
   fAnaBarLengthCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarLength",this);
   fAnaBarLengthCmd->SetGuidance("Set Anabar Length in cm.");
+  
   fNumberOfLayersCmd = new G4UIcmdWithAnInteger("/AnaBarMC/detector/NumberOfLayers",this);
   fNumberOfLayersCmd->SetGuidance("Set Number of AnaBar Layers.");
+  fNumberOfBarsCmd = new G4UIcmdWithAnInteger("/AnaBarMC/detector/NumberOfBars",this);
+  fNumberOfBarsCmd->SetGuidance("Set Number of AnaBar Bars.");
+  fNumberOfSidesCmd = new G4UIcmdWithAnInteger("/AnaBarMC/detector/NumberOfSides",this);
+  fNumberOfSidesCmd->SetGuidance("Set Number of AnaBar Sides.");
+  fNumberOfModulesCmd = new G4UIcmdWithAnInteger("/AnaBarMC/detector/NumberOfModules",this);
+  fNumberOfModulesCmd->SetGuidance("Set Number of AnaBar Modules.");
+  fNumberOfPlanesCmd = new G4UIcmdWithAnInteger("/AnaBarMC/detector/NumberOfPlanes",this);
+  fNumberOfPlanesCmd->SetGuidance("Set Number of AnaBar Planes.");
+  
   fAnaBarWidthCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarWidth",this);
   fAnaBarWidthCmd->SetGuidance("Set Anabar Width in cm.");
   fAnaBarThicknessCmd = new G4UIcmdWithADouble("/AnaBarMC/detector/AnaBarThickness",this);
@@ -83,6 +93,10 @@ DetectorMessenger::~DetectorMessenger()
   delete fAnaBarYposCmd;
   delete fAnaBarZposCmd;
   delete fNumberOfLayersCmd;
+  delete fNumberOfBarsCmd;
+  delete fNumberOfSidesCmd;
+  delete fNumberOfModulesCmd;
+  delete fNumberOfPlanesCmd;
   delete fAnaBarLengthCmd;
   delete fAnaBarWidthCmd;
   delete fAnaBarThicknessCmd;
@@ -124,6 +138,15 @@ void DetectorMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
   
   if (command == fNumberOfLayersCmd)
     fDetector->SetNumberOfLayers(fNumberOfLayersCmd->GetNewIntValue(newValue));
+  if (command == fNumberOfBarsCmd)
+    fDetector->SetNumberOfBars(fNumberOfBarsCmd->GetNewIntValue(newValue));
+  if (command == fNumberOfSidesCmd)
+    fDetector->SetNumberOfSides(fNumberOfSidesCmd->GetNewIntValue(newValue));
+  if (command == fNumberOfModulesCmd)
+    fDetector->SetNumberOfModules(fNumberOfModulesCmd->GetNewIntValue(newValue));
+  if (command == fNumberOfPlanesCmd)
+    fDetector->SetNumberOfPlanes(fNumberOfPlanesCmd->GetNewIntValue(newValue));
+  
   if (command == fAnaBarLengthCmd)
     fDetector->SetAnaBarLength(fAnaBarLengthCmd->GetNewDoubleValue(newValue));
   if (command == fAnaBarWidthCmd)
