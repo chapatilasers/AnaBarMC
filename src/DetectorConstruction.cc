@@ -68,7 +68,7 @@ DetectorConstruction::DetectorConstruction()
   // There are 14 Bars in One Half Module
   fNumberOfBars = 14;
   // There are 2 sides to a Modules
-  fNumberOfSides = 21;
+  fNumberOfSides = 2;
   // There are 3 Modules in a Plane 
   fNumberOfModules = 3;
   // There are 2 Planes in the Detector
