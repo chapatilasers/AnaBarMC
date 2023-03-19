@@ -52,7 +52,8 @@ bool getTrigger(int Detector_Nhits, int* Detector_id) {
                 ahit = true;
             }
         }
-        if (tophit && bottomhit) {
+        //if (tophit && bottomhit) {
+        if (ahit) {
             fhit = true;
             trigger = true;
         }
@@ -491,7 +492,7 @@ std::vector<float> getAnaBarEdTotal(bool trigger, float fNewTheta, int Detector_
 
 RNode AnalyseSignalsRDataFrameNoKE() {
 
-	auto fileName = "data/AnaBarMC_7777.root";
+	auto fileName = "data/AnaBarMC_7000.root";
 	auto treeName = "T";
 
 	ROOT::RDataFrame d(treeName,fileName);
