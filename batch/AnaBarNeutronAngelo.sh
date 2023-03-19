@@ -21,7 +21,7 @@ echo "/AnaBarMC/detector/NumberOfModules 3"	                         >>  $MCMACR
 echo "/AnaBarMC/detector/NumberOfPlanes 2"	                         >>  $MCMACRO
 echo "/run/initialize"                                                   >>  $MCMACRO
 echo "/AnaBarMC/generator/Mode 1"                              >>  $MCMACRO
-echo "/AnaBarMC/generator/InputFile $tempdir/data/g4sbs_RootFile.root" >>  $MCMACRO
+echo "/AnaBarMC/generator/InputFile $tempdir/data/AnaBarMC_Gen_$RUN_NUMBER.root" >>  $MCMACRO
 echo "/AnaBarMC/analysis/setOutputFile $tempdir/rootfiles/AnaBarMC_$RUN_NUMBER.root" >>  $MCMACRO
 
 cd $tempdir

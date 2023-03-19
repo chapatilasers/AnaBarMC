@@ -8,6 +8,7 @@ plots/*.pdf
 *.wrl
 batch/data/*.root
 batch/*.mac
+batch/runlist_test*
 batch/rootfiles/*.root
 *.*~
 *.pcm
