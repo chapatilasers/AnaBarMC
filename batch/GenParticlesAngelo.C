@@ -85,10 +85,10 @@ void GenParticles( int fPDGCode = 13, int nevents = 100,
   inname.Form("~/CDetOptical/macros/gep_12Gev1000.root");
   fInFileName = inname;
   InitInput();
-  
+
   // Initialise output
   TString fname;
-  fname.Form("~/CDetOptical/batch/data/AnaBarMC_Gen_%d.root",run_number);
+  fname.Form("~/CDetOptical/macros/AnaBarMC_Gen_%d.root",run_number);
   fOutFileName = fname;
   InitOutput();
 
@@ -118,9 +118,8 @@ void GenParticles( int fPDGCode = 13, int nevents = 100,
     {
       nTotal++;
       
-      //GenerateOneParticle(fPDGCode);
       GenerateOneSBSParticle(i);
-
+      //GenerateOneParticle(fPDGCode);
       fROOTTree->Fill();
       
       if( i % 10 == 0 )
@@ -164,45 +163,72 @@ void InitOutput()
 
 void InitInput()
 {
-        TFile *f1 = new TFile(fInFileName,"READ");
-        tree1 = (TTree*)f1->Get("T");
+	TFile *f1 = new TFile(fInFileName,"READ");
+	tree1 = (TTree*)f1->Get("T");
 
-        tree1->SetBranchAddress("Earm.CDET_Scint.hit.nhits", &cdet_hit);
-        tree1->SetBranchAddress("Earm.CDET_Scint.hit.sdtridx", &sdtrack_idx);
-        tree1->SetBranchAddress("SDTrack.PID",&pid);
-        tree1->SetBranchAddress("SDTrack.posx",&xpos);
-        tree1->SetBranchAddress("SDTrack.posy",&ypos);
-        tree1->SetBranchAddress("SDTrack.posz",&zpos);
-        tree1->SetBranchAddress("SDTrack.momx",&xmomentum);
-        tree1->SetBranchAddress("SDTrack.momy",&ymomentum);
-        tree1->SetBranchAddress("SDTrack.momz",&zmomentum);
-        tree1->SetBranchAddress("SDTrack.Etot",&energy);
+	tree1->SetBranchAddress("Earm.CDET_Scint.hit.nhits", &cdet_hit);
+	tree1->SetBranchAddress("Earm.CDET_Scint.hit.sdtridx", &sdtrack_idx);
+	tree1->SetBranchAddress("SDTrack.PID",&pid);
+	tree1->SetBranchAddress("SDTrack.posx",&xpos);
+	tree1->SetBranchAddress("SDTrack.posy",&ypos);
+	tree1->SetBranchAddress("SDTrack.posz",&zpos);
+	tree1->SetBranchAddress("SDTrack.momx",&xmomentum);
+	tree1->SetBranchAddress("SDTrack.momy",&ymomentum);
+	tree1->SetBranchAddress("SDTrack.momz",&zmomentum);
+	tree1->SetBranchAddress("SDTrack.Etot",&energy);
 
 }
 
 // ------------------------------------------------------------------------------------------------
 
-void GenerateOneSBSParticle(int iEvent)
+void GenerateOneSBSParticle(int iEvent) 
 {
 
-        tree1->GetEntry(iEvent);
+	tree1->GetEntry(iEvent);
 
-        if (cdet_hit>0) {
-                fVx =        -(*xpos)[(*sdtrack_idx)[0]]*100 + 200;//-(*ypos)[(*sdtrack_idx)[0]]*100 + 0;
-                fVy =        -(*zpos)[(*sdtrack_idx)[0]]*100 + 380;
-                fVz =         (*ypos)[(*sdtrack_idx)[0]]*100 - 160;//(*xpos)[(*sdtrack_idx)[0]]*100 - 400;
-                fPx =   -(*xmomentum)[(*sdtrack_idx)[0]]*1000;//-(*ymomentum)[(*sdtrack_idx)[0]]*1000;
-                fPy =   -(*zmomentum)[(*sdtrack_idx)[0]]*1000;
-                fPz =    (*ymomentum)[(*sdtrack_idx)[0]]*1000;//(*xmomentum)[(*sdtrack_idx)[0]]*1000;
-                fE =        (*energy)[(*sdtrack_idx)[0]]*1000;
-                fPDGCodeTree = (*pid)[(*sdtrack_idx)[0]];
- 
-               fM = fPDG->GetParticle( fPDGCodeTree )->Mass() * 1000;
+	//std::cout << "CDet nhits: " << cdet_hit << std::endl;
+	//for (int i = 0; i < cdet_hit ; i++) {
+	//	std::cout << "Track index: " << i << "     " << (*sdtrack_idx)[i] << std::endl;
+	//	std::cout << "xpos1: " << i << "     " << (*xpos)[(*sdtrack_idx)[i]] << std::endl;
+	//}
 
-        }
+	if (cdet_hit>0) {
+		fVx =        -(*xpos)[(*sdtrack_idx)[0]]*100 + 200;//-(*ypos)[(*sdtrack_idx)[0]]*100 + 0;
+		fVy =        -(*zpos)[(*sdtrack_idx)[0]]*100 + 380;
+		fVz =         (*ypos)[(*sdtrack_idx)[0]]*100 - 160;//(*xpos)[(*sdtrack_idx)[0]]*100 - 400;
+		fPx =   -(*xmomentum)[(*sdtrack_idx)[0]]*1000;//-(*ymomentum)[(*sdtrack_idx)[0]]*1000;
+		fPy =   -(*zmomentum)[(*sdtrack_idx)[0]]*1000;
+		fPz =    (*ymomentum)[(*sdtrack_idx)[0]]*1000;//(*xmomentum)[(*sdtrack_idx)[0]]*1000;
+		fE =        (*energy)[(*sdtrack_idx)[0]]*1000;
+		fPDGCodeTree = (*pid)[(*sdtrack_idx)[0]];
+
+		//fVx =        -(*ypos)[(*sdtrack_idx)[0]]*100 + 0;
+		//fVy =        -(*zpos)[(*sdtrack_idx)[0]]*100 + 380;
+		//fVz =         (*xpos)[(*sdtrack_idx)[0]]*100 - 400;
+		//fPx =   -(*ymomentum)[(*sdtrack_idx)[0]]*1000;
+		//fPy =   -(*zmomentum)[(*sdtrack_idx)[0]]*1000;
+		//fPz =    (*xmomentum)[(*sdtrack_idx)[0]]*1000;
+		//fE =        (*energy)[(*sdtrack_idx)[0]]*1000;
+		//fPDGCodeTree = (*pid)[(*sdtrack_idx)[0]];
+
+		//std::cout << "xpos: " << (*xpos)[(*sdtrack_idx)[0]] << std::endl;
+		//std::cout << "ypos: " << (*ypos)[(*sdtrack_idx)[0]] << std::endl;
+		//std::cout << "zpos: " << (*zpos)[(*sdtrack_idx)[0]] << std::endl;
+		//std::cout << "xmom: " << (*xmomentum)[(*sdtrack_idx)[0]] << std::endl;
+		//std::cout << "ymom: " << (*ymomentum)[(*sdtrack_idx)[0]] << std::endl;
+		//std::cout << "zmom: " << (*zmomentum)[(*sdtrack_idx)[0]] << std::endl;
+		//std::cout << "energy: " << (*energy)[(*sdtrack_idx)[0]] << std::endl;
+		//std::cout << "pdgcode " << (*pid)[(*sdtrack_idx)[0]] << std::endl;
+		
+		//double mom = TMath::Sqrt(fPx*fPx+fPy*fPy+fPz*fPz);
+		//double mass = (mom*mom-fE*fE)/(2.0*fE);
+		//std::cout << fPDGCodeTree << std::endl;
+		
+		fM = fPDG->GetParticle( fPDGCodeTree )->Mass() * 1000;
+		
+	}
 
 }
-
 void GenerateOneParticle(int fPDGCode)
 {
 
@@ -210,30 +236,22 @@ void GenerateOneParticle(int fPDGCode)
   fVx = fRand->Uniform(-12.5 , 12.5 );
   fVy = 25.0;
   fVz = fRand->Uniform( -7.5 , 2.5 );
-  //fVx = fRand->Uniform(-0.01 , 0.01 );
-  //fVy = fRand->Uniform( -.01, 0.01 );
-  //fVz = 2.0;
-
-  // Sample Momentum Distributions (flat from min to mean, p^-2.7 from mean to max)
-  //if( fRand->Uniform(0.,1) < fIntRatio ) 
-  //  fP = 1000. * fMomFlatDist->GetRandom();
-  //else 
-  //  fP = 1000. * fMomPowDist->GetRandom();
   
   fP = 1000.*fRand->Uniform(1.0,5.0);
 
   // Sample Angular Distributions (cos^2(theta) and flat phi)
-  //Float_t th = fThetaDist->GetRandom();
   Float_t th = TMath::Pi()-fRand->Uniform(0.0,0.15);
   Float_t ph = fPhiDist->GetRandom();
-  //Float_t th = 3.14159265;
-  //Float_t ph = 0.0;
+  
+
+  // Generate momentum components
   fPx        = fP * TMath::Sin(th) * TMath::Cos(ph);
   fPz        = fP * TMath::Sin(th) * TMath::Sin(ph);
   fPy        = fP * TMath::Cos(th);
-  //fPy        = fP * TMath::Sin(th) * TMath::Sin(ph);
-  //fPz        = fP * TMath::Cos(th);
+  
+  // Calculate mass and energy
   fM         = fPDG->GetParticle( fPDGCode )->Mass() * 1000;
+  std::cout << "Mass: " << fM << "   Code: " << fPDGCode << std::endl;
   fE         = TMath::Sqrt( (fP*fP + fM*fM) );
   fPDGCodeTree = fPDGCode;
   
