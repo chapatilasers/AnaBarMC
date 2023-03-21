@@ -187,13 +187,15 @@ void GenerateOneSBSParticle(int iEvent)
 
         tree1->GetEntry(iEvent);
 
+        double angle = 27.0/180.0*3.14159265;
+
         if (cdet_hit>0) {
-                fVx =        -(*xpos)[(*sdtrack_idx)[0]]*100 + 200;//-(*ypos)[(*sdtrack_idx)[0]]*100 + 0;
-                fVy =        -(*zpos)[(*sdtrack_idx)[0]]*100 + 380;
-                fVz =         (*ypos)[(*sdtrack_idx)[0]]*100 - 160;//(*xpos)[(*sdtrack_idx)[0]]*100 - 400;
-                fPx =   -(*xmomentum)[(*sdtrack_idx)[0]]*1000;//-(*ymomentum)[(*sdtrack_idx)[0]]*1000;
-                fPy =   -(*zmomentum)[(*sdtrack_idx)[0]]*1000;
-                fPz =    (*ymomentum)[(*sdtrack_idx)[0]]*1000;//(*xmomentum)[(*sdtrack_idx)[0]]*1000;
+                fVx =        -(-(*zpos)[(*sdtrack_idx)[0]] * sin(angle) + (*xpos)[(*sdtrack_idx)[0]] * cos(angle))*100;
+                fVy =        -((*zpos)[(*sdtrack_idx)[0]] *cos(angle) + (*xpos)[(*sdtrack_idx)[0]] * sin(angle) - 4.0735)*100;
+                fVz =         -(*ypos)[(*sdtrack_idx)[0]]*100;
+                fPx =   -(-(*zmomentum)[(*sdtrack_idx)[0]] * sin(angle) + (*xmomentum)[(*sdtrack_idx)[0]] * cos(angle))*1000;
+                fPy =   -((*zmomentum)[(*sdtrack_idx)[0]] * cos(angle) + (*xmomentum)[(*sdtrack_idx)[0]] * sin(angle))*1000;
+                fPz =    -(*ymomentum)[(*sdtrack_idx)[0]]*1000;
                 fE =        (*energy)[(*sdtrack_idx)[0]]*1000;
                 fPDGCodeTree = (*pid)[(*sdtrack_idx)[0]];
  
@@ -210,9 +212,6 @@ void GenerateOneParticle(int fPDGCode)
   fVx = fRand->Uniform(-12.5 , 12.5 );
   fVy = 25.0;
   fVz = fRand->Uniform( -7.5 , 2.5 );
-  //fVx = fRand->Uniform(-0.01 , 0.01 );
-  //fVy = fRand->Uniform( -.01, 0.01 );
-  //fVz = 2.0;
 
   // Sample Momentum Distributions (flat from min to mean, p^-2.7 from mean to max)
   //if( fRand->Uniform(0.,1) < fIntRatio ) 
