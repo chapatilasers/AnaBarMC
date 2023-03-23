@@ -13,4 +13,5 @@ batch/rootfiles/*.root
 *.*~
 *.pcm
 .ipynb_checkpoints/*
+macros/.ipynb_checkpoints/*
 __pycache__/
