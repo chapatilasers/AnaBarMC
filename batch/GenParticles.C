@@ -211,7 +211,7 @@ void GenerateOneParticle(int fPDGCode)
   // Generate vertex position in cm 
   fVx = fRand->Uniform(-12.5 , 12.5 );
   fVy = 25.0;
-  fVz = fRand->Uniform( -7.5 , 2.5 );
+  fVz = fRand->Uniform( -320.5 , 2.5 );
 
   // Sample Momentum Distributions (flat from min to mean, p^-2.7 from mean to max)
   //if( fRand->Uniform(0.,1) < fIntRatio ) 
