@@ -118,8 +118,8 @@ void GenParticles( int fPDGCode = 13, int nevents = 100,
     {
       nTotal++;
       
-      //GenerateOneParticle(fPDGCode);
-      GenerateOneSBSParticle(i);
+      GenerateOneParticle(fPDGCode);
+      //GenerateOneSBSParticle(i);
 
       fROOTTree->Fill();
       
