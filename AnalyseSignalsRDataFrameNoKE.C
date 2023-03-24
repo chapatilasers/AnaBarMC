@@ -492,7 +492,7 @@ std::vector<float> getAnaBarEdTotal(bool trigger, float fNewTheta, int Detector_
 
 RNode AnalyseSignalsRDataFrameNoKE() {
 
-	auto fileName = "data/AnaBarMC_7000.root";
+	auto fileName = "data/AnaBarMC_4000.root";
 	auto treeName = "T";
 
 	ROOT::RDataFrame d(treeName,fileName);
