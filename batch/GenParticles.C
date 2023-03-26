@@ -68,7 +68,7 @@ Float_t         fIntRatio;
 
 // ------------------------------------------------------------------------------------------------
 
-void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100, 
+void GenParticles( int fPDGCode = 13, int nevents = 100, 
 		    int run_number = 2000) 
 {
   
@@ -78,7 +78,7 @@ void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100,
   // Set up PDG Table
   fPDG             = new TDatabasePDG();
   TString pdgtable = gSystem->Getenv( "ROOTSYS" );
-  pdgtable.Append( "/etc/root/pdg_table.txt" );
+  pdgtable.Append( "/etc/pdg_table.txt" );
   fPDG->ReadPDGTable( pdgtable );
 
   // Initialize input
