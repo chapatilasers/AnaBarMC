@@ -10,12 +10,16 @@
 #include "TMath.h"
 
 #include <iostream>
+#include <vector>
 
 // ------------------------------------------------------------------------------------------------
 
 // Functions
 void  InitOutput();
+void  InitInput();
 void  GenerateOneParticle(int fPDGCode);
+void  GenerateOneSBSParticle(int iEvent);
+void  GenerateOneToyParticle();
 
 // Random number generator
 TRandom3*       fRand;
@@ -27,6 +31,7 @@ TDatabasePDG*   fPDG;
 TFile*          fROOTFile;
 TTree*          fROOTTree;
 TString         fOutFileName;
+TString         fInFileName;
 Float_t         fVx;
 Float_t         fVy;
 Float_t         fVz;
@@ -37,6 +42,19 @@ Float_t         fP;
 Float_t         fM;
 Float_t         fE;
 Int_t           fPDGCodeTree;
+
+// Input from SBS
+TTree* tree1;
+int cdet_hit;
+vector<int> *sdtrack_idx;
+vector<int> *pid;
+vector<double> *xpos;
+vector<double> *ypos;
+vector<double> *zpos;
+vector<double> *xmomentum;
+vector<double> *ymomentum;
+vector<double> *zmomentum;
+vector<double> *energy;
 
 // Sampling Functions
 TH1*            fMomFlatDist;
@@ -63,6 +81,12 @@ void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100,
   pdgtable.Append( "/etc/root/pdg_table.txt" );
   fPDG->ReadPDGTable( pdgtable );
 
+  // Initialize input
+  TString inname;
+  inname.Form("~/CDetOptical/macros/gep_12Gev1000.root");
+  fInFileName = inname;
+  InitInput();
+  
   // Initialise output
   TString fname;
   fname.Form("~/CDetOptical/batch/data/AnaBarMC_Gen_%d.root",run_number);
@@ -95,7 +119,10 @@ void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100,
     {
       nTotal++;
       
-      GenerateOneParticle(fPDGCode);
+      //GenerateOneParticle(fPDGCode);
+      //GenerateOneSBSParticle(i);
+      GenerateOneToyParticle();
+
       fROOTTree->Fill();
       
       if( i % 10 == 0 )
@@ -137,7 +164,113 @@ void InitOutput()
 
 }
 
+void InitInput()
+{
+        TFile *f1 = new TFile(fInFileName,"READ");
+        tree1 = (TTree*)f1->Get("T");
+
+        tree1->SetBranchAddress("Earm.CDET_Scint.hit.nhits", &cdet_hit);
+        tree1->SetBranchAddress("Earm.CDET_Scint.hit.sdtridx", &sdtrack_idx);
+        tree1->SetBranchAddress("SDTrack.PID",&pid);
+        tree1->SetBranchAddress("SDTrack.posx",&xpos);
+        tree1->SetBranchAddress("SDTrack.posy",&ypos);
+        tree1->SetBranchAddress("SDTrack.posz",&zpos);
+        tree1->SetBranchAddress("SDTrack.momx",&xmomentum);
+        tree1->SetBranchAddress("SDTrack.momy",&ymomentum);
+        tree1->SetBranchAddress("SDTrack.momz",&zmomentum);
+        tree1->SetBranchAddress("SDTrack.Etot",&energy);
+
+}
+
 // ------------------------------------------------------------------------------------------------
+
+void GenerateOneSBSParticle(int iEvent)
+{
+
+        tree1->GetEntry(iEvent);
+
+        double angle = 27.0/180.0*3.14159265;
+
+        if (cdet_hit>0) {
+                fVx =        -(-(*zpos)[(*sdtrack_idx)[0]] * sin(angle) + (*xpos)[(*sdtrack_idx)[0]] * cos(angle))*100;
+                fVy =        -((*zpos)[(*sdtrack_idx)[0]] *cos(angle) + (*xpos)[(*sdtrack_idx)[0]] * sin(angle) - 4.0735)*100;
+                fVz =         -(*ypos)[(*sdtrack_idx)[0]]*100;
+                fPx =   -(-(*zmomentum)[(*sdtrack_idx)[0]] * sin(angle) + (*xmomentum)[(*sdtrack_idx)[0]] * cos(angle))*1000;
+                fPy =   -((*zmomentum)[(*sdtrack_idx)[0]] * cos(angle) + (*xmomentum)[(*sdtrack_idx)[0]] * sin(angle))*1000;
+                fPz =    -(*ymomentum)[(*sdtrack_idx)[0]]*1000;
+                fE =        (*energy)[(*sdtrack_idx)[0]]*1000;
+                fPDGCodeTree = (*pid)[(*sdtrack_idx)[0]];
+ 
+               fM = fPDG->GetParticle( fPDGCodeTree )->Mass() * 1000;
+  	//	std::cout << fVx << " " << fVy << " " << fVz << std::endl;
+  	//	std::cout << fPx << " " << fPy << " " << fPz << std::endl;
+  	//	std::cout << fE << " " << fM << " " << fPDGCodeTree << std::endl;
+  	//	std::cout << std::endl;
+
+        }
+
+}
+
+void GenerateOneToyParticle()
+{
+
+  double xsize = 100.0;
+  double ysize = 100.0;
+  double mp = 938.2796;
+  double ebeam = 11000.0;
+  double bbdist = 4.50;
+  double angle = 29.0*3.14159265/180.0;
+
+  int module = int(fRand->Uniform(0.0,3.0))+1;
+  fVz = bbdist*100.0;
+
+  if (module == 1) {
+	  fVx = -xsize/2.0+xsize*fRand->Uniform(0.0,1.0)-20.0;
+	  fVy = -ysize/2.0+ysize*fRand->Uniform(0.0,1.0)-ysize;
+  }
+  if (module == 2) {
+	  fVx = -xsize/2.0+xsize*fRand->Uniform(0.0,1.0);
+	  fVy = -ysize/2.0+ysize*fRand->Uniform(0.0,1.0);
+  }
+  if (module == 3) {
+	  fVx = -xsize/2.0+xsize*fRand->Uniform(0.0,1.0)-20.0;
+	  fVy = -ysize/2.0+ysize*fRand->Uniform(0.0,1.0)+ysize;
+  }
+
+  // Vertex positions of Event 1 in 1000 event g4sbs sample (Angelo), for testing!
+  //fVx = -29.956;
+  //fVy = -145.003;
+  //fVz = 450.0;
+
+  double theta_polar = acos((-fVx*sin(angle)+fVz*cos(angle))/
+		  sqrt(fVx*fVx+fVy*fVy+fVz*fVz));
+
+  fE = ebeam*mp/(mp+ebeam*(1.0-cos(theta_polar)));
+  fM = fPDG->GetParticle(11)->Mass()*1000;
+
+  fPx = fE*(fVx/sqrt(fVx*fVx+fVy*fVy+fVz*fVz));
+  fPy = fE*(fVy/sqrt(fVx*fVx+fVy*fVy+fVz*fVz));
+  fPz = fE*(fVz/sqrt(fVx*fVx+fVy*fVy+fVz*fVz));
+
+  // SBS -> CDet Coordinates
+  fVx = -fVx;
+  double dummy = fVy;
+  fVy = -(fVz-470.0);
+  fVz = -dummy;
+  fPx = -fPx;
+  double dummy2 = fPy;
+  fPy = -fPz;
+  fPz = -dummy2;
+
+  fPDGCodeTree = 11;
+                
+  //std::cout << module << std::endl;
+  //std::cout << fVx << " " << fVy << " " << fVz << std::endl;
+  //std::cout << fPx << " " << fPy << " " << fPz << std::endl;
+  //std::cout << fE << " " << fM << " " << fPDGCodeTree << std::endl;
+  //std::cout << std::endl;
+
+}
 
 void GenerateOneParticle(int fPDGCode)
 {
@@ -145,10 +278,7 @@ void GenerateOneParticle(int fPDGCode)
   // Generate vertex position in cm 
   fVx = fRand->Uniform(-12.5 , 12.5 );
   fVy = 25.0;
-  fVz = fRand->Uniform( -320.0 , 2.5 );
-  //fVx = fRand->Uniform(-0.01 , 0.01 );
-  //fVy = fRand->Uniform( -.01, 0.01 );
-  //fVz = 2.0;
+  fVz = fRand->Uniform( -320.5 , 2.5 );
 
   // Sample Momentum Distributions (flat from min to mean, p^-2.7 from mean to max)
   //if( fRand->Uniform(0.,1) < fIntRatio ) 

@@ -19,6 +19,7 @@ void  InitOutput();
 void  InitInput();
 void  GenerateOneParticle(int fPDGCode);
 void  GenerateOneSBSParticle(int iEvent);
+void  GenerateOneToyParticle();
 
 // Random number generator
 TRandom3*       fRand;
@@ -67,7 +68,7 @@ Float_t         fIntRatio;
 
 // ------------------------------------------------------------------------------------------------
 
-void GenParticles( int fPDGCode = 13, int nevents = 100, 
+void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100, 
 		    int run_number = 2000) 
 {
   
@@ -77,7 +78,7 @@ void GenParticles( int fPDGCode = 13, int nevents = 100,
   // Set up PDG Table
   fPDG             = new TDatabasePDG();
   TString pdgtable = gSystem->Getenv( "ROOTSYS" );
-  pdgtable.Append( "/etc/pdg_table.txt" );
+  pdgtable.Append( "/etc/root/pdg_table.txt" );
   fPDG->ReadPDGTable( pdgtable );
 
   // Initialize input
@@ -118,8 +119,9 @@ void GenParticles( int fPDGCode = 13, int nevents = 100,
     {
       nTotal++;
       
-      GenerateOneParticle(fPDGCode);
+      //GenerateOneParticle(fPDGCode);
       //GenerateOneSBSParticle(i);
+      GenerateOneToyParticle();
 
       fROOTTree->Fill();
       
@@ -200,8 +202,73 @@ void GenerateOneSBSParticle(int iEvent)
                 fPDGCodeTree = (*pid)[(*sdtrack_idx)[0]];
  
                fM = fPDG->GetParticle( fPDGCodeTree )->Mass() * 1000;
+  	//	std::cout << fVx << " " << fVy << " " << fVz << std::endl;
+  	//	std::cout << fPx << " " << fPy << " " << fPz << std::endl;
+  	//	std::cout << fE << " " << fM << " " << fPDGCodeTree << std::endl;
+  	//	std::cout << std::endl;
 
         }
+
+}
+
+void GenerateOneToyParticle()
+{
+
+  double xsize = 100.0;
+  double ysize = 100.0;
+  double mp = 938.2796;
+  double ebeam = 11000.0;
+  double bbdist = 4.50;
+  double angle = 29.0*3.14159265/180.0;
+
+  int module = int(fRand->Uniform(0.0,3.0))+1;
+  fVz = bbdist*100.0;
+
+  if (module == 1) {
+	  fVx = -xsize/2.0+xsize*fRand->Uniform(0.0,1.0)-20.0;
+	  fVy = -ysize/2.0+ysize*fRand->Uniform(0.0,1.0)-ysize;
+  }
+  if (module == 2) {
+	  fVx = -xsize/2.0+xsize*fRand->Uniform(0.0,1.0);
+	  fVy = -ysize/2.0+ysize*fRand->Uniform(0.0,1.0);
+  }
+  if (module == 3) {
+	  fVx = -xsize/2.0+xsize*fRand->Uniform(0.0,1.0)-20.0;
+	  fVy = -ysize/2.0+ysize*fRand->Uniform(0.0,1.0)+ysize;
+  }
+
+  // Vertex positions of Event 1 in 1000 event g4sbs sample (Angelo), for testing!
+  //fVx = -29.956;
+  //fVy = -145.003;
+  //fVz = 450.0;
+
+  double theta_polar = acos((-fVx*sin(angle)+fVz*cos(angle))/
+		  sqrt(fVx*fVx+fVy*fVy+fVz*fVz));
+
+  fE = ebeam*mp/(mp+ebeam*(1.0-cos(theta_polar)));
+  fM = fPDG->GetParticle(11)->Mass()*1000;
+
+  fPx = fE*(fVx/sqrt(fVx*fVx+fVy*fVy+fVz*fVz));
+  fPy = fE*(fVy/sqrt(fVx*fVx+fVy*fVy+fVz*fVz));
+  fPz = fE*(fVz/sqrt(fVx*fVx+fVy*fVy+fVz*fVz));
+
+  // SBS -> CDet Coordinates
+  fVx = -fVx;
+  double dummy = fVy;
+  fVy = -(fVz-470.0);
+  fVz = -dummy;
+  fPx = -fPx;
+  double dummy2 = fPy;
+  fPy = -fPz;
+  fPz = -dummy2;
+
+  fPDGCodeTree = 11;
+                
+  //std::cout << module << std::endl;
+  //std::cout << fVx << " " << fVy << " " << fVz << std::endl;
+  //std::cout << fPx << " " << fPy << " " << fPz << std::endl;
+  //std::cout << fE << " " << fM << " " << fPDGCodeTree << std::endl;
+  //std::cout << std::endl;
 
 }
 
