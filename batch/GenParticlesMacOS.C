@@ -118,10 +118,16 @@ void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100,
   for( int i = 0; i < nevents; i++ ) 
     {
       nTotal++;
-      
-      //GenerateOneParticle(fPDGCode);
-      //GenerateOneSBSParticle(i);
-      GenerateOneToyParticle();
+     
+      if (fPDGCode == -1 ) { 
+      	GenerateOneSBSParticle(i);
+      } else {
+	      if (fPDGCode == -2) {
+      		GenerateOneToyParticle();
+	      } else {
+      		GenerateOneParticle(fPDGCode);
+	      }
+      }
 
       fROOTTree->Fill();
       
