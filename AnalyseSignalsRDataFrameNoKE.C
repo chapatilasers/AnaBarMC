@@ -494,10 +494,10 @@ std::vector<float> getAnaBarEdTotal(bool trigger, float fNewTheta, int Detector_
 RNode AnalyseSignalsRDataFrameNoKE(int run_number = 4000) {
 
 	global_run_number = run_number;
-	TString fileName;
 	std::cout << run_number << std::endl;
-	fileName.Form("data/AnaBarMC_%d.root",run_number);
-	//auto fileName = "data/AnaBarMC_4001.root";
+	//TString fileName;
+	//fileName.Form("data/AnaBarMC_%d.root",run_number);
+	auto fileName = "data/AnaBarMC_"+std::to_string(run_number)+".root";
 	auto treeName = "T";
 
 	ROOT::RDataFrame d(treeName,fileName);
