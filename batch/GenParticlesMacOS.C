@@ -18,7 +18,7 @@
 void  InitOutput();
 void  InitInput();
 void  GenerateOneParticle(int fPDGCode);
-void  GenerateOneSBSParticle(int iEvent);
+void  GenerateOneSBSParticle(int iEvent, int runNumber, int nEvents);
 void  GenerateOneToyParticle();
 
 // Random number generator
@@ -118,15 +118,15 @@ void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100,
   for( int i = 0; i < nevents; i++ ) 
     {
       nTotal++;
-     
-      if (fPDGCode == -1 ) { 
-      	GenerateOneSBSParticle(i);
+      
+      if (fPDGCode == -1 ) {
+        GenerateOneSBSParticle(i,run_number,nevents);
       } else {
-	      if (fPDGCode == -2) {
-      		GenerateOneToyParticle();
-	      } else {
-      		GenerateOneParticle(fPDGCode);
-	      }
+              if (fPDGCode == -2) {
+                GenerateOneToyParticle();
+              } else {
+                GenerateOneParticle(fPDGCode);
+              }
       }
 
       fROOTTree->Fill();
@@ -190,10 +190,11 @@ void InitInput()
 
 // ------------------------------------------------------------------------------------------------
 
-void GenerateOneSBSParticle(int iEvent)
+void GenerateOneSBSParticle(int iEvent, int runNumber, int nEvents)
 {
+	int eventOffset = runNumber%100*nEvents;
 
-        tree1->GetEntry(iEvent);
+        tree1->GetEntry(eventOffset+iEvent);
 
         double angle = 27.0/180.0*3.14159265;
 
