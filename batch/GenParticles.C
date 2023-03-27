@@ -83,7 +83,7 @@ void GenParticles( int fPDGCode = 13, int nevents = 100,
 
   // Initialize input
   TString inname;
-  inname.Form("~/CDetOptical/macros/gep_12Gev1000.root");
+  inname.Form("~/CDetOptical/macros/gep_12Gev1mil.root");
   fInFileName = inname;
   InitInput();
   
@@ -120,6 +120,7 @@ void GenParticles( int fPDGCode = 13, int nevents = 100,
       nTotal++;
       
       if (fPDGCode == -1 ) {
+	std::cout << "SBS" << std::endl;
         GenerateOneSBSParticle(i,run_number,nevents);
       } else {
               if (fPDGCode == -2) {
@@ -193,6 +194,7 @@ void InitInput()
 void GenerateOneSBSParticle(int iEvent, int runNumber, int nEvents)
 {
 	int eventOffset = runNumber%100*nEvents;
+	std::cout << eventOffset << " "  << iEvent << std::endl;
 
         tree1->GetEntry(eventOffset+iEvent);
 
