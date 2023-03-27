@@ -103,6 +103,7 @@ DetectorConstruction::DetectorConstruction()
   G4String command = "/control/execute macros/DetectorSetup.mac";
   UI->ApplyCommand(command);
 
+  //std::cout << "In DetectorConstuction constructor: Bars = " << fNumberOfBars << "  FingerWidth = " << fFingerWidth << std::endl; 
 }
 
 //---------------------------------------------------------------------------
@@ -121,7 +122,7 @@ G4int DetectorConstruction::SetDetectorID(G4int iOffset, G4int iLayer, G4int iBa
   fDetectorID = fDetectorID + iSide*fNumberOfBars*fNumberOfLayers;
   fDetectorID = fDetectorID + iModule*fNumberOfSides*fNumberOfBars*fNumberOfLayers;
   fDetectorID = fDetectorID + iPlane*fNumberOfModules*fNumberOfSides*fNumberOfBars*fNumberOfLayers;
-  std::cout<<"setting detector id: "<<fDetectorID<<", iLayer: "<<iLayer<<", iBar: "<<iBar<<", iModule: "<<iModule<<", iSide: "<<iSide<<", iPlane: "<<iPlane<<std::endl;
+  //std::cout<<"setting detector id: "<<fDetectorID<<", iLayer: "<<iLayer<<", iBar: "<<iBar<<", iModule: "<<iModule<<", iSide: "<<iSide<<", iPlane: "<<iPlane<<std::endl;
   return fDetectorID;
 }
 
@@ -244,6 +245,16 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 						   expHall_log, "expHall", 0, false,0);
 
   //----------------- Create Mylar Layers and Sides ----------------------
+  
+  
+  // Redefine here some quantities from the constructor that are based on parameters definable at runtime!!!!
+  fFingerWidth = fNumberOfModules*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness+2.0*fMylarThickness)+20.0;
+  fFingerZoffset = -(fFingerWidth-20.0)/2.0;
+  fFingerYoffset = fAnaBarWidth/2.0+fFingerThickness/2.0+20.0;
+  fHoleLength = fAnaBarLength;
+  fFibreLength = fCladdingLength;
+  std::cout << "In DetectorConstuction Construct(): Bars = " << fNumberOfBars << "  FingerWidth = " << fFingerWidth << std::endl; 
+
 
   G4VSolid* solidMylar = new G4Box("Mylar",fAnaBarLength/2.0*cm,fAnaBarWidth/2.0*cm,fMylarThickness/2.0*cm);
   
@@ -367,7 +378,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    G4ThreeVector MylarFinger_pos8(xoffset*cm+0.0*cm, yoffset*cm + fFingerYoffset*cm , fFingerZoffset*cm-fFingerWidth/2.0*cm-fMylarThickness/2.0*cm);
    MylarFingerEnd    =  new G4PVPlacement(0, MylarFinger_pos8 , logicMylarFingerEnd , "MylarFingerEnd" , expHall_log , false , 2589);
 
-   std::cout<<"The xoffset is: "<<xoffset<<" and the yoffset is: "<<yoffset<<std::endl;
+   //std::cout<<"The xoffset is: "<<xoffset<<" and the yoffset is: "<<yoffset<<std::endl;
    
    //----------------------------
    // Creating Detector itself
@@ -441,7 +452,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    }
    }
 
-std::cout<<"ALL PADDLES SHOULD BE CREATED"<<std::endl;
+  //std::cout<<"ALL PADDLES SHOULD BE CREATED"<<std::endl;
 
   //----------------- Create Mirror on non-phototube end ----------------------
 
@@ -466,7 +477,7 @@ std::cout<<"ALL PADDLES SHOULD BE CREATED"<<std::endl;
   mirrorSurface -> SetMaterialPropertiesTable(mirrorSurfaceProperty);
   new G4LogicalSkinSurface("MirrorSurface",Mirror_log,mirrorSurface);
 
-	std::cout << "MIRROR POSITION, SIZE : " << fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness) << " ***** " << -1.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)/2.0 << std::endl;
+  //std::cout << "MIRROR POSITION, SIZE : " << fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness) << " ***** " << -1.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)/2.0 << std::endl;
    
    for (G4int iPlane=0; iPlane<fNumberOfPlanes; iPlane++){
 	if (iPlane==0) {
@@ -555,7 +566,7 @@ std::cout<<"ALL PADDLES SHOULD BE CREATED"<<std::endl;
   }
   }
   }
-std::cout<<"Fibbers and Fibber Claddings have been created" <<std::endl; 
+  std::cout<<"Fibres and Fibre Claddings have been created" <<std::endl; 
 
   //---------------------------------------------------------------------------
   // Create AnaBar PMT
@@ -604,13 +615,14 @@ std::cout<<"Fibbers and Fibber Claddings have been created" <<std::endl;
 	fDetVol = new G4PVPlacement(anabar_rm, G4ThreeVector(xoff+fAnaBarXposP*cm, yoff+0., zoff-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm)),
 						det1_log, "det1", expHall_log, false, SetDetectorID(0,iLayer, iBar, iModule, iSide, iPlane));
 	
-	std::cout<<"Creaing fDetVol for paddle id: "<<SetDetectorID(0,iLayer,iBar,iModule,iSide,iPlane)<<std::endl;
+        //std::cout<<"Creaing fDetVol for paddle id: "<<SetDetectorID(0,iLayer,iBar,iModule,iSide,iPlane)<<std::endl;
     }
   }
   }
   }
   }
-std::cout<<"The AnaBar PMTs have been set as the fDetVol things - logical volume = det1_log" <<std::endl;
+  
+  std::cout<<"The AnaBar PMTs have been set as the fDetVol things - logical volume = det1_log" <<std::endl;
 
   //---------------------------------------------------------------------------
   // Create Finger PMT
@@ -638,7 +650,7 @@ std::cout<<"The AnaBar PMTs have been set as the fDetVol things - logical volume
    fDet15Vol                  = new G4PVPlacement(finger_rm, G4ThreeVector(xoffset*cm+0.0*cm,yoffset*cm + fFingerYoffset*cm,fFingerZoffset*cm+fFingerWidth/2.0*cm+fPhotoCathodeThickness/20*cm),
   						det2_log, "det2", expHall_log, false, 2503);
 
-std::cout<<"The finger PMTs has been set as the fDet15Vol things - logical volume = det2_log"<<std::endl;
+  std::cout<<"The finger PMTs has been set as the fDet15Vol things - logical volume = det2_log"<<std::endl;
 
   //---------------------------------------------------------------------------
   // Create Optical Surface
@@ -692,7 +704,7 @@ std::cout<<"The finger PMTs has been set as the fDet15Vol things - logical volum
   det1_log->SetVisAttributes(yellow);
   det2_log->SetVisAttributes(yellow);
 
-std::cout<<"Returning the Experimental Hall"<<std::endl;
+  std::cout<<"Returning the Experimental Hall"<<std::endl;
 
   return fExpHall;
 }
@@ -707,7 +719,7 @@ void DetectorConstruction::UpdateGeometry()
 //---------------------------------------------------------------------------
 
 G4Material* DetectorConstruction::FindMaterial(G4String name) {
-    std::cout << "Here I am ... rock me like a hurricane! " << name << std::endl;
+    std::cout << "Here I am ... in FindMaterial(" << name << ")" << std::endl;
     G4Material* material = G4Material::GetMaterial(name,true);
     return material;
 }

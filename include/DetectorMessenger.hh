@@ -35,6 +35,10 @@ private:
   G4UIcmdWithADouble*          fAnaBarYposCmd;
   G4UIcmdWithADouble*          fAnaBarZposCmd;
   G4UIcmdWithAnInteger*          fNumberOfLayersCmd;
+  G4UIcmdWithAnInteger*          fNumberOfBarsCmd;
+  G4UIcmdWithAnInteger*          fNumberOfSidesCmd;
+  G4UIcmdWithAnInteger*          fNumberOfModulesCmd;
+  G4UIcmdWithAnInteger*          fNumberOfPlanesCmd;
   G4UIcmdWithADouble*          fAnaBarLengthCmd;
   G4UIcmdWithADouble*          fAnaBarWidthCmd;
   G4UIcmdWithADouble*          fAnaBarThicknessCmd;
