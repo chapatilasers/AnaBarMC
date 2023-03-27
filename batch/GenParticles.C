@@ -85,7 +85,9 @@ void GenParticles( int fPDGCode = 13, int nevents = 100,
   TString inname;
   inname.Form("~/CDetOptical/macros/gep_12Gev1mil.root");
   fInFileName = inname;
-  InitInput();
+  if (fPDGCode == -1) {
+	InitInput();
+  }
   
   // Initialise output
   TString fname;
