@@ -415,19 +415,19 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4double fAnaBarXposA = fAnaBarXpos-iSideA*(fAnaBarLength/2.0+fMirrorThickness/2.0);
 	G4double fAnaBarXposM = fAnaBarXposA+iSideM*(fAnaBarLength/2.0+fMylarThickness/2.0);
    for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
+     for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
 	if (iModule==0) {
-		xoff=0.0*cm;
+		xoff=(1-iBar/7)*20.0*cm;
 		zoff=fAnaBarZpos*cm;
 	} else {
 		if (iModule == 1) {
 			xoff = -20.0*cm;
 			zoff = fAnaBarZpos*cm-2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		} else {
-			xoff = 0.0*cm;
+			xoff = (iBar/7)*20.0*cm;
 			zoff = fAnaBarZpos*cm-4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		}
 	}
-   for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
      for (G4int iLayer=0; iLayer<fNumberOfLayers; iLayer++){
 	  G4double fAnaBarZposA = zoff-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm); 
      	  
@@ -456,7 +456,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   //----------------- Create Mirror on non-phototube end ----------------------
 
-  G4VSolid* solidMirror = new G4Box("Mirror",fMirrorThickness/2.0*cm,fAnaBarWidth/2.0*cm,fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm);
+  G4VSolid* solidMirror = new G4Box("Mirror",fMirrorThickness/2.0*cm,fAnaBarWidth/2.0*cm,fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm);
 
   G4LogicalVolume* Mirror_log = new G4LogicalVolume(solidMirror,FindMaterial("G4_Al"), "Mirror");
 
@@ -486,23 +486,24 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 		yoff=fAnaBarYpos*cm-30.0*cm;
 	}
    for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
+       for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
 	if (iModule==0) {
-		xoff=0.0*cm;
+		xoff=(1-iBar/7)*20.0*cm;
 		zoff=fAnaBarZpos*cm;
 	} else {
 		if (iModule == 1) {
 			xoff = -20.0*cm;
 			zoff = fAnaBarZpos*cm-2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		} else {
-			xoff = 0.0*cm;
+			xoff = (iBar/7)*20.0*cm;
 			zoff = fAnaBarZpos*cm-4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		}
 	}
   
-        Mirror = new G4PVPlacement(0,G4ThreeVector(xoff+fAnaBarXpos*cm-fAnaBarLength/2.0*cm-fMirrorThickness/2.0*cm,yoff+0.0*cm, zoff-1.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm ),Mirror_log,"Mirror",expHall_log,false,2700+2.0*iModule+iPlane);
+        Mirror = new G4PVPlacement(0,G4ThreeVector(xoff+fAnaBarXpos*cm-fAnaBarLength/2.0*cm-fMirrorThickness/2.0*cm,yoff+0.0*cm, zoff + (iBar+0.5)*(-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm)),Mirror_log,"Mirror",expHall_log,false,2700+2.0*iModule+iPlane);
    }
    }
-
+   }
   std::cout<<"Mirror has been created"<<std::endl;
 
   //---------------------------------------------------------------------------
@@ -537,19 +538,19 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4double iSideF = 1.0-2.0*iSide;
 	G4double fAnaBarXposA = fAnaBarXpos-iSideA*(fAnaBarLength/2.0+fMirrorThickness/2.0);
    for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
+     for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
 	if (iModule==0) {
-		xoff=0.0*cm;
+		xoff=(1-iBar/7)*20.0*cm;
 		zoff=fAnaBarZpos*cm;
 	} else {
 		if (iModule == 1) {
 			xoff = -20.0*cm;
 			zoff = fAnaBarZpos*cm-2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		} else {
-			xoff = 0.0*cm;
+			xoff = (iBar/7)*20.0*cm;
 			zoff = fAnaBarZpos*cm-4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		}
 	}
-  for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
     for (G4int iLayer=0; iLayer<fNumberOfLayers; iLayer++){ 
   	G4ThreeVector Global_fibre_pos(xoff+fAnaBarXposA*cm + iSideF*(fFibreLength-fAnaBarLength)/2.0*cm , yoff+0.0*cm , zoff-1.0*(fAnaBarThickness/2.0)*cm-(fAnaBarThickness+2.0*fMylarThickness)*iLayer*cm + iBar*(-(fAnaBarThickness+2.0*fMylarThickness)*fNumberOfLayers*cm));
 
@@ -596,19 +597,19 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 	G4double fAnaBarXposP = fAnaBarXposF+iSideF*(fFibreLength+fPhotoCathodeThickness)/2.0;
 
   for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
+     for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
 	if (iModule==0) {
-		xoff=0.0*cm;
+		xoff=(1-iBar/7)*20.0*cm;
 		zoff=fAnaBarZpos*cm;
 	} else {
 		if (iModule == 1) {
 			xoff = -20.0*cm;
 			zoff = fAnaBarZpos*cm-2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		} else {
-			xoff = 0.0*cm;
+			xoff = (iBar/7)*20.0*cm;
 			zoff = fAnaBarZpos*cm-4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		}
 	}
-  for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
     for (G4int iLayer=0; iLayer<fNumberOfLayers; iLayer++){
   	
     	
