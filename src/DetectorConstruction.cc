@@ -417,14 +417,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
      for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
 	if (iModule==0) {
-		xoff=(1-iBar/7)*20.0*cm;
+		xoff=(1-iBar/7)*7.5*cm;
 		zoff=fAnaBarZpos*cm;
 	} else {
 		if (iModule == 1) {
-			xoff = -20.0*cm;
+			xoff = -7.5*cm;
 			zoff = fAnaBarZpos*cm-2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		} else {
-			xoff = (iBar/7)*20.0*cm;
+			xoff = (iBar/7)*7.5*cm;
 			zoff = fAnaBarZpos*cm-4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		}
 	}
@@ -488,14 +488,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
        for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
 	if (iModule==0) {
-		xoff=(1-iBar/7)*20.0*cm;
+		xoff=(1-iBar/7)*7.5*cm;
 		zoff=fAnaBarZpos*cm;
 	} else {
 		if (iModule == 1) {
-			xoff = -20.0*cm;
+			xoff = -7.5*cm;
 			zoff = fAnaBarZpos*cm-2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		} else {
-			xoff = (iBar/7)*20.0*cm;
+			xoff = (iBar/7)*7.5*cm;
 			zoff = fAnaBarZpos*cm-4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		}
 	}
@@ -540,14 +540,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
    for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
      for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
 	if (iModule==0) {
-		xoff=(1-iBar/7)*20.0*cm;
+		xoff=(1-iBar/7)*7.5*cm;
 		zoff=fAnaBarZpos*cm;
 	} else {
 		if (iModule == 1) {
-			xoff = -20.0*cm;
+			xoff = -7.5*cm;
 			zoff = fAnaBarZpos*cm-2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		} else {
-			xoff = (iBar/7)*20.0*cm;
+			xoff = (iBar/7)*7.5*cm;
 			zoff = fAnaBarZpos*cm-4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		}
 	}
@@ -599,14 +599,14 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   for (G4int iModule=0; iModule<fNumberOfModules; iModule++){
      for (G4int iBar=0; iBar<fNumberOfBars; iBar++){
 	if (iModule==0) {
-		xoff=(1-iBar/7)*20.0*cm;
+		xoff=(1-iBar/7)*7.5*cm;
 		zoff=fAnaBarZpos*cm;
 	} else {
 		if (iModule == 1) {
-			xoff = -20.0*cm;
+			xoff = -7.5*cm;
 			zoff = fAnaBarZpos*cm-2.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		} else {
-			xoff = (iBar/7)*20.0*cm;
+			xoff = (iBar/7)*7.5*cm;
 			zoff = fAnaBarZpos*cm-4.0*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness/2.0+fMylarThickness)*cm;
 		}
 	}
