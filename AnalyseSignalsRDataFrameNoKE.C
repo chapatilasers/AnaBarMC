@@ -850,6 +850,7 @@ TCanvas* plotC13() {
 	auto hPx_vs_x = fdft.Filter("trigger2").Histo2D({"h33", "Px vs x", 100, -800.0, 800.0, 100, -800.0, 800.0},"anaBarXVec","fPx");
 	auto hPz_vs_z = fdft.Filter("trigger2").Histo2D({"h34", "Pz vs z", 100, -2400.0, 2400.0, 100, -2400.0, 2400.0},"anaBarZVec","fPz");
 	auto hz_vs_x = fdft.Filter("trigger2").Histo2D({"h35", "z vs x", 100, -800.0, 800.0, 100, -2400.0, 2400.0},"anaBarXVec","anaBarZVec");
+	auto hPrimXZ = fdft.Histo2D({"h99", "z vs z", 100, -80.0, 80.0, 100, -240.0, 240.0},"Prim_X","Prim_Z");
 
 
 	TCanvas *c13 = new TCanvas("c13","c13",800,800);
@@ -861,6 +862,8 @@ TCanvas* plotC13() {
 	hPz_vs_z->Draw("COLZ");
 	c13->cd(3);
 	hz_vs_x->Draw("COLZ");
+	c13->cd(4);
+	hPrimXZ->Draw("COLZ");
 
 	c13->DrawClone();
 	c13->Print("plots/c13.pdf");
