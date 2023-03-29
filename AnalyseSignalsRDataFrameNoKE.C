@@ -842,14 +842,15 @@ TCanvas* plotC12(){
 
 }
 
+TCanvas* plotC13() {
 
-TCanvas* plotC13(){
 
 	RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
 	auto hPx_vs_x = fdft.Filter("trigger2").Histo2D({"h33", "Px vs x", 100, -800.0, 800.0, 100, -800.0, 800.0},"anaBarXVec","fPx");
 	auto hPz_vs_z = fdft.Filter("trigger2").Histo2D({"h34", "Pz vs z", 100, -2400.0, 2400.0, 100, -2400.0, 2400.0},"anaBarZVec","fPz");
 	auto hz_vs_x = fdft.Filter("trigger2").Histo2D({"h35", "z vs x", 100, -800.0, 800.0, 100, -2400.0, 2400.0},"anaBarXVec","anaBarZVec");
+
 
 	TCanvas *c13 = new TCanvas("c13","c13",800,800);
 	c13->Divide(2,2,0.01,0.01,0);
@@ -865,5 +866,34 @@ TCanvas* plotC13(){
 	c13->Print("plots/c13.pdf");
 
 	return c13;
+
+}
+
+
+TCanvas* plotC14(){
+
+	RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+
+	auto hPrimX = fdft.Histo1D("Prim_X");
+	auto hPrimY = fdft.Histo1D("Prim_Y");
+	auto hPrimZ = fdft.Histo1D("Prim_Z");
+	auto hPrimXZ = fdft.Histo2D({"h99", "z vs z", 100, -80.0, 80.0, 100, -240.0, 240.0},"Prim_X","Prim_Z");
+	
+	TCanvas *c14 = new TCanvas("c14","c14",800,800);
+	c14->Divide(2,2,0.01,0.01,0);
+
+	c14->cd(1);
+	hPrimZ->Draw();
+	c14->cd(2);
+	hPrimY->Draw();
+	c14->cd(3);
+	hPrimZ->Draw();
+	c14->cd(4);
+	hPrimXZ->Draw("COLZ");
+
+	c14->DrawClone();
+	c14->Print("plots/c14.pdf");
+
+	return c14;
 
 }
