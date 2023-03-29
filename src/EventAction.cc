@@ -131,6 +131,9 @@ void EventAction::EndOfEventAction(const G4Event* evt)
   if( det_hits != 0 ) {
     fAnaManager->SetPrimaryDirection ( (G4ThreeVector)fPGA->GetDirection() );
     fAnaManager->SetPrimaryEnergy    ( (G4double)fPGA->GetEnergy() );
+    fAnaManager->SetPrimaryX    ( (G4double)fPGA->GetX() );
+    fAnaManager->SetPrimaryY    ( (G4double)fPGA->GetY() );
+    fAnaManager->SetPrimaryZ    ( (G4double)fPGA->GetZ() );
     fAnaManager->SetPrimaryTime      ( (G4double)fPGA->GetTime() );
     fAnaManager->SetPrimaryPDef      ( (G4ParticleDefinition*)fPGA->GetPrimPDef() );
     
