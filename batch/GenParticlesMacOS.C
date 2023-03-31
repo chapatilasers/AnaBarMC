@@ -201,8 +201,8 @@ void GenerateOneSBSParticle(int iEvent, int runNumber, int nEvents)
         tree1->GetEntry(eventOffset+iEvent);
 
         double angle = 29.0/180.0*3.14159265;
-	double bbdist = 4.50;
-	double cdetdist = 4.0735;
+        double bbdist = 4.50;
+        double cdetdist = 4.0735;
 
         if (cdet_hit>0) {
                 fVx =        -(-(*zpos)[(*sdtrack_idx)[0]] * sin(angle) + (*xpos)[(*sdtrack_idx)[0]] * cos(angle))*100;
