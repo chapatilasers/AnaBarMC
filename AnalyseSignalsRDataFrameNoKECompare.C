@@ -3,6 +3,7 @@
 using namespace std;
 using RNode = ROOT::RDF::RNode;
 
+std::vector<RNode> v;
 int global_run_number1;
 int global_run_number2;
 int Analyse_Secondaries = 1;
@@ -492,9 +493,10 @@ std::vector<float> getAnaBarEdTotal(bool trigger, float fNewTheta, int Detector_
     return v;
 }
 
-std::vector<RNode> AnalyseSignalsRDataFrameNoKECompare(int run_number1 = 4000, int run_number2 = 4001) {
+//std::vector<RNode> AnalyseSignalsRDataFrameNoKECompare(int run_number1 = 4000, int run_number2 = 4001) {
+void AnalyseSignalsRDataFrameNoKECompare(int run_number1 = 4000, int run_number2 = 4001) {
 
-        std::vector<RNode> v;
+        //std::vector<RNode> v;
 	global_run_number1 = run_number1;
 	global_run_number2 = run_number2;
 	std::cout << run_number1 << std::endl;
@@ -591,12 +593,12 @@ std::vector<RNode> AnalyseSignalsRDataFrameNoKECompare(int run_number1 = 4000, i
         v.push_back(fdft2);
 
 
-	return v;
+	//return v;
 }
 
 TCanvas* plotC1(){
 
-    std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
+    //std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
 
   auto hFingerX1 = v[0].Histo1D("fingerXVec");
   auto hFingerY1 = v[0].Histo1D("fingerYVec");
@@ -636,7 +638,7 @@ TCanvas* plotC1(){
 
 TCanvas* plotC2(){
 
-    std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
+    //std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
 
         auto hPrimE1 = v[0].Histo1D({"h1", "E", 100, 0.0, 7000.0},"Prim_E");
         auto hPrimTh1 = v[0].Histo1D({"h1", "TH", 100, -0.1, 3.2},"fNewTheta");
@@ -677,36 +679,61 @@ TCanvas* plotC2(){
 
 TCanvas* plotC3(){
 
-    std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
+    //std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
 
-	auto hDetectorNhits = v[0].Histo1D("Detector_Nhits");
-	auto hDetectorPdg = v[0].Histo1D("anaBarPDG");
-	auto hDetectorID = v[0].Histo1D("anaBarID");
-	auto hFingerPdg = v[0].Histo1D("fingerPDG");
-	auto hFingerID = v[0].Histo1D("fingerID");
-	auto hPMTID = v[0].Histo1D("PMT_id");
-	auto hAnaBarPMTID = v[0].Histo1D("anaBarPMTID");
-	auto hFingerPMTID = v[0].Histo1D("fingerPMTID");
+	auto hDetectorNhits1 = v[0].Histo1D("Detector_Nhits");
+	auto hDetectorPdg1 = v[0].Histo1D("anaBarPDG");
+	auto hDetectorID1 = v[0].Histo1D("anaBarID");
+	auto hFingerPdg1 = v[0].Histo1D("fingerPDG");
+	auto hFingerID1 = v[0].Histo1D("fingerID");
+	auto hPMTID1 = v[0].Histo1D("PMT_id");
+	auto hAnaBarPMTID1 = v[0].Histo1D("anaBarPMTID");
+	auto hFingerPMTID1 = v[0].Histo1D("fingerPMTID");
+	
+        auto hDetectorNhits2 = v[1].Histo1D("Detector_Nhits");
+	auto hDetectorPdg2 = v[1].Histo1D("anaBarPDG");
+	auto hDetectorID2 = v[1].Histo1D("anaBarID");
+	auto hFingerPdg2 = v[1].Histo1D("fingerPDG");
+	auto hFingerID2 = v[1].Histo1D("fingerID");
+	auto hPMTID2 = v[1].Histo1D("PMT_id");
+	auto hAnaBarPMTID2 = v[1].Histo1D("anaBarPMTID");
+	auto hFingerPMTID2 = v[1].Histo1D("fingerPMTID");
 
 	TCanvas *c3 = new TCanvas("c3","c3",800,800);
 	c3->Divide(3,3,0.01,0.01,0);
 
 	c3->cd(1);
-	hDetectorNhits->Draw();
+	hDetectorNhits1->Draw();
 	c3->cd(2);
-	hFingerPdg->Draw();
+	hFingerPdg1->Draw();
 	c3->cd(3);
-	hDetectorPdg->Draw();
+	hDetectorPdg1->Draw();
 	c3->cd(4);
-	hFingerID->Draw();
+	hFingerID1->Draw();
 	c3->cd(5);
-	hDetectorID->Draw();
+	hDetectorID1->Draw();
 	c3->cd(6);
-	hPMTID->Draw();
+	hPMTID1->Draw();
 	c3->cd(7);
-	hFingerPMTID->Draw();
+	hFingerPMTID1->Draw();
 	c3->cd(8);
-	hAnaBarPMTID->Draw();
+	hAnaBarPMTID1->Draw();
+	c3->cd(1);
+	hDetectorNhits2->Draw("SAME");
+	c3->cd(2);
+	hFingerPdg2->Draw("SAME");
+	c3->cd(3);
+	hDetectorPdg2->Draw("SAME");
+	c3->cd(4);
+	hFingerID2->Draw("SAME");
+	c3->cd(5);
+	hDetectorID2->Draw("SAME");
+	c3->cd(6);
+	hPMTID2->Draw("SAME");
+	c3->cd(7);
+	hFingerPMTID2->Draw("SAME");
+	c3->cd(8);
+	hAnaBarPMTID2->Draw("SAME");
 
 	c3->DrawClone();
 	c3->Print("plots/c3RA.pdf");
@@ -718,12 +745,16 @@ TCanvas* plotC3(){
 
 TCanvas* plotC4(){
 
-    std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
+    //std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
 
-	auto hFingerEd = v[0].Histo1D("fingerEd");
-	auto hFingerPMTNphot = v[0].Histo1D("fingerPMTNPhotons");
-	auto hAnaBarPMTNphot = v[0].Histo1D("anaBarPMTNPhotons");
-	auto hAnaBarEd = v[0].Histo1D("anaBarEd");
+	auto hFingerEd1 = v[0].Histo1D({"h1", "Finger EDep", 100, 0.0, 10.0},"fingerEd");
+	auto hFingerPMTNphot1 = v[0].Histo1D({"h1", "Finger Npe", 100, 0.0, 20.0},"fingerPMTNPhotons");
+	auto hAnaBarPMTNphot1 = v[0].Histo1D({"h1", "AnaBar Npe", 100, 0.0, 200.0},"anaBarPMTNPhotons");
+	auto hAnaBarEd1 = v[0].Histo1D({"h1", "AnaBar EDep", 100, 0.0, 10.0},"anaBarEd");
+	auto hFingerEd2 = v[1].Histo1D({"h1", "Finger EDep", 100, 0.0, 10.0},"fingerEd");
+	auto hFingerPMTNphot2 = v[1].Histo1D({"h1", "Finger Npe", 100, 0.0, 20.0},"fingerPMTNPhotons");
+	auto hAnaBarPMTNphot2 = v[1].Histo1D({"h1", "AnaBar Npe", 100, 0.0, 200.0},"anaBarPMTNPhotons");
+	auto hAnaBarEd2 = v[1].Histo1D({"h1", "AnaBar EDep", 100, 0.0, 10.0},"anaBarEd");
 
 	TCanvas *c4 = new TCanvas("c4","c4",800,800);
 
@@ -731,31 +762,39 @@ TCanvas* plotC4(){
 	TPad *pad1 = new TPad("pad1","pad1",0.01,0.51,0.50,0.99);
 	pad1->Draw();
 	pad1->cd();
-	hFingerEd->GetXaxis()->SetRangeUser(1.0,10);
-	hFingerEd->Draw();
+	hFingerEd2->GetXaxis()->SetRangeUser(1.0,10);
+	hFingerEd2->Draw();
+	hFingerEd1->GetXaxis()->SetRangeUser(1.0,10);
+	hFingerEd1->Draw("SAME");
 
 	c4->cd();
 	TPad *pad2 = new TPad("pad2","pad2",0.51,0.51,0.99,0.99);
 	pad2->Draw();
 	pad2->cd();
-	hFingerPMTNphot->GetXaxis()->SetRangeUser(-10,250);
-	hFingerPMTNphot->Draw();
+	hFingerPMTNphot2->GetXaxis()->SetRangeUser(-10,250);
+	hFingerPMTNphot2->Draw();
+	hFingerPMTNphot1->GetXaxis()->SetRangeUser(-10,250);
+	hFingerPMTNphot1->Draw("SAME");
 
 	c4->cd();
 	TPad *pad3 = new TPad("pad3","pad3",0.01,0.01,0.50,0.50);
 	//pad3->SetLogy();
 	pad3->Draw();
 	pad3->cd();
-	hAnaBarEd->GetXaxis()->SetRangeUser(1.0,10);
-	hAnaBarEd->Draw();
+	hAnaBarEd2->GetXaxis()->SetRangeUser(1.0,10);
+	hAnaBarEd2->Draw();
+	hAnaBarEd1->GetXaxis()->SetRangeUser(1.0,10);
+	hAnaBarEd1->Draw("SAME");
 
 	c4->cd();
 	TPad *pad4 = new TPad("pad4","pad4",0.51,0.01,0.99,0.50);
 	//pad4->SetLogy();
 	pad4->Draw();
 	pad4->cd();
-	hAnaBarPMTNphot->GetXaxis()->SetRangeUser(-20,180);
-	hAnaBarPMTNphot->Draw();
+	hAnaBarPMTNphot2->GetXaxis()->SetRangeUser(-20,180);
+	hAnaBarPMTNphot2->Draw();
+	hAnaBarPMTNphot1->GetXaxis()->SetRangeUser(-20,180);
+	hAnaBarPMTNphot1->Draw("SAME");
 
 	c4->DrawClone();
 	c4->Print("plots/c4RA.pdf");
@@ -766,24 +805,36 @@ TCanvas* plotC4(){
 
 TCanvas* plotC5(){
 
-    std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
+    //std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
 
-	auto hAnaBarX = v[0].Histo1D("anaBarXVec");
-	auto hAnaBarY = v[0].Histo1D("anaBarYVec");
-	auto hAnaBarZ = v[0].Histo1D("anaBarZVec");
-	auto hAnaBarT = v[0].Histo1D("anaBarTVec");
+	auto hAnaBarX1 = v[0].Histo1D({"h1", "AnaBar X", 100, -800.0, 800.0},"anaBarXVec");
+	auto hAnaBarY1 = v[0].Histo1D({"h1", "AnaBar Y", 100, -400.0, 100.0},"anaBarYVec");
+	auto hAnaBarZ1 = v[0].Histo1D({"h1", "AnaBar Z", 100, -2000.0, 2000.0},"anaBarZVec");
+	auto hAnaBarT1 = v[0].Histo1D({"h1", "AnaBar T", 100, 0.0, 10.0},"anaBarTVec");
+	auto hAnaBarX2 = v[1].Histo1D({"h1", "AnaBar X", 100, -800.0, 800.0},"anaBarXVec");
+	auto hAnaBarY2 = v[1].Histo1D({"h1", "AnaBar Y", 100, -400.0, 100.0},"anaBarYVec");
+	auto hAnaBarZ2 = v[1].Histo1D({"h1", "AnaBar Z", 100, -2000.0, 2000.0},"anaBarZVec");
+	auto hAnaBarT2 = v[1].Histo1D({"h1", "AnaBar T", 100, 0.0, 10.0},"anaBarTVec");
 
 	TCanvas *c5 = new TCanvas("c5","c5",800,800);
 	c5->Divide(2,2,0.01,0.01,0);
 
 	c5->cd(1);
-	hAnaBarX->Draw();
+	hAnaBarX1->Draw("SAME");
 	c5->cd(2);
-	hAnaBarY->Draw();
+	hAnaBarY1->Draw("SAME");
 	c5->cd(3);
-	hAnaBarZ->Draw();
+	hAnaBarZ1->Draw("SAME");
 	c5->cd(4);
-	hAnaBarT->Draw();
+	hAnaBarT1->Draw("SAME");
+	c5->cd(1);
+	hAnaBarX2->Draw("SAME");
+	c5->cd(2);
+	hAnaBarY2->Draw("SAME");
+	c5->cd(3);
+	hAnaBarZ2->Draw("SAME");
+	c5->cd(4);
+	hAnaBarT2->Draw("SAME");
 
 	c5->DrawClone();
 	c5->Print("plots/c5RA.pdf");
@@ -794,15 +845,18 @@ TCanvas* plotC5(){
 
 TCanvas* plotC6(){
 
-    std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
+    //std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
 
-	auto hE1vsE2 = v[0].Histo2D({"h2", "E1 vs E2", 100, 0.01, 10.0, 100, 0.01, 30.0},"fingerEd","anaBarEdTotal");
+	auto hE1vsE21 = v[0].Histo2D({"h2", "E1 vs E2", 100, 0.01, 3.0, 100, 0.01, 30.0},"fingerEd","anaBarEdTotal");
+	auto hE1vsE22 = v[1].Histo2D({"h2", "E1 vs E2", 100, 0.01, 3.0, 100, 0.01, 30.0},"fingerEd","anaBarEdTotal");
 
 	TCanvas *c6 = new TCanvas("c6","c6",800,800);
-	c6->Divide(1,1,0.01,0.01,0);
+	c6->Divide(2,1,0.01,0.01,0);
 
 	c6->cd(1);
-	hE1vsE2->Draw("COLZ");
+	hE1vsE21->Draw("COLZ");
+	c6->cd(2);
+	hE1vsE22->Draw("COLZ");
 
 	c6->DrawClone();
 	c6->Print("plots/c6RA.pdf");
@@ -813,24 +867,36 @@ TCanvas* plotC6(){
 
 TCanvas* plotC7(){
 
-    std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
+    //std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
 
-	auto hFinger_Edep_vs_Nphot = v[0].Filter("trigger2").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 500.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
-	auto hAnaBar_Edep_vs_Nphot = v[0].Filter("trigger2").Histo2D({"h4", "AnaBar Edep vs NphotTotal", 100, 0.01, 30.0, 100, 0.01, 500.0},"anaBarEdTotal","anaBarNPhotonsTotal");
+	auto hFinger_Edep_vs_Nphot1 = v[0].Filter("trigger2").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 500.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
+	auto hAnaBar_Edep_vs_Nphot1 = v[0].Filter("trigger2").Histo2D({"h4", "AnaBar Edep vs NphotTotal", 100, 0.01, 30.0, 100, 0.01, 500.0},"anaBarEdTotal","anaBarNPhotonsTotal");
 	auto hNphot0_vs_Nphot1 = v[0].Filter("trigger2").Histo2D({"h5", "AnaBar NphotTotal vs Finger Nphot", 100, 0.01, 500.0, 100, 0.01, 500.0},"anaBarNPhotonsTotal","fingerPMTNPhotons");
+	auto hFinger_Edep_vs_Nphot2 = v[1].Filter("trigger2").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 500.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
+	auto hAnaBar_Edep_vs_Nphot2 = v[1].Filter("trigger2").Histo2D({"h4", "AnaBar Edep vs NphotTotal", 100, 0.01, 30.0, 100, 0.01, 500.0},"anaBarEdTotal","anaBarNPhotonsTotal");
+	auto hNphot0_vs_Nphot2 = v[1].Filter("trigger2").Histo2D({"h5", "AnaBar NphotTotal vs Finger Nphot", 100, 0.01, 500.0, 100, 0.01, 500.0},"anaBarNPhotonsTotal","fingerPMTNPhotons");
 
 	TCanvas *c7 = new TCanvas("c7","c7",800,800);
-	c7->Divide(2,2,0.01,0.01,0);
+	c7->Divide(4,2,0.01,0.01,0);
 
 	c7->cd(1);
-	hFinger_Edep_vs_Nphot->Draw("COLZ");
+	hFinger_Edep_vs_Nphot1->Draw("COLZ");
 	c7->cd(2);
-	hAnaBar_Edep_vs_Nphot->Draw("COLZ");
+	hAnaBar_Edep_vs_Nphot1->Draw("COLZ");
 	c7->cd(3);
 	hNphot0_vs_Nphot1->Draw("COLZ");
 	c7->cd(4);
-	TProfile *prof = hAnaBar_Edep_vs_Nphot->ProfileX();
-	prof->Fit("pol1");
+	TProfile *prof1 = hAnaBar_Edep_vs_Nphot1->ProfileX();
+	prof1->Fit("pol1");
+	c7->cd(5);
+	hFinger_Edep_vs_Nphot2->Draw("COLZ");
+	c7->cd(6);
+	hAnaBar_Edep_vs_Nphot2->Draw("COLZ");
+	c7->cd(7);
+	hNphot0_vs_Nphot2->Draw("COLZ");
+	c7->cd(8);
+	TProfile *prof2 = hAnaBar_Edep_vs_Nphot2->ProfileX();
+	prof2->Fit("pol1");
 
 	c7->DrawClone();
 	c7->Print("plots/c7RA.pdf");
@@ -841,24 +907,36 @@ TCanvas* plotC7(){
 
 TCanvas* plotC8(){
 
-    std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
+    //std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
 
-	auto hFinger_Edep_vs_NphotCut = v[0].Filter("trigger3").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 500.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
-	auto hAnaBar_Edep_vs_NphotCut = v[0].Filter("trigger3").Histo2D({"h4", "AnaBar Edep vs NphotTotal", 100, 0.01, 30.0, 100, 0.01, 500.0},"anaBarEdTotal","anaBarNPhotonsTotal");
-	auto hNphot0_vs_Nphot1Cut = v[0].Filter("trigger3").Histo2D({"h5", "AnaBar NphotTotal vs Finger Nphot", 100, 0.01, 500.0, 100, 0.01, 500.0},"anaBarNPhotonsTotal","fingerPMTNPhotons");
+	auto hFinger_Edep_vs_Nphot1 = v[0].Filter("trigger3").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 500.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
+	auto hAnaBar_Edep_vs_Nphot1 = v[0].Filter("trigger3").Histo2D({"h4", "AnaBar Edep vs NphotTotal", 100, 0.01, 30.0, 100, 0.01, 500.0},"anaBarEdTotal","anaBarNPhotonsTotal");
+	auto hNphot0_vs_Nphot1 = v[0].Filter("trigger3").Histo2D({"h5", "AnaBar NphotTotal vs Finger Nphot", 100, 0.01, 500.0, 100, 0.01, 500.0},"anaBarNPhotonsTotal","fingerPMTNPhotons");
+	auto hFinger_Edep_vs_Nphot2 = v[1].Filter("trigger3").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 500.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
+	auto hAnaBar_Edep_vs_Nphot2 = v[1].Filter("trigger3").Histo2D({"h4", "AnaBar Edep vs NphotTotal", 100, 0.01, 30.0, 100, 0.01, 500.0},"anaBarEdTotal","anaBarNPhotonsTotal");
+	auto hNphot0_vs_Nphot2 = v[1].Filter("trigger3").Histo2D({"h5", "AnaBar NphotTotal vs Finger Nphot", 100, 0.01, 500.0, 100, 0.01, 500.0},"anaBarNPhotonsTotal","fingerPMTNPhotons");
 
 	TCanvas *c8 = new TCanvas("c8","c8",800,800);
-	c8->Divide(2,2,0.01,0.01,0);
+	c8->Divide(4,2,0.01,0.01,0);
 
 	c8->cd(1);
-	hFinger_Edep_vs_NphotCut->Draw("COLZ");
+	hFinger_Edep_vs_Nphot1->Draw("COLZ");
 	c8->cd(2);
-	hAnaBar_Edep_vs_NphotCut->Draw("COLZ");
+	hAnaBar_Edep_vs_Nphot1->Draw("COLZ");
 	c8->cd(3);
-	hNphot0_vs_Nphot1Cut->Draw("COLZ");
+	hNphot0_vs_Nphot1->Draw("COLZ");
 	c8->cd(4);
-	TProfile *profCut = hAnaBar_Edep_vs_NphotCut->ProfileX();
-	profCut->Fit("pol1");
+	TProfile *prof1 = hAnaBar_Edep_vs_Nphot1->ProfileX();
+	prof1->Fit("pol1");
+	c8->cd(5);
+	hFinger_Edep_vs_Nphot2->Draw("COLZ");
+	c8->cd(6);
+	hAnaBar_Edep_vs_Nphot2->Draw("COLZ");
+	c8->cd(7);
+	hNphot0_vs_Nphot2->Draw("COLZ");
+	c8->cd(8);
+	TProfile *prof2 = hAnaBar_Edep_vs_Nphot2->ProfileX();
+	prof2->Fit("pol1");
 
 	c8->DrawClone();
 	c8->Print("plots/c8RA.pdf");
@@ -868,42 +946,52 @@ TCanvas* plotC8(){
 }
 
 TCanvas* plotC11(){
+    
+    //std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
 
-    std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
+    auto hAnaBarMult1 = v[0].Histo1D({"h1", "CDet Multiplicity", 20, 0, 20},"imult");
+    auto hAnaBarMult2 = v[1].Histo1D({"h1", "CDet Multiplicity", 20, 0, 20},"imult");
 
-	auto hAnaBarMult = v[0].Histo1D("imult");
+    TCanvas* c11 = new TCanvas("c11", "c11", 800,800);
+    c11->Divide(1,1, 0.01, 0.01, 0);
 
-	TCanvas *c11 = new TCanvas("c11", "c11", 800,800);
-	c11->Divide(1,1, 0.01, 0.01, 0);
+    c11->cd(1);
+    hAnaBarMult1->Draw();
+    hAnaBarMult2->Draw("SAME");
 
-	c11->cd(1);
-	hAnaBarMult->Draw();
+    c11->DrawClone();
+    c11->Print("plots/c11RA.pdf");
 
-	c11->DrawClone();
-	c11->Print("plots/c11RA.pdf");
-
-	return c11;
+    return c11;
 
 }
 
-
 TCanvas* plotC12(){
 
-    std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
+    //std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
 
-	auto hPrimPx = v[0].Histo1D("fPx");
-	auto hPrimPy = v[0].Histo1D("fPy");
-	auto hPrimPz = v[0].Histo1D("fPz");
+	auto hPrimPx1 = v[0].Histo1D({"h1", "Px", 100, -1000, 1000},"fPx");
+	auto hPrimPy1 = v[0].Histo1D({"h1", "Px", 100, -8000, 8000},"fPy");
+	auto hPrimPz1 = v[0].Histo1D({"h1", "Px", 100, -2000, 2000},"fPz");
+	auto hPrimPx2 = v[1].Histo1D({"h1", "Px", 100, -1000, 1000},"fPx");
+	auto hPrimPy2 = v[1].Histo1D({"h1", "Px", 100, -8000, 8000},"fPy");
+	auto hPrimPz2 = v[1].Histo1D({"h1", "Px", 100, -2000, 2000},"fPz");
 
 	TCanvas *c12 = new TCanvas("c12","c12",800,800);
 	c12->Divide(2,2,0.01,0.01,0);
 
 	c12->cd(1);
-	hPrimPx->Draw();
+	hPrimPx1->Draw("SAME");
 	c12->cd(2);
-	hPrimPy->Draw();
+	hPrimPy1->Draw("SAME");
 	c12->cd(3);
-	hPrimPz->Draw();
+	hPrimPz1->Draw("SAME");
+	c12->cd(1);
+	hPrimPx2->Draw("SAME");
+	c12->cd(2);
+	hPrimPy2->Draw("SAME");
+	c12->cd(3);
+	hPrimPz2->Draw("SAME");
 
 	c12->DrawClone();
 	c12->Print("plots/c12.pdf");
@@ -915,21 +1003,30 @@ TCanvas* plotC12(){
 
 TCanvas* plotC13(){
 
-    std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
+    //std::vector<RNode> v = AnalyseSignalsRDataFrameNoKECompare(global_run_number1,global_run_number2);
 
-	auto hPx_vs_x = v[0].Filter("trigger2").Histo2D({"h33", "Px vs x", 100, -800.0, 800.0, 100, -800.0, 800.0},"anaBarXVec","fPx");
-	auto hPz_vs_z = v[0].Filter("trigger2").Histo2D({"h34", "Pz vs z", 100, -2400.0, 2400.0, 100, -2400.0, 2400.0},"anaBarZVec","fPz");
-	auto hz_vs_x = v[0].Filter("trigger2").Histo2D({"h35", "z vs x", 100, -800.0, 800.0, 100, -2400.0, 2400.0},"anaBarXVec","anaBarZVec");
+	auto hPx_vs_x1 = v[0].Filter("trigger2").Histo2D({"h33", "Px vs x", 100, -800.0, 800.0, 100, -800.0, 800.0},"anaBarXVec","fPx");
+	auto hPz_vs_z1 = v[0].Filter("trigger2").Histo2D({"h34", "Pz vs z", 100, -2400.0, 2400.0, 100, -2400.0, 2400.0},"anaBarZVec","fPz");
+	auto hz_vs_x1 = v[0].Filter("trigger2").Histo2D({"h35", "z vs x", 100, -800.0, 800.0, 100, -2400.0, 2400.0},"anaBarXVec","anaBarZVec");
+	auto hPx_vs_x2 = v[1].Filter("trigger2").Histo2D({"h33", "Px vs x", 100, -800.0, 800.0, 100, -800.0, 800.0},"anaBarXVec","fPx");
+	auto hPz_vs_z2 = v[1].Filter("trigger2").Histo2D({"h34", "Pz vs z", 100, -2400.0, 2400.0, 100, -2400.0, 2400.0},"anaBarZVec","fPz");
+	auto hz_vs_x2 = v[1].Filter("trigger2").Histo2D({"h35", "z vs x", 100, -800.0, 800.0, 100, -2400.0, 2400.0},"anaBarXVec","anaBarZVec");
 
 	TCanvas *c13 = new TCanvas("c13","c13",800,800);
-	c13->Divide(2,2,0.01,0.01,0);
+	c13->Divide(3,2,0.01,0.01,0);
 
 	c13->cd(1);
-	hPx_vs_x->Draw("COLZ");
+	hPx_vs_x1->Draw("COLZ");
 	c13->cd(2);
-	hPz_vs_z->Draw("COLZ");
+	hPz_vs_z1->Draw("COLZ");
 	c13->cd(3);
-	hz_vs_x->Draw("COLZ");
+	hz_vs_x1->Draw("COLZ");
+	c13->cd(4);
+	hPx_vs_x2->Draw("COLZ");
+	c13->cd(5);
+	hPz_vs_z2->Draw("COLZ");
+	c13->cd(6);
+	hz_vs_x2->Draw("COLZ");
 
 	c13->DrawClone();
 	c13->Print("plots/c13.pdf");

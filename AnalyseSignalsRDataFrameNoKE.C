@@ -543,7 +543,7 @@ RNode AnalyseSignalsRDataFrameNoKE(int run_number = 4000) {
 	auto triggers = fdf.Filter("trigger==true").Count();
 	cout << *triggers << " entries passed Main trigger" << endl;
 
-	auto fdft = fdf.Filter("trigger==true");
+        auto fdft = fdf.Filter("trigger==true");
 
 	return fdft;
 }
