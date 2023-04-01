@@ -250,7 +250,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   // Redefine here some quantities from the constructor that are based on parameters definable at runtime!!!!
   fFingerWidth = fNumberOfModules*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness+2.0*fMylarThickness)+20.0;
   fFingerZoffset = -(fFingerWidth-20.0)/2.0;
-  fFingerYoffset = fAnaBarWidth/2.0+fFingerThickness/2.0+20.0;
+  fFingerYoffset = fAnaBarWidth/2.0+fFingerThickness/2.0+5.0;
   fHoleLength = fAnaBarLength;
   fFibreLength = fCladdingLength;
   std::cout << "In DetectorConstuction Construct(): Bars = " << fNumberOfBars << "  FingerWidth = " << fFingerWidth << std::endl; 
