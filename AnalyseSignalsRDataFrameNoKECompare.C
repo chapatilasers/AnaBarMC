@@ -1034,3 +1034,43 @@ TCanvas* plotC13(){
 	return c13;
 
 }
+
+TCanvas* plotC14(){
+
+	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+
+	auto hPrimX1 = v[0].Histo1D({"h99","X_vtx", 100, -80,80},"Prim_X");
+	auto hPrimY1 = v[0].Histo1D({"h99","Y_vtx", 100, 0,40},"Prim_Y");
+	auto hPrimZ1 = v[0].Histo1D({"h99","Z_vtx", 100, -200,200},"Prim_Z");
+	auto hPrimXZ1 = v[0].Histo2D({"h99", "z vs z", 100, -80.0, 80.0, 100, -240.0, 240.0},"Prim_X","Prim_Z");
+	auto hPrimX2 = v[1].Histo1D({"h99","X_vtx", 100, -80,80},"Prim_X");
+	auto hPrimY2 = v[1].Histo1D({"h99","Y_vtx", 100, 0,40},"Prim_Y");
+	auto hPrimZ2 = v[1].Histo1D({"h99","Z_vtx", 100, -200,200},"Prim_Z");
+	auto hPrimXZ2 = v[1].Histo2D({"h99", "z vs z", 100, -80.0, 80.0, 100, -240.0, 240.0},"Prim_X","Prim_Z");
+	
+	TCanvas *c14 = new TCanvas("c14","c14",800,800);
+	c14->Divide(3,2,0.01,0.01,0);
+
+	c14->cd(1);
+	hPrimX1->Draw();
+	c14->cd(2);
+	hPrimY1->Draw();
+	c14->cd(3);
+	hPrimZ1->Draw();
+	c14->cd(4);
+	hPrimXZ1->Draw("COLZ");
+	c14->cd(1);
+	hPrimX2->Draw("SAME");
+	c14->cd(2);
+	hPrimY2->Draw("SAME");
+	c14->cd(3);
+	hPrimZ2->Draw("SAME");
+	c14->cd(5);
+	hPrimXZ2->Draw("COLZ");
+
+	c14->DrawClone();
+	c14->Print("plots/c14.pdf");
+
+	return c14;
+
+}
