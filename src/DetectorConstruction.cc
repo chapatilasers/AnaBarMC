@@ -84,8 +84,8 @@ DetectorConstruction::DetectorConstruction()
   fFingerLength = 10.0;
   fFingerWidth = fNumberOfModules*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness+2.0*fMylarThickness)+20.0;
   fFingerThickness = 1.0;
-  fFingerZoffset = -(fFingerWidth-20.0)/2.0;
-  fFingerYoffset = fAnaBarWidth/2.0+fFingerThickness/2.0+20.0;
+  fFingerZoffset = -(fFingerWidth-20.0)/2.0+fAnaBarZpos;
+  fFingerYoffset = fAnaBarWidth/2.0+fFingerThickness/2.0+5.0;
 
   fHoleDiameter = 0.19;
   fHoleLength = fAnaBarLength;
@@ -249,7 +249,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   
   // Redefine here some quantities from the constructor that are based on parameters definable at runtime!!!!
   fFingerWidth = fNumberOfModules*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness+2.0*fMylarThickness)+20.0;
-  fFingerZoffset = -(fFingerWidth-20.0)/2.0;
+  fFingerZoffset = -(fFingerWidth-20.0)/2.0+fAnaBarZpos;
   fFingerYoffset = fAnaBarWidth/2.0+fFingerThickness/2.0+5.0;
   fHoleLength = fAnaBarLength;
   fFibreLength = fCladdingLength;
