@@ -84,8 +84,8 @@ DetectorConstruction::DetectorConstruction()
   fFingerLength = 10.0;
   fFingerWidth = fNumberOfModules*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness+2.0*fMylarThickness)+20.0;
   fFingerThickness = 1.0;
-  fFingerZoffset = -(fFingerWidth-20.0)/2.0;
-  fFingerYoffset = fAnaBarWidth/2.0+fFingerThickness/2.0+20.0;
+  fFingerZoffset = -(fFingerWidth-20.0)/2.0+fAnaBarZpos;
+  fFingerYoffset = fAnaBarWidth/2.0+fFingerThickness/2.0+2.0;
 
   fHoleDiameter = 0.19;
   fHoleLength = fAnaBarLength;
@@ -249,8 +249,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   
   // Redefine here some quantities from the constructor that are based on parameters definable at runtime!!!!
   fFingerWidth = fNumberOfModules*fNumberOfBars*fNumberOfLayers*(fAnaBarThickness+2.0*fMylarThickness)+20.0;
-  fFingerZoffset = -(fFingerWidth-20.0)/2.0;
-  fFingerYoffset = fAnaBarWidth/2.0+fFingerThickness/2.0+20.0;
+  fFingerZoffset = -(fFingerWidth-20.0)/2.0+fAnaBarZpos;
+  fFingerYoffset = fAnaBarWidth/2.0+fFingerThickness/2.0+2.0;
   fHoleLength = fAnaBarLength;
   fFibreLength = fCladdingLength;
   std::cout << "In DetectorConstuction Construct(): Bars = " << fNumberOfBars << "  FingerWidth = " << fFingerWidth << std::endl; 
@@ -433,6 +433,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
      	  
 	  G4ThreeVector AnaBar_pos(xoff+fAnaBarXposA*cm , yoff+0.0*cm , fAnaBarZposA);
    	  AnaBar      =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , SetDetectorID(30000,iLayer, iBar, iModule, iSide, iPlane ));
+
+          // Testing of printout of geometry information
+          std::cout << SetDetectorID(0,iLayer,iBar,iModule,iSide,iPlane) << " " << AnaBar_pos[0] << " " << AnaBar_pos[1] << " " << AnaBar_pos[2] << std::endl;
      	  
 	  G4ThreeVector AnaBarMylar_pos(xoff+fAnaBarXposM*cm , yoff+0.0*cm , fAnaBarZposA);
    	  AnaBarMylar      =  new G4PVPlacement(0, AnaBarMylar_pos , AnaBarMylar_log , "AnaBarMylar" , expHall_log , false , SetDetectorID(32500,iLayer, iBar, iModule, iSide, iPlane ));

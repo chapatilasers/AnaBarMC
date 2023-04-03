@@ -3,6 +3,7 @@
 using namespace std;
 using RNode = ROOT::RDF::RNode;
 
+std::vector<RNode> v;
 int global_run_number;
 int Analyse_Secondaries = 1;
 float Theta_min_cut = 2.524;
@@ -491,7 +492,8 @@ std::vector<float> getAnaBarEdTotal(bool trigger, float fNewTheta, int Detector_
     return v;
 }
 
-RNode AnalyseSignalsRDataFrameNoKE(int run_number = 4000) {
+//RNode AnalyseSignalsRDataFrameNoKE(int run_number = 4000) {
+void AnalyseSignalsRDataFrameNoKE(int run_number = 4000) {
 
 	global_run_number = run_number;
 	std::cout << run_number << std::endl;
@@ -543,19 +545,20 @@ RNode AnalyseSignalsRDataFrameNoKE(int run_number = 4000) {
 	auto triggers = fdf.Filter("trigger==true").Count();
 	cout << *triggers << " entries passed Main trigger" << endl;
 
-	auto fdft = fdf.Filter("trigger==true");
+        auto fdft = fdf.Filter("trigger==true");
+        v.push_back(fdft);
 
-	return fdft;
+	//return fdft;
 }
 
 TCanvas* plotC1(){
 
-  RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+  //RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
-  auto hFingerX = fdft.Histo1D("fingerXVec");
-  auto hFingerY = fdft.Histo1D("fingerYVec");
-  auto hFingerZ = fdft.Histo1D("fingerZVec");
-  auto hFingerT = fdft.Histo1D("fingerTVec");
+  auto hFingerX = v[0].Histo1D("fingerXVec");
+  auto hFingerY = v[0].Histo1D("fingerYVec");
+  auto hFingerZ = v[0].Histo1D("fingerZVec");
+  auto hFingerT = v[0].Histo1D("fingerTVec");
   
   TCanvas *c1 = new TCanvas("c1", "c1", 100,100,500,270);
   c1->Divide(2,2, 0.01, 0.01, 0);
@@ -578,12 +581,12 @@ TCanvas* plotC1(){
 
 TCanvas* plotC2(){
 
-	RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
-	auto hPrimE = fdft.Histo1D("Prim_E");
-	auto hPrimTh = fdft.Histo1D("fNewTheta");
-	auto hPrimPh = fdft.Histo1D("fNewPhi");
-	auto hPrimPdg = fdft.Histo1D("Prim_pdg");
+	auto hPrimE = v[0].Histo1D("Prim_E");
+	auto hPrimTh = v[0].Histo1D("fNewTheta");
+	auto hPrimPh = v[0].Histo1D("fNewPhi");
+	auto hPrimPdg = v[0].Histo1D("Prim_pdg");
 
 	TCanvas *c2 = new TCanvas("c2","c2",800,800);
 	c2->Divide(2,2,0.01,0.01,0);
@@ -607,16 +610,16 @@ TCanvas* plotC2(){
 
 TCanvas* plotC3(){
 
-	RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
-	auto hDetectorNhits = fdft.Histo1D("Detector_Nhits");
-	auto hDetectorPdg = fdft.Histo1D("anaBarPDG");
-	auto hDetectorID = fdft.Histo1D("anaBarID");
-	auto hFingerPdg = fdft.Histo1D("fingerPDG");
-	auto hFingerID = fdft.Histo1D("fingerID");
-	auto hPMTID = fdft.Histo1D("PMT_id");
-	auto hAnaBarPMTID = fdft.Histo1D("anaBarPMTID");
-	auto hFingerPMTID = fdft.Histo1D("fingerPMTID");
+	auto hDetectorNhits = v[0].Histo1D("Detector_Nhits");
+	auto hDetectorPdg = v[0].Histo1D("anaBarPDG");
+	auto hDetectorID = v[0].Histo1D("anaBarID");
+	auto hFingerPdg = v[0].Histo1D("fingerPDG");
+	auto hFingerID = v[0].Histo1D("fingerID");
+	auto hPMTID = v[0].Histo1D("PMT_id");
+	auto hAnaBarPMTID = v[0].Histo1D("anaBarPMTID");
+	auto hFingerPMTID = v[0].Histo1D("fingerPMTID");
 
 	TCanvas *c3 = new TCanvas("c3","c3",800,800);
 	c3->Divide(3,3,0.01,0.01,0);
@@ -648,12 +651,12 @@ TCanvas* plotC3(){
 
 TCanvas* plotC4(){
 
-	RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
-	auto hFingerEd = fdft.Histo1D("fingerEd");
-	auto hFingerPMTNphot = fdft.Histo1D("fingerPMTNPhotons");
-	auto hAnaBarPMTNphot = fdft.Histo1D("anaBarPMTNPhotons");
-	auto hAnaBarEd = fdft.Histo1D("anaBarEd");
+	auto hFingerEd = v[0].Histo1D("fingerEd");
+	auto hFingerPMTNphot = v[0].Histo1D("fingerPMTNPhotons");
+	auto hAnaBarPMTNphot = v[0].Histo1D("anaBarPMTNPhotons");
+	auto hAnaBarEd = v[0].Histo1D("anaBarEd");
 
 	TCanvas *c4 = new TCanvas("c4","c4",800,800);
 
@@ -696,12 +699,12 @@ TCanvas* plotC4(){
 
 TCanvas* plotC5(){
 
-	RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
-	auto hAnaBarX = fdft.Histo1D("anaBarXVec");
-	auto hAnaBarY = fdft.Histo1D("anaBarYVec");
-	auto hAnaBarZ = fdft.Histo1D("anaBarZVec");
-	auto hAnaBarT = fdft.Histo1D("anaBarTVec");
+	auto hAnaBarX = v[0].Histo1D("anaBarXVec");
+	auto hAnaBarY = v[0].Histo1D("anaBarYVec");
+	auto hAnaBarZ = v[0].Histo1D("anaBarZVec");
+	auto hAnaBarT = v[0].Histo1D("anaBarTVec");
 
 	TCanvas *c5 = new TCanvas("c5","c5",800,800);
 	c5->Divide(2,2,0.01,0.01,0);
@@ -724,9 +727,9 @@ TCanvas* plotC5(){
 
 TCanvas* plotC6(){
 
-	RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
-	auto hE1vsE2 = fdft.Histo2D({"h2", "E1 vs E2", 100, 0.01, 10.0, 100, 0.01, 30.0},"fingerEd","anaBarEdTotal");
+	auto hE1vsE2 = v[0].Histo2D({"h2", "E1 vs E2", 100, 0.01, 10.0, 100, 0.01, 30.0},"fingerEd","anaBarEdTotal");
 
 	TCanvas *c6 = new TCanvas("c6","c6",800,800);
 	c6->Divide(1,1,0.01,0.01,0);
@@ -743,11 +746,11 @@ TCanvas* plotC6(){
 
 TCanvas* plotC7(){
 
-	RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
-	auto hFinger_Edep_vs_Nphot = fdft.Filter("trigger2").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 500.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
-	auto hAnaBar_Edep_vs_Nphot = fdft.Filter("trigger2").Histo2D({"h4", "AnaBar Edep vs NphotTotal", 100, 0.01, 30.0, 100, 0.01, 500.0},"anaBarEdTotal","anaBarNPhotonsTotal");
-	auto hNphot0_vs_Nphot1 = fdft.Filter("trigger2").Histo2D({"h5", "AnaBar NphotTotal vs Finger Nphot", 100, 0.01, 500.0, 100, 0.01, 500.0},"anaBarNPhotonsTotal","fingerPMTNPhotons");
+	auto hFinger_Edep_vs_Nphot = v[0].Filter("trigger2").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 500.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
+	auto hAnaBar_Edep_vs_Nphot = v[0].Filter("trigger2").Histo2D({"h4", "AnaBar Edep vs NphotTotal", 100, 0.01, 30.0, 100, 0.01, 500.0},"anaBarEdTotal","anaBarNPhotonsTotal");
+	auto hNphot0_vs_Nphot1 = v[0].Filter("trigger2").Histo2D({"h5", "AnaBar NphotTotal vs Finger Nphot", 100, 0.01, 500.0, 100, 0.01, 500.0},"anaBarNPhotonsTotal","fingerPMTNPhotons");
 
 	TCanvas *c7 = new TCanvas("c7","c7",800,800);
 	c7->Divide(2,2,0.01,0.01,0);
@@ -771,11 +774,11 @@ TCanvas* plotC7(){
 
 TCanvas* plotC8(){
 
-	RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
-	auto hFinger_Edep_vs_NphotCut = fdft.Filter("trigger3").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 500.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
-	auto hAnaBar_Edep_vs_NphotCut = fdft.Filter("trigger3").Histo2D({"h4", "AnaBar Edep vs NphotTotal", 100, 0.01, 30.0, 100, 0.01, 500.0},"anaBarEdTotal","anaBarNPhotonsTotal");
-	auto hNphot0_vs_Nphot1Cut = fdft.Filter("trigger3").Histo2D({"h5", "AnaBar NphotTotal vs Finger Nphot", 100, 0.01, 500.0, 100, 0.01, 500.0},"anaBarNPhotonsTotal","fingerPMTNPhotons");
+	auto hFinger_Edep_vs_NphotCut = v[0].Filter("trigger3").Histo2D({"h3", "Finger Edep vs Nphot", 100, 0.01, 500.0, 100, 0.01, 10.0},"fingerPMTNPhotons","fingerEd");
+	auto hAnaBar_Edep_vs_NphotCut = v[0].Filter("trigger3").Histo2D({"h4", "AnaBar Edep vs NphotTotal", 100, 0.01, 30.0, 100, 0.01, 500.0},"anaBarEdTotal","anaBarNPhotonsTotal");
+	auto hNphot0_vs_Nphot1Cut = v[0].Filter("trigger3").Histo2D({"h5", "AnaBar NphotTotal vs Finger Nphot", 100, 0.01, 500.0, 100, 0.01, 500.0},"anaBarNPhotonsTotal","fingerPMTNPhotons");
 
 	TCanvas *c8 = new TCanvas("c8","c8",800,800);
 	c8->Divide(2,2,0.01,0.01,0);
@@ -799,9 +802,9 @@ TCanvas* plotC8(){
 
 TCanvas* plotC11(){
 
-	RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
-	auto hAnaBarMult = fdft.Histo1D("imult");
+	auto hAnaBarMult = v[0].Histo1D("imult");
 
 	TCanvas *c11 = new TCanvas("c11", "c11", 800,800);
 	c11->Divide(1,1, 0.01, 0.01, 0);
@@ -819,11 +822,11 @@ TCanvas* plotC11(){
 
 TCanvas* plotC12(){
 
-	RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
-	auto hPrimPx = fdft.Histo1D("fPx");
-	auto hPrimPy = fdft.Histo1D("fPy");
-	auto hPrimPz = fdft.Histo1D("fPz");
+	auto hPrimPx = v[0].Histo1D("fPx");
+	auto hPrimPy = v[0].Histo1D("fPy");
+	auto hPrimPz = v[0].Histo1D("fPz");
 
 	TCanvas *c12 = new TCanvas("c12","c12",800,800);
 	c12->Divide(2,2,0.01,0.01,0);
@@ -845,12 +848,12 @@ TCanvas* plotC12(){
 TCanvas* plotC13() {
 
 
-	RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
-	auto hPx_vs_x = fdft.Filter("trigger2").Histo2D({"h33", "Px vs x", 100, -800.0, 800.0, 100, -800.0, 800.0},"anaBarXVec","fPx");
-	auto hPz_vs_z = fdft.Filter("trigger2").Histo2D({"h34", "Pz vs z", 100, -2400.0, 2400.0, 100, -2400.0, 2400.0},"anaBarZVec","fPz");
-	auto hz_vs_x = fdft.Filter("trigger2").Histo2D({"h35", "z vs x", 100, -800.0, 800.0, 100, -2400.0, 2400.0},"anaBarXVec","anaBarZVec");
-	auto hPrimXZ = fdft.Histo2D({"h99", "z vs z", 100, -80.0, 80.0, 100, -240.0, 240.0},"Prim_X","Prim_Z");
+	auto hPx_vs_x = v[0].Filter("trigger2").Histo2D({"h33", "Px vs x", 100, -800.0, 800.0, 100, -800.0, 800.0},"anaBarXVec","fPx");
+	auto hPz_vs_z = v[0].Filter("trigger2").Histo2D({"h34", "Pz vs z", 100, -2400.0, 2400.0, 100, -2400.0, 2400.0},"anaBarZVec","fPz");
+	auto hz_vs_x = v[0].Filter("trigger2").Histo2D({"h35", "z vs x", 100, -800.0, 800.0, 100, -2400.0, 2400.0},"anaBarXVec","anaBarZVec");
+	auto hPrimXZ = v[0].Histo2D({"h99", "z vs z", 100, -80.0, 80.0, 100, -240.0, 240.0},"Prim_X","Prim_Z");
 
 
 
@@ -876,12 +879,12 @@ TCanvas* plotC13() {
 
 TCanvas* plotC14(){
 
-	RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
-	auto hPrimX = fdft.Histo1D("Prim_X");
-	auto hPrimY = fdft.Histo1D("Prim_Y");
-	auto hPrimZ = fdft.Histo1D("Prim_Z");
-	auto hPrimXZ = fdft.Histo2D({"h99", "z vs z", 100, -80.0, 80.0, 100, -240.0, 240.0},"Prim_X","Prim_Z");
+	auto hPrimX = v[0].Histo1D("Prim_X");
+	auto hPrimY = v[0].Histo1D("Prim_Y");
+	auto hPrimZ = v[0].Histo1D("Prim_Z");
+	auto hPrimXZ = v[0].Histo2D({"h99", "z vs z", 100, -80.0, 80.0, 100, -240.0, 240.0},"Prim_X","Prim_Z");
 	
 	TCanvas *c14 = new TCanvas("c14","c14",800,800);
 	c14->Divide(2,2,0.01,0.01,0);
