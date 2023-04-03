@@ -45,6 +45,10 @@ public:
 	        //std::cout << "SetPhotonCount: " << pno << " ... " << snp << std::endl;
 		fNphotons[pno]    = snp; 
 	}
+  inline void SetPhotonTime       ( G4int pno, G4double stime )        { 
+	        //std::cout << "SetPhotonTime: " << pno << " ... " << stime << std::endl;
+		fPMTTime[pno]    = stime; 
+	}
   
   /*
   inline void SetPMTKE ( PMTHit* hit2 ) {
@@ -89,6 +93,7 @@ private:
   static const Int_t	fMaxPMTNo = 50000;
   static const Int_t    fMaxPMTHits = 1000;
   Int_t			fNphotons[fMaxPMTNo];
+  Float_t		fPMTTime[fMaxPMTNo];
   //Float_t 		fPMTKineticEnergy[fMaxPMTNo][fMaxPMTHits];
 
   // Detector (step information) 
