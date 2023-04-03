@@ -21,7 +21,8 @@ AnalysisManager::AnalysisManager()
 {
   ZeroArray();
 
-  fOutFileName = TString("output/out_default.root");
+  fOutFileName = TString("data/AnaBar_default.root");
+  fGeoFileName = TString("data/geometry.dat");
 
   fAnaMessenger = new AnalysisMessenger(this);
 }
@@ -56,6 +57,7 @@ void AnalysisManager::InitOutput()
   // Set PMT Hit Branches
   fROOTtree->Branch("PMT_id",     &fPMTNo,     "PMT_id/I" );  
   fROOTtree->Branch("PMT_Nphotons",  fNphotons,  "PMT_Nphotons[50000]/I" );  
+  fROOTtree->Branch("PMT_Time",  fPMTTime,  "PMT_Time[50000]/F" );  
   //fROOTtree->Branch("PMT_KineticEnergy",  fPMTKineticEnergy,  "PMT_KineticEnergy[50000][1000]/F" );  
 
   // Set Raw Detector Step Hit Branches
@@ -92,6 +94,7 @@ void AnalysisManager::ZeroArray()
   fPMTNo    = -1;
   for ( Int_t i = 0; i < fMaxPMTNo; i++) {
 	fNphotons[i]=0;
+	fPMTTime[i]=0;
  	//for (Int_t j = 0; j < fMaxPMTHits; j++) {
 	//	fPMTKineticEnergy[i][j] = 0;
 	//}	

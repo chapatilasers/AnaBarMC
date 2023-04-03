@@ -31,6 +31,7 @@ public:
   void FillTree();
 
   inline void SetOutFileName     ( TString fname )             { fOutFileName  = fname; }
+  inline void SetGeoFileName     ( TString fname )             { fGeoFileName  = fname; }
 
   inline void SetPrimaryEnergy   ( G4double       ene  )       { fPEne  = ene;  }
   inline void SetPrimaryX   ( G4double       xvtx  )       { fXvtx  = xvtx;  }
@@ -44,6 +45,10 @@ public:
   inline void SetPhotonCount       ( G4int pno, G4int snp )        { 
 	        //std::cout << "SetPhotonCount: " << pno << " ... " << snp << std::endl;
 		fNphotons[pno]    = snp; 
+	}
+  inline void SetPhotonTime       ( G4int pno, G4double stime )        { 
+	        //std::cout << "SetPhotonTime: " << pno << " ... " << stime << std::endl;
+		fPMTTime[pno]    = stime; 
 	}
   
   /*
@@ -69,6 +74,7 @@ private:
   
   AnalysisMessenger*    fAnaMessenger;
   TString               fOutFileName;
+  TString               fGeoFileName;
   TFile*                fROOTfile;
   TTree*                fROOTtree;
   
@@ -89,6 +95,7 @@ private:
   static const Int_t	fMaxPMTNo = 50000;
   static const Int_t    fMaxPMTHits = 1000;
   Int_t			fNphotons[fMaxPMTNo];
+  Float_t		fPMTTime[fMaxPMTNo];
   //Float_t 		fPMTKineticEnergy[fMaxPMTNo][fMaxPMTHits];
 
   // Detector (step information) 
