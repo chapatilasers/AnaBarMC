@@ -433,6 +433,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
      	  
 	  G4ThreeVector AnaBar_pos(xoff+fAnaBarXposA*cm , yoff+0.0*cm , fAnaBarZposA);
    	  AnaBar      =  new G4PVPlacement(0, AnaBar_pos , AnaBar_log , "AnaBar" , expHall_log , false , SetDetectorID(30000,iLayer, iBar, iModule, iSide, iPlane ));
+
+          // Testing of printout of geometry information
+          std::cout << SetDetectorID(0,iLayer,iBar,iModule,iSide,iPlane) << " " << AnaBar_pos[0] << " " << AnaBar_pos[1] << " " << AnaBar_pos[2] << std::endl;
      	  
 	  G4ThreeVector AnaBarMylar_pos(xoff+fAnaBarXposM*cm , yoff+0.0*cm , fAnaBarZposA);
    	  AnaBarMylar      =  new G4PVPlacement(0, AnaBarMylar_pos , AnaBarMylar_log , "AnaBarMylar" , expHall_log , false , SetDetectorID(32500,iLayer, iBar, iModule, iSide, iPlane ));
