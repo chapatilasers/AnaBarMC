@@ -5,6 +5,7 @@ using namespace std;
 using RNode = ROOT::RDF::RNode;
 
 std::vector<RNode> v;
+TList* myGeometryData;
 int global_run_number;
 int Analyse_Secondaries = 1;
 float Theta_min_cut = 2.524;
@@ -341,11 +342,25 @@ std::vector<float> getAnaBarPMTTime(bool trigger, int* PMT_Nphotons, float* PMT_
     std::vector<float> v;
     TRandom3* fRand = new TRandom3(-1);
     float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
-    //std::cout << "--------------------" << std::endl;
+    std::cout << "--------------------" << std::endl;
     if (trigger) {
         for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
             if (PMT_Nphotons[icount]>0) {
-                //std::cout << "getAnaBarPMTTime: " << icount << " " << PMT_Time[icount] << " " << PMT_Nphotons[icount] << std::endl;
+                float xdpos, ydpos, zdpos;
+                for (int is = 0; is<NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS; is++) {
+                    TVectorD* x = (TVectorD*)myGeometryData->At(is);
+                    if ((int)(*x)[0] == icount) {
+                        //std::cout << (*x)[0] << std::endl;
+                        //std::cout << (*x)[1] << std::endl;
+                        //std::cout << (*x)[2] << std::endl;
+                        //std::cout << (*x)[3] << std::endl;
+                        xdpos = (*x)[1];
+                        ydpos = (*x)[2];
+                        zdpos = (*x)[3];
+                    }
+                }
+                std::cout << "detector positions: " << xdpos << " " << ydpos << " " << zdpos << std::endl;
+                std::cout << "getAnaBarPMTTime: " << icount << " " << PMT_Time[icount] << " " << PMT_Nphotons[icount] << std::endl;
                 pmttime[icount] = PMT_Time[icount];
                 v.push_back(pmttime[icount]);
             }
@@ -526,8 +541,9 @@ void AnalyseSignalsRDataFrameNoKE(int run_number = 4000) {
 
 	ROOT::RDataFrame d(treeName,fileName);
 
-        auto  myGeometryData = t->GetUserInfo()->FindObject("myGeometryData");
-        myGeometryData->Print();
+        myGeometryData = (TList*)t->GetUserInfo()->FindObject("myGeometryData");
+
+        //myGeometryData->Print();
 
 	//auto entries = d.Count();
 	//cout << *entries << " entries in Tree with no filter" << endl;
@@ -630,6 +646,23 @@ TCanvas* plotC2(){
 	c2->Print("plots/c2RA.pdf");
 
 	return c2;
+
+}
+
+TCanvas* plotC33(){
+
+    auto hAnaBarPMTTime_vs_ID = v[0].Histo2D({"h1", "AnaBar Time vs ID", 100, 0.0, 2500.0,100,0.0,20.0},"anaBarPMTID","anaBarPMTTime");
+
+    TCanvas* c33 = new TCanvas("c33","c33",800,800);
+    c33->Divide(1,1,0.01,0.01,0);
+
+    c33->cd(1);
+    hAnaBarPMTTime_vs_ID->Draw("COLZ");
+
+    c33->DrawClone();
+    c33->Print("plots/c33.pdf");
+
+    return c33;
 
 }
 
