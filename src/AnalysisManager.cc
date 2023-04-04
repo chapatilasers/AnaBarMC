@@ -25,11 +25,10 @@ AnalysisManager::AnalysisManager(DetectorConstruction* Detect)
   ZeroArray();
 
   fOutFileName = TString("data/AnaBar_default.root");
-  fGeoFileName = TString("data/geometry.dat");
 
-  std::cout << "<<<<<<<<<<<<" << std::endl;
-  std::cout << "In analysisManager about to call analysisMessenger construtor" << std::endl;
-  std::cout << "<<<<<<<<<<<<" << std::endl;
+  //std::cout << "<<<<<<<<<<<<" << std::endl;
+  //std::cout << "In analysisManager about to call analysisMessenger construtor" << std::endl;
+  //std::cout << "<<<<<<<<<<<<" << std::endl;
 
   fAnaMessenger = new AnalysisMessenger(this);
 
@@ -54,7 +53,6 @@ AnalysisManager::~AnalysisManager()
       }
       //y.Print();
       x.push_back(y);
-      std::cout << std::endl;
   }
 
   for (int i =0; i<geometryData.size(); i++) {
@@ -62,13 +60,12 @@ AnalysisManager::~AnalysisManager()
   }
 
   fROOTtree->GetUserInfo()->Add(myGeometryData);
-  
-  std::cout << "here 1" << std::endl;
+ 
+   
+   std::cout<<"Write output root tree and close output root file"<<std::endl;
    fROOTtree->Write();
-    std::cout << "here 2" << std::endl;
    fROOTfile->Close();
-    std::cout << "here 3" << std::endl;
-   std::cout<<"Tree has been writen and closed bc analysis manager has been deconstructed"<<std::endl;
+   std::cout<<"Tree has been written and closed bc analysis manager has been deconstructed"<<std::endl;
 }
 
 //---------------------------------------------------------------------------

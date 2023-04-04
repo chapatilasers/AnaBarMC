@@ -26,7 +26,6 @@ class AnalysisMessenger: public G4UImessenger
     AnalysisManager*      fAnalysisManager;
     G4UIdirectory*        fAnalysisDir;
     G4UIcmdWithAString*   fOutFileCmd;
-    G4UIcmdWithAString*   fGeoFileCmd;
 };
 #endif
 

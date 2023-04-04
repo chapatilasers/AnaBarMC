@@ -20,10 +20,6 @@ AnalysisMessenger::AnalysisMessenger(AnalysisManager* anMana)
   fOutFileCmd->SetParameterName("choice",true);
   fOutFileCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   
-  fGeoFileCmd = new G4UIcmdWithAString("/AnaBarMC/analysis/setGeometryFile",this);
-  fGeoFileCmd->SetGuidance("Set the full name and path of the output Geometry file");
-  fGeoFileCmd->SetParameterName("choice",true);
-  fGeoFileCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 } 
 
 //---------------------------------------------------------------------------
@@ -31,7 +27,6 @@ AnalysisMessenger::AnalysisMessenger(AnalysisManager* anMana)
 AnalysisMessenger::~AnalysisMessenger()
 {
   delete fOutFileCmd;
-  delete fGeoFileCmd;
 }
 
 //---------------------------------------------------------------------------
@@ -40,8 +35,6 @@ void AnalysisMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 {
   if(command == fOutFileCmd)
     {fAnalysisManager->SetOutFileName(newValue.data());}
-  if(command == fGeoFileCmd)
-    {fAnalysisManager->SetGeoFileName(newValue.data());}
 }
 
 //---------------------------------------------------------------------------

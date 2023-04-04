@@ -35,7 +35,6 @@ public:
   void FillTree();
 
   inline void SetOutFileName     ( TString fname )             { fOutFileName  = fname; }
-  inline void SetGeoFileName     ( TString fname )             { fGeoFileName  = fname; }
 
   inline void SetPrimaryEnergy   ( G4double       ene  )       { fPEne  = ene;  }
   inline void SetPrimaryX   ( G4double       xvtx  )       { fXvtx  = xvtx;  }
@@ -79,7 +78,6 @@ private:
   AnalysisMessenger*    fAnaMessenger;
   DetectorConstruction* fDetector;
   TString               fOutFileName;
-  TString               fGeoFileName;
   TFile*                fROOTfile;
   TTree*                fROOTtree;
   
