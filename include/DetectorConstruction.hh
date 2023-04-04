@@ -37,6 +37,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   inline G4VPhysicalVolume* GetWLSfiberVol()    { return physiWLSfiber;  };
   inline DetectorSD*        GetDetSD()      { return fDetSD;    };
   inline PMTSD*             GetPMTSD()      { return fPMTSD;    };
+  inline std::vector<std::vector<float>> GetGeometry() {return geometry; };
 
   inline void SetTumourOn     ( G4int    tumon )   { fTumourOn     = tumon; }
   inline void SetTumourRadius ( G4double radius )  { fTumourRadius = radius; }
@@ -71,6 +72,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   G4Material* FindMaterial(G4String);
   
   private:
+
+  std::vector<std::vector<float>> geometry;
 
   WLSMaterials* fMaterials;
 

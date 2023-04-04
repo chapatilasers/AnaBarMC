@@ -1,6 +1,8 @@
 #include "AnalysisManager.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "AnalysisMessenger.hh"
+#include "DetectorConstruction.hh"
+#include "DetectorMessenger.hh"
 
 #include "G4UnitsTable.hh"
 #include "G4RunManager.hh"
@@ -17,23 +19,56 @@
 
 //---------------------------------------------------------------------------
 
-AnalysisManager::AnalysisManager()
+AnalysisManager::AnalysisManager(DetectorConstruction* Detect)
+    :fDetector(Detect)
 {
   ZeroArray();
 
   fOutFileName = TString("data/AnaBar_default.root");
   fGeoFileName = TString("data/geometry.dat");
 
+  std::cout << "<<<<<<<<<<<<" << std::endl;
+  std::cout << "In analysisManager about to call analysisMessenger construtor" << std::endl;
+  std::cout << "<<<<<<<<<<<<" << std::endl;
+
   fAnaMessenger = new AnalysisMessenger(this);
+
 }
 
 //---------------------------------------------------------------------------
 
 AnalysisManager::~AnalysisManager()
 {
+  std::vector<std::vector<float>> geometryData = fDetector->GetGeometry();
+
+  TList* myGeometryData = new TList();
+  myGeometryData->SetName("myGeometryData");
+
+
+  std::vector<TVectorD> x;
+  for (int i =0; i<geometryData.size(); i++) {
+      TVectorD y(geometryData[0].size());
+      for (int j=0; j<geometryData[0].size(); j++) {
+              //std::cout << geometryData[i][j] << " ";
+              y[j]=geometryData[i][j];
+      }
+      //y.Print();
+      x.push_back(y);
+      std::cout << std::endl;
+  }
+
+  for (int i =0; i<geometryData.size(); i++) {
+      myGeometryData->Add(&x[i]);
+  }
+
+  fROOTtree->GetUserInfo()->Add(myGeometryData);
+  
+  std::cout << "here 1" << std::endl;
    fROOTtree->Write();
+    std::cout << "here 2" << std::endl;
    fROOTfile->Close();
-//std::cout<<"Tree has been writen and closed bc analysis manager has been deconstructed"<<std::endl;
+    std::cout << "here 3" << std::endl;
+   std::cout<<"Tree has been writen and closed bc analysis manager has been deconstructed"<<std::endl;
 }
 
 //---------------------------------------------------------------------------
@@ -44,7 +79,7 @@ void AnalysisManager::InitOutput()
   fROOTfile = new TFile(fOutFileName,"RECREATE","fROOTfile",1);
   fROOTtree = new TTree("T","Output Tree");
   fROOTtree->SetAutoSave();
-//std::cout<<"Tree has been created"<<std::endl;
+  std::cout<<"Tree has been created"<<std::endl;
   // Set Primary Branches
   fROOTtree->Branch("Prim_E",      &fPEne,   "Prim_E/F"      );
   fROOTtree->Branch("Prim_X",      &fXvtx,   "Prim_X/F"      );
@@ -69,7 +104,8 @@ void AnalysisManager::InitOutput()
   fROOTtree->Branch("Detector_z",     fRAW_zpre,   "Detector_z[Detector_Nhits]/F"  );
   fROOTtree->Branch("Detector_t",     fRAW_time,   "Detector_t[Detector_Nhits]/F"  );
   fROOTtree->Branch("Detector_Ed",    fRAW_Edep,   "Detector_Ed[Detector_Nhits]/F" );
-//std::cout<<"branches have been created"<<std::endl;
+  
+  std::cout<<"branches have been created"<<std::endl;
 }
 
 //---------------------------------------------------------------------------
@@ -176,7 +212,7 @@ void AnalysisManager::FillTree()
   fZvtx   = (Float_t)fZvtx;                         
   fPpdg   = (Int_t)  fPPDef->GetPDGEncoding();
 
-  fROOTtree->Fill();
+  fROOTtree->Fill(); 
   //for (G4int i=0; i<3000;i++){
   //	  std::cout << i << ": " << fNphotons[i] << std::endl;
   //}

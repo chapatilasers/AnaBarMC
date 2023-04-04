@@ -1,4 +1,5 @@
 #include <iostream>
+#include <TF1.h>
 
 using namespace std;
 using RNode = ROOT::RDF::RNode;
@@ -335,6 +336,24 @@ std::vector<float> getFingerPMTNPhotons(bool trigger, int* PMT_Nphotons) {
     return v;
 }
 
+std::vector<float> getAnaBarPMTTime(bool trigger, int* PMT_Nphotons, float* PMT_Time) {
+
+    std::vector<float> v;
+    TRandom3* fRand = new TRandom3(-1);
+    float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
+    //std::cout << "--------------------" << std::endl;
+    if (trigger) {
+        for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
+            if (PMT_Nphotons[icount]>0) {
+                //std::cout << "getAnaBarPMTTime: " << icount << " " << PMT_Time[icount] << " " << PMT_Nphotons[icount] << std::endl;
+                pmttime[icount] = PMT_Time[icount];
+                v.push_back(pmttime[icount]);
+            }
+        }
+    }
+    return v;
+}
+
 std::vector<float> getAnaBarPMTNPhotons(bool trigger, int* PMT_Nphotons) {
 
     std::vector<float> v;
@@ -502,7 +521,13 @@ void AnalyseSignalsRDataFrameNoKE(int run_number = 4000) {
 	auto fileName = "data/AnaBarMC_"+std::to_string(run_number)+".root";
 	auto treeName = "T";
 
+        TFile* f = new TFile((TString)fileName,"READ");
+        TTree* t = (TTree*)f->Get(treeName);
+
 	ROOT::RDataFrame d(treeName,fileName);
+
+        auto  myGeometryData = t->GetUserInfo()->FindObject("myGeometryData");
+        myGeometryData->Print();
 
 	//auto entries = d.Count();
 	//cout << *entries << " entries in Tree with no filter" << endl;
@@ -533,6 +558,7 @@ void AnalyseSignalsRDataFrameNoKE(int run_number = 4000) {
                         .Define("fingerPMTID","getFingerPMTID(trigger,&PMT_Nphotons[0])") \
                         .Define("fingerPMTNPhotons","getFingerPMTNPhotons(trigger,&PMT_Nphotons[0])")
        			.Define("anaBarPMTNPhotons","getAnaBarPMTNPhotons(trigger,&PMT_Nphotons[0])")
+       			.Define("anaBarPMTTime","getAnaBarPMTTime(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
        			.Define("anaBarNPhotonsTotal","getAnaBarNPhotonsTotal(trigger,&PMT_Nphotons[0])")
        			.Define("imult","getAnaBarMult(trigger,&PMT_Nphotons[0])")
        			.Define("fingerEd","getFingerEd(trigger,fNewTheta,Detector_Nhits,Prim_pdg,&Detector_id[0],&Detector_pdg[0],&Detector_Ed[0])")

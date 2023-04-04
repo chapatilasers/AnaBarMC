@@ -12,6 +12,11 @@
 DetectorMessenger::DetectorMessenger(DetectorConstruction* Detect)
   :fDetector(Detect)
 {
+
+    std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
+    std::cout << "In DetectorMessenger Constructor" << std::endl;
+    std::cout << "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" << std::endl;
+
   fDetectorDir        = new G4UIdirectory("/AnaBarMC/detector/");
   fDetectorDir->SetGuidance("Detector geometry control");
   

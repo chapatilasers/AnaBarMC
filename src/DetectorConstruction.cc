@@ -130,8 +130,6 @@ G4int DetectorConstruction::SetDetectorID(G4int iOffset, G4int iLayer, G4int iBa
 G4VPhysicalVolume* DetectorConstruction::Construct()
 { 
 
-  std::vector<std::vector<float>> geometry;
-  
   G4GeometryManager::GetInstance()->OpenGeometry();
   G4PhysicalVolumeStore::GetInstance()->Clean();
   G4LogicalVolumeStore::GetInstance()->Clean();
@@ -441,11 +439,15 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
           
           std::cout << SetDetectorID(0,iLayer,iBar,iModule,iSide,iPlane) << " " << AnaBar_pos[0] << " " << AnaBar_pos[1] << " " << AnaBar_pos[2] << std::endl;
           std::vector<float> temp;
-          temp.push_back(SetDetectorID(0,iLayer,iBar,iModule,iSide,iPlane));
+          temp.push_back(1.0*SetDetectorID(0,iLayer,iBar,iModule,iSide,iPlane));
           temp.push_back(AnaBar_pos[0]);
           temp.push_back(AnaBar_pos[1]);
           temp.push_back(AnaBar_pos[2]);
           geometry.push_back(temp);
+          for (int iii = 0; iii < temp.size(); iii++) {
+              std::cout << temp[iii] << " ";
+          }
+          std::cout << std::endl;
 
           /////////////////////////////////////////////
 
@@ -723,6 +725,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   std::cout<<"Returning the Experimental Hall"<<std::endl;
 
   return fExpHall;
+
 }
 
 //---------------------------------------------------------------------------

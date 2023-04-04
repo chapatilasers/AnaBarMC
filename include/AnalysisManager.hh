@@ -4,16 +4,20 @@
 #include "globals.hh"
 #include "PrimaryGeneratorAction.hh"
 #include "AnalysisMessenger.hh"
+#include "DetectorMessenger.hh"
+#include "DetectorConstruction.hh"
 
 #include "G4ThreeVector.hh"
 #include "G4ParticleDefinition.hh"
 #include "Rtypes.h"
 #include "TVector3.h"
+#include "TVector.h"
 #include "TString.h"
 #include "PMTHit.hh"
 
 class TTree;
 class TFile;
+class DetectorConstruction;
 
 //---------------------------------------------------------------------------
 
@@ -21,7 +25,7 @@ class AnalysisManager {
 
 public:
 
-  AnalysisManager();
+  AnalysisManager(DetectorConstruction*);
   ~AnalysisManager();
 
   void InitOutput();
@@ -73,6 +77,7 @@ public:
 private:
   
   AnalysisMessenger*    fAnaMessenger;
+  DetectorConstruction* fDetector;
   TString               fOutFileName;
   TString               fGeoFileName;
   TFile*                fROOTfile;
