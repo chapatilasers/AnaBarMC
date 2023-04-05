@@ -25,7 +25,6 @@ AnalysisManager::AnalysisManager(DetectorConstruction* Detect)
   ZeroArray();
 
   fOutFileName = TString("data/AnaBar_default.root");
-  fHitFileName = TString("data/hits.csv");
 
   //std::cout << "<<<<<<<<<<<<" << std::endl;
   //std::cout << "In analysisManager about to call analysisMessenger construtor" << std::endl;
@@ -68,7 +67,6 @@ AnalysisManager::~AnalysisManager()
    fROOTfile->Close();
    std::cout<<"Tree has been written and closed bc analysis manager has been deconstructed"<<std::endl;
 
-   hitsFile.close();
 }
 
 //---------------------------------------------------------------------------

@@ -10,6 +10,7 @@ int global_run_number;
 int Analyse_Secondaries = 1;
 float Theta_min_cut = 2.524;
 float ThetaVerticalCut = 3.02;
+float Photon_min_cut = 20.0;
 
 int MaxPMTNo = 50000;
 int MaxPMTHits = 1000;
@@ -345,7 +346,7 @@ std::vector<float> getAnaBarPMTTime(bool trigger, int* PMT_Nphotons, float* PMT_
     //std::cout << "--------------------" << std::endl;
     if (trigger) {
         for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
-            if (PMT_Nphotons[icount]>0) {
+            if (PMT_Nphotons[icount]>Photon_min_cut) {
                 float xdpos, ydpos, zdpos;
                 /*
                 for (int is = 0; is<NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS; is++) {
@@ -379,7 +380,7 @@ std::vector<float> getAnaBarPMTNPhotons(bool trigger, int* PMT_Nphotons) {
 
     if (trigger) {
         for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
-            if (PMT_Nphotons[icount]>0) {
+            if (PMT_Nphotons[icount]>Photon_min_cut) {
                 //std::cout << "getFingerPMTNphotons: " << icount << " " << PMT_Nphotons[icount] << std::endl;
                 pmttot[icount] = PMT_Nphotons[icount]+fRand->Gaus(0.0,pedastel_sigma);
                 v.push_back(pmttot[icount]);
@@ -395,7 +396,7 @@ std::vector<float> getFingerPMTID(bool trigger, int* PMT_Nphotons) {
 
     if (trigger) {
         for (Int_t icount = Detector_PMT_Offset;icount<Detector_PMT_Offset+2;icount++){
-            if (PMT_Nphotons[icount]>0) {
+            if (PMT_Nphotons[icount]>Photon_min_cut) {
                 //std::cout << "getFingerPMTID: " << icount << " " << PMT_Nphotons[icount] << std::endl;
                 v.push_back(icount);
             }
@@ -411,7 +412,7 @@ std::vector<float> getAnaBarPMTID(bool trigger, int* PMT_Nphotons) {
 
     if (trigger) {
         for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
-            if (PMT_Nphotons[icount]>0) {
+            if (PMT_Nphotons[icount]>Photon_min_cut) {
                 //std::cout << "getAnaBarPMTID: " << icount << " " << PMT_Nphotons[icount] << std::endl;
                 v.push_back(icount);
             }
@@ -429,7 +430,7 @@ std::vector<float> getAnaBarNPhotonsTotal(bool trigger, int* PMT_Nphotons) {
 
     if (trigger) {
         for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
-            if (PMT_Nphotons[icount]>0) {
+            if (PMT_Nphotons[icount]>Photon_min_cut) {
                 pmttot = pmttot + PMT_Nphotons[icount]+fRand->Gaus(0.0,pedastel_sigma);
             }
         }
@@ -655,14 +656,17 @@ TCanvas* plotC33(){
 
     auto hAnaBarPMTTime_vs_ID = v[0].Histo2D({"h1", "AnaBar Time vs ID", 100, 0.0, 2500.0,100,0.0,20.0},"anaBarPMTID","anaBarPMTTime");
     auto hAnaBarPMTTime = v[0].Histo1D({"h1","AnaBar Time",100,0.0,20.0},"anaBarPMTTime");
+    auto hAnaBarPMTTime_vs_Nphoton = v[0].Histo2D({"h1", "AnaBar Time vs Nphotons", 100, 0.0, 300.0,100,0.0,20.0},"anaBarPMTNPhotons","anaBarPMTTime");
 
     TCanvas* c33 = new TCanvas("c33","c33",800,800);
-    c33->Divide(2,1,0.01,0.01,0);
+    c33->Divide(2,2,0.01,0.01,0);
 
     c33->cd(1);
     hAnaBarPMTTime_vs_ID->Draw("COLZ");
     c33->cd(2);
     hAnaBarPMTTime->Draw();
+    c33->cd(3);
+    hAnaBarPMTTime_vs_Nphoton->Draw("COLZ");
 
     c33->DrawClone();
     c33->Print("plots/c33.pdf");

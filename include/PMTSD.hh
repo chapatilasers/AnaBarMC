@@ -6,6 +6,7 @@
 
 class G4Step;
 class G4HCofThisEvent;
+class AnalysisManager;
 
 class PMTSD : public G4VSensitiveDetector
 {

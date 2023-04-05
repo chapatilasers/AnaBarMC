@@ -20,11 +20,6 @@ AnalysisMessenger::AnalysisMessenger(AnalysisManager* anMana)
   fOutFileCmd->SetParameterName("choice",true);
   fOutFileCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
   
-  fHitFileCmd = new G4UIcmdWithAString("/AnaBarMC/analysis/setHitFile",this);
-  fHitFileCmd->SetGuidance("Set the full name and path of the output Hits file");
-  fHitFileCmd->SetParameterName("choice",true);
-  fHitFileCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-  
 } 
 
 //---------------------------------------------------------------------------
@@ -32,7 +27,6 @@ AnalysisMessenger::AnalysisMessenger(AnalysisManager* anMana)
 AnalysisMessenger::~AnalysisMessenger()
 {
   delete fOutFileCmd;
-  delete fHitFileCmd;
 }
 
 //---------------------------------------------------------------------------
@@ -41,8 +35,6 @@ void AnalysisMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
 {
   if(command == fOutFileCmd)
     {fAnalysisManager->SetOutFileName(newValue.data());}
-  if(command == fHitFileCmd)
-    {fAnalysisManager->SetHitFileName(newValue.data());}
 }
 
 //---------------------------------------------------------------------------
