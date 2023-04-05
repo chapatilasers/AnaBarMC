@@ -23,7 +23,6 @@
 /AnaBarMC/generator/Mode 1
 /AnaBarMC/generator/InputFile data/Gen_test_single.root
 /AnaBarMC/analysis/setOutputFile data/G4_vis_single.root
-/AnaBarMC/analysis/setGeometryFile data/geometey.dat
 
 ##################################################################
 # Set visualisation options

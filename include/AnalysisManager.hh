@@ -35,6 +35,7 @@ public:
   void FillTree();
 
   inline void SetOutFileName     ( TString fname )             { fOutFileName  = fname; }
+  inline void SetHitFileName     ( TString fname )             { fHitFileName  = fname; }
 
   inline void SetPrimaryEnergy   ( G4double       ene  )       { fPEne  = ene;  }
   inline void SetPrimaryX   ( G4double       xvtx  )       { fXvtx  = xvtx;  }
@@ -78,6 +79,7 @@ private:
   AnalysisMessenger*    fAnaMessenger;
   DetectorConstruction* fDetector;
   TString               fOutFileName;
+  TString               fHitFileName;
   TFile*                fROOTfile;
   TTree*                fROOTtree;
   

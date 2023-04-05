@@ -342,11 +342,12 @@ std::vector<float> getAnaBarPMTTime(bool trigger, int* PMT_Nphotons, float* PMT_
     std::vector<float> v;
     TRandom3* fRand = new TRandom3(-1);
     float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
-    std::cout << "--------------------" << std::endl;
+    //std::cout << "--------------------" << std::endl;
     if (trigger) {
         for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
             if (PMT_Nphotons[icount]>0) {
                 float xdpos, ydpos, zdpos;
+                /*
                 for (int is = 0; is<NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS; is++) {
                     TVectorD* x = (TVectorD*)myGeometryData->At(is);
                     if ((int)(*x)[0] == icount) {
@@ -359,8 +360,9 @@ std::vector<float> getAnaBarPMTTime(bool trigger, int* PMT_Nphotons, float* PMT_
                         zdpos = (*x)[3];
                     }
                 }
-                std::cout << "detector positions: " << xdpos << " " << ydpos << " " << zdpos << std::endl;
-                std::cout << "getAnaBarPMTTime: " << icount << " " << PMT_Time[icount] << " " << PMT_Nphotons[icount] << std::endl;
+                */
+                //std::cout << "detector positions: " << xdpos << " " << ydpos << " " << zdpos << std::endl;
+                //std::cout << "getAnaBarPMTTime: " << icount << " " << PMT_Time[icount] << " " << PMT_Nphotons[icount] << std::endl;
                 pmttime[icount] = PMT_Time[icount];
                 v.push_back(pmttime[icount]);
             }
@@ -652,12 +654,15 @@ TCanvas* plotC2(){
 TCanvas* plotC33(){
 
     auto hAnaBarPMTTime_vs_ID = v[0].Histo2D({"h1", "AnaBar Time vs ID", 100, 0.0, 2500.0,100,0.0,20.0},"anaBarPMTID","anaBarPMTTime");
+    auto hAnaBarPMTTime = v[0].Histo1D({"h1","AnaBar Time",100,0.0,20.0},"anaBarPMTTime");
 
     TCanvas* c33 = new TCanvas("c33","c33",800,800);
-    c33->Divide(1,1,0.01,0.01,0);
+    c33->Divide(2,1,0.01,0.01,0);
 
     c33->cd(1);
     hAnaBarPMTTime_vs_ID->Draw("COLZ");
+    c33->cd(2);
+    hAnaBarPMTTime->Draw();
 
     c33->DrawClone();
     c33->Print("plots/c33.pdf");
@@ -679,6 +684,7 @@ TCanvas* plotC3(){
 	auto hPMTID = v[0].Histo1D("PMT_id");
 	auto hAnaBarPMTID = v[0].Histo1D("anaBarPMTID");
 	auto hFingerPMTID = v[0].Histo1D("fingerPMTID");
+	auto hAnaBarPMTTime = v[0].Histo1D("anaBarPMTTime");
 
 	TCanvas *c3 = new TCanvas("c3","c3",800,800);
 	c3->Divide(3,3,0.01,0.01,0);
@@ -699,6 +705,8 @@ TCanvas* plotC3(){
 	hFingerPMTID->Draw();
 	c3->cd(8);
 	hAnaBarPMTID->Draw();
+	c3->cd(9);
+	hAnaBarPMTTime->Draw();
 
 	c3->DrawClone();
 	c3->Print("plots/c3RA.pdf");
