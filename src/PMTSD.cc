@@ -1,5 +1,6 @@
 #include "PMTSD.hh"
 #include "PMTHit.hh"
+#include "AnalysisManager.hh"
 
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
@@ -26,7 +27,8 @@ PMTSD::PMTSD(G4String name, G4int Nelements )
   fhitID      = new G4int[fNelements];
   fHits       = new G4int[fNelements];
   for(G4int i=0; i<fNelements; i++) fhitID[i] = -1;
-  for(G4int i=0; i<fNelements; i++) fHits[i]  = 0; 
+  for(G4int i=0; i<fNelements; i++) fHits[i]  = 0;
+  TString myHitsFile = fAnaManager->GetHitFilename();
 }
 
 //---------------------------------------------------------------------------
@@ -99,7 +101,8 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
     G4double new_time = (current_time*(current_hit_number-1)+pmtTime)/current_hit_number;
     (*fCollection)[fhitID[pmtNumber]]->SetPMTTime(new_time);
 
-    if (pmtNumber<2500)  std::cout << "Not a new hit ... pmtNumber = " << pmtNumber << " hitNumber = " << current_hit_number << " old_time = " << current_time << " new_time " << new_time << " thi_time = " << pmtTime << std::endl; 
+      
+    if (pmtNumber<2500)  myHitsFile << "Not a new hit ... pmtNumber = " << pmtNumber << " hitNumber = " << current_hit_number << " old_time = " << current_time << " new_time " << new_time << " thi_time = " << pmtTime << std::endl; 
     //(*fCollection)[fhitID[pmtNumber]]->SetPMTKineticEnergy(current_hit_number-1,energy);
     //std::cout << "Returning from PMTSD::ProcessHits_constStep" << std::endl; 
   return true;

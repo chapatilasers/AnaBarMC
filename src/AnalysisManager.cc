@@ -67,6 +67,8 @@ AnalysisManager::~AnalysisManager()
    fROOTtree->Write();
    fROOTfile->Close();
    std::cout<<"Tree has been written and closed bc analysis manager has been deconstructed"<<std::endl;
+
+   hitsFile.close();
 }
 
 //---------------------------------------------------------------------------
@@ -104,6 +106,7 @@ void AnalysisManager::InitOutput()
   fROOTtree->Branch("Detector_Ed",    fRAW_Edep,   "Detector_Ed[Detector_Nhits]/F" );
   
   std::cout<<"branches have been created"<<std::endl;
+
 }
 
 //---------------------------------------------------------------------------
