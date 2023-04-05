@@ -82,7 +82,7 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
   //std::cout << "Accessing fhitID ... " << fhitID[pmtNumber] << " " << energy << std::endl; 
   //if ( fhitID[pmtNumber] == -1 && energy > 0.1) {
   if ( fhitID[pmtNumber] == -1 ) {
-    if (pmtNumber<2500) std::cout << "First PMT hit ... pmtNumber = " << pmtNumber << " time = " << pmtTime << std::endl; 
+    //if (pmtNumber<2500) std::cout << "First PMT hit ... pmtNumber = " << pmtNumber << " time = " << pmtTime << std::endl; 
     PMTHit* OpHit = new PMTHit;
     OpHit->SetPMTNumber(pmtNumber);
     OpHit->SetPMTTime(pmtTime);
@@ -102,7 +102,7 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
     (*fCollection)[fhitID[pmtNumber]]->SetPMTTime(new_time);
 
       
-    if (pmtNumber<2500)  G4cout << "Not a new hit ... pmtNumber = " << pmtNumber << " hitNumber = " << current_hit_number << " old_time = " << current_time << " new_time " << new_time << " thi_time = " << pmtTime << std::endl; 
+    //if (pmtNumber<2500)  G4cout << "Not a new hit ... pmtNumber = " << pmtNumber << " hitNumber = " << current_hit_number << " old_time = " << current_time << " new_time " << new_time << " thi_time = " << pmtTime << std::endl; 
     //(*fCollection)[fhitID[pmtNumber]]->SetPMTKineticEnergy(current_hit_number-1,energy);
     //std::cout << "Returning from PMTSD::ProcessHits_constStep" << std::endl; 
   return true;
