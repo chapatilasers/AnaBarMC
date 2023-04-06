@@ -10,7 +10,7 @@ int global_run_number;
 int Analyse_Secondaries = 1;
 float Theta_min_cut = 2.524;
 float ThetaVerticalCut = 3.02;
-float Photon_min_cut = 20.0;
+float Photon_min_cut = 75.0;
 
 int MaxPMTNo = 50000;
 int MaxPMTHits = 1000;
@@ -372,6 +372,38 @@ std::vector<float> getAnaBarPMTTime(bool trigger, int* PMT_Nphotons, float* PMT_
     return v;
 }
 
+std::vector<float> getAnaBarPMTTimeTop(bool trigger, int* PMT_Nphotons, float* PMT_Time) {
+
+    std::vector<float> v;
+    TRandom3* fRand = new TRandom3(-1);
+    float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
+    if (trigger) {
+        for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES;icount++){
+            if (PMT_Nphotons[icount]>Photon_min_cut) {
+                pmttime[icount] = PMT_Time[icount];
+                v.push_back(pmttime[icount]);
+            }
+        }
+    }
+    return v;
+}
+
+std::vector<float> getAnaBarPMTTimeBottom(bool trigger, int* PMT_Nphotons, float* PMT_Time) {
+
+    std::vector<float> v;
+    TRandom3* fRand = new TRandom3(-1);
+    float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
+    if (trigger) {
+        for (Int_t icount = AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
+            if (PMT_Nphotons[icount]>Photon_min_cut) {
+                pmttime[icount] = PMT_Time[icount];
+                v.push_back(pmttime[icount]);
+            }
+        }
+    }
+    return v;
+}
+
 std::vector<float> getAnaBarPMTNPhotons(bool trigger, int* PMT_Nphotons) {
 
     std::vector<float> v;
@@ -578,6 +610,8 @@ void AnalyseSignalsRDataFrameNoKE(int run_number = 4000) {
                         .Define("fingerPMTNPhotons","getFingerPMTNPhotons(trigger,&PMT_Nphotons[0])")
        			.Define("anaBarPMTNPhotons","getAnaBarPMTNPhotons(trigger,&PMT_Nphotons[0])")
        			.Define("anaBarPMTTime","getAnaBarPMTTime(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
+       			.Define("anaBarPMTTimeTop","getAnaBarPMTTimeTop(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
+       			.Define("anaBarPMTTimeBottom","getAnaBarPMTTimeBottom(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
        			.Define("anaBarNPhotonsTotal","getAnaBarNPhotonsTotal(trigger,&PMT_Nphotons[0])")
        			.Define("imult","getAnaBarMult(trigger,&PMT_Nphotons[0])")
        			.Define("fingerEd","getFingerEd(trigger,fNewTheta,Detector_Nhits,Prim_pdg,&Detector_id[0],&Detector_pdg[0],&Detector_Ed[0])")
@@ -656,17 +690,25 @@ TCanvas* plotC33(){
 
     auto hAnaBarPMTTime_vs_ID = v[0].Histo2D({"h1", "AnaBar Time vs ID", 100, 0.0, 2500.0,100,0.0,20.0},"anaBarPMTID","anaBarPMTTime");
     auto hAnaBarPMTTime = v[0].Histo1D({"h1","AnaBar Time",100,0.0,20.0},"anaBarPMTTime");
+    auto hAnaBarPMTTimeTop = v[0].Histo1D({"h1","AnaBar Time Top",100,0.0,20.0},"anaBarPMTTimeTop");
+    auto hAnaBarPMTTimeBottom = v[0].Histo1D({"h1","AnaBar Time Bottom",100,0.0,20.0},"anaBarPMTTimeBottom");
     auto hAnaBarPMTTime_vs_Nphoton = v[0].Histo2D({"h1", "AnaBar Time vs Nphotons", 100, 0.0, 300.0,100,0.0,20.0},"anaBarPMTNPhotons","anaBarPMTTime");
 
     TCanvas* c33 = new TCanvas("c33","c33",800,800);
-    c33->Divide(2,2,0.01,0.01,0);
+    c33->Divide(3,2,0.01,0.01,0);
 
     c33->cd(1);
     hAnaBarPMTTime_vs_ID->Draw("COLZ");
     c33->cd(2);
-    hAnaBarPMTTime->Draw();
-    c33->cd(3);
     hAnaBarPMTTime_vs_Nphoton->Draw("COLZ");
+    c33->cd(3);
+    hAnaBarPMTTime->Draw();
+    hAnaBarPMTTimeTop->Draw("SAME");
+    hAnaBarPMTTimeBottom->Draw("SAME");
+    c33->cd(4);
+    hAnaBarPMTTimeTop->Draw();
+    c33->cd(5);
+    hAnaBarPMTTimeBottom->Draw();
 
     c33->DrawClone();
     c33->Print("plots/c33.pdf");
