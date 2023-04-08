@@ -348,29 +348,14 @@ std::vector<float> getAnaBarPMTTime(bool trigger, int* PMT_Nphotons, float* PMT_
         for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
             if (PMT_Nphotons[icount]>Photon_min_cut) {
                 float xdpos, ydpos, zdpos;
-                float xdpos2, ydpos2, zdpos2;
-
-                for (int is = 0; is<NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS; is++) {
-                    TVectorD* x = (TVectorD*)myGeometryData->At(is);
-                    if ((int)(*x)[0] == icount) {
-                        //std::cout << (*x)[0] << std::endl;
-                        //std::cout << (*x)[1] << std::endl;
-                        //std::cout << (*x)[2] << std::endl;
-                        //std::cout << (*x)[3] << std::endl;
-                        xdpos = (*x)[1];
-                        ydpos = (*x)[2];
-                        zdpos = (*x)[3];
-                    }
-                }
 
                 TVectorD* y = (TVectorD*)myGeometryData->At(icount);
-                xdpos2 = (*y)[1];
-                ydpos2 = (*y)[2];
-                zdpos2 = (*y)[3];
+                xdpos = (*y)[1];
+                ydpos = (*y)[2];
+                zdpos = (*y)[3];
 
-                std::cout << "detector positions 1: " << xdpos << " " << ydpos << " " << zdpos << std::endl;
-                std::cout << "detector positions 2: " << xdpos2 << " " << ydpos2 << " " << zdpos2 << std::endl;
-                std::cout << "getAnaBarPMTTime: " << icount << " " << PMT_Time[icount] << " " << PMT_Nphotons[icount] << std::endl;
+                //std::cout << "detector positions: " <<  xdpos << " " << ydpos << " " << zdpos << std::endl;
+                //std::cout << "getAnaBarPMTTime: " << icount << " " << PMT_Time[icount] << " " << PMT_Nphotons[icount] << std::endl;
                 
                 pmttime[icount] = PMT_Time[icount];
                 v.push_back(pmttime[icount]);
