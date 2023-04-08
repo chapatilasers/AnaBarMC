@@ -16,8 +16,18 @@
 #include "TTree.h"
 #include "TString.h"
 #include "TMath.h"
+#include <algorithm>
+#include <vector>
 
 //---------------------------------------------------------------------------
+
+bool vectorCompare(const std::vector<float>& v1, const std::vector<float>& v2) {
+    return v1[0] < v2[0];
+}
+
+void sortVectorOfVector(std::vector<std::vector<float>>& vec) {
+    std::sort(vec.begin(), vec.end(), vectorCompare);
+}
 
 AnalysisManager::AnalysisManager(DetectorConstruction* Detect)
     :fDetector(Detect)
@@ -39,6 +49,9 @@ AnalysisManager::AnalysisManager(DetectorConstruction* Detect)
 AnalysisManager::~AnalysisManager()
 {
   std::vector<std::vector<float>> geometryData = fDetector->GetGeometry();
+  
+  //Sort the geometry data by PMT ID Number
+  sortVectorOfVector(geometryData);
 
   TList* myGeometryData = new TList();
   myGeometryData->SetName("myGeometryData");
@@ -51,6 +64,7 @@ AnalysisManager::~AnalysisManager()
               //std::cout << geometryData[i][j] << " ";
               y[j]=geometryData[i][j];
       }
+      //std::cout << endl;
       //y.Print();
       x.push_back(y);
   }
