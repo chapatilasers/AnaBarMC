@@ -5,13 +5,14 @@ fPDGVal=${1:-"13"}
 start=${2:-7001}
 end=${3:-7080}
 nevents=${4:-96}
+xvalue=${5:0}
 
 #The generation code
 echo "Generating input ROOT files for given particle ..."
 cd batch
 for (( i=$start ; i<=$end ; i++ ))
 do
-root -b -q 'GenParticlesMacOS.C('$fPDGVal','$nevents','$i')'
+root -b -q 'GenParticlesMacOS.C('$fPDGVal','$nevents','$i','$xvalue')'
 done
 cd ..
 echo "Done"

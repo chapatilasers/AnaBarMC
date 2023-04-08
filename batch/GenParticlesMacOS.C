@@ -17,7 +17,7 @@
 // Functions
 void  InitOutput();
 void  InitInput();
-void  GenerateOneParticle(int fPDGCode);
+void  GenerateOneParticle(int fPDGCode, double xvalue);
 void  GenerateOneSBSParticle(int iEvent, int runNumber, int nEvents);
 void  GenerateOneToyParticle();
 
@@ -69,7 +69,7 @@ Float_t         fIntRatio;
 // ------------------------------------------------------------------------------------------------
 
 void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100, 
-		    int run_number = 2000) 
+		    int run_number = 2000, double xvalue = 0.0;) 
 {
   
   // Initialise random number generator
@@ -128,7 +128,7 @@ void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100,
               if (fPDGCode == -2) {
                 GenerateOneToyParticle();
               } else {
-                GenerateOneParticle(fPDGCode);
+                GenerateOneParticle(fPDGCode,xvalue);
               }
       }
 
