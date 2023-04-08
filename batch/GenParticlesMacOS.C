@@ -69,7 +69,7 @@ Float_t         fIntRatio;
 // ------------------------------------------------------------------------------------------------
 
 void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100, 
-		    int run_number = 2000, double xvalue = 0.0;) 
+		    int run_number = 2000, double xvalue = 0.0) 
 {
   
   // Initialise random number generator
@@ -297,7 +297,7 @@ void GenerateOneToyParticle()
 
 }
 
-void GenerateOneParticle(int fPDGCode)
+void GenerateOneParticle(int fPDGCode, double xvalue)
 {
 
   // Generate vertex position in cm 

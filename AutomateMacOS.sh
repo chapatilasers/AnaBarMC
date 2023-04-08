@@ -4,8 +4,8 @@
 fPDGVal=${1:-"13"}
 start=${2:-7001}
 end=${3:-7080}
-nevents=${4:-96}
-xvalue=${5:0}
+nevents=${4:-100}
+xvalue=${5:-0}
 
 #The generation code
 echo "Generating input ROOT files for given particle ..."
