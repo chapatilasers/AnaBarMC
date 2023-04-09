@@ -973,6 +973,125 @@ TCanvas* plotC33(){
 
 }
 
+TCanvas* plotC34(){
+
+    auto hAnaBarXZPMT = v[0].Histo2D({"h1","AnaBar XvsZPMT",100,-100.0,100.0,100,-200,200},"anaBarXPMT","anaBarZPMT");
+
+    TCanvas* c34 = new TCanvas("c34","c34",800,800);
+    c34->Divide(1,1,0.01,0.01,0);
+
+    c34->cd(1);
+    hAnaBarXZPMT->Draw("COLZ");
+
+    double opacity=0.2;
+    double x1 = 55.0;
+    double y1 = -50.0;
+    double x2 = -45.0;
+    double y2 = 0.0;
+    TBox *rect1 = new TBox(x1, y1, x2, y2);
+    rect1->SetFillColorAlpha(kRed, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect1);
+    x1 = 55.0;
+    y1 = 0.0;
+    x2 = -45.0;
+    y2 = 50.0;
+    TBox *rect2 = new TBox(x1, y1, x2, y2);
+    rect2->SetFillColorAlpha(kRed, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect2);
+    x1 = 62.5;
+    y1 = -100.0;
+    x2 = -37.5;
+    y2 = -50.0;
+    TBox *rect3 = new TBox(x1, y1, x2, y2);
+    rect3->SetFillColorAlpha(kRed, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect3);
+    x1 = 69.5;
+    y1 = -150.0;
+    x2 = -30.5;
+    y2 = -100.0;
+    TBox *rect4 = new TBox(x1, y1, x2, y2);
+    rect4->SetFillColorAlpha(kRed, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect4);
+    x1 = 62.5;
+    y1 = 50.0;
+    x2 = -37.5;
+    y2 = 100.0;
+    TBox *rect5 = new TBox(x1, y1, x2, y2);
+    rect5->SetFillColorAlpha(kRed, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect5);
+    x1 = 69.5;
+    y1 = 100.0;
+    x2 = -30.5;
+    y2 = 150.0;
+    TBox *rect6 = new TBox(x1, y1, x2, y2);
+    rect6->SetFillColorAlpha(kRed, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect6);
+    
+    x1 = 60.0;
+    y1 = 115.0;
+    x2 = 70.0;
+    y2 = 125.0;
+    opacity = 0.9;
+    TBox *rect7 = new TBox(x1, y1, x2, y2);
+    rect7->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect7);
+    x1 = 60.0;
+    y1 = -115.0;
+    x2 = 70.0;
+    y2 = -125.0;
+    opacity = 0.9;
+    TBox *rect8 = new TBox(x1, y1, x2, y2);
+    rect8->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect8);
+    x1 = -35.0;
+    y1 = -5.0;
+    x2 = -45.0;
+    y2 = 5.0;
+    opacity = 0.9;
+    TBox *rect9 = new TBox(x1, y1, x2, y2);
+    rect9->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect9);
+    x1 = -5.0;
+    y1 = 55.0;
+    x2 = 5.0;
+    y2 = 65.0;
+    opacity = 0.9;
+    TBox *rect10 = new TBox(x1, y1, x2, y2);
+    rect10->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect10);
+    x1 = -5.0;
+    y1 = -55.0;
+    x2 = 5.0;
+    y2 = -65.0;
+    opacity = 0.9;
+    TBox *rect11 = new TBox(x1, y1, x2, y2);
+    rect11->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect11);
+    x1 = 25.0;
+    y1 = -85.0;
+    x2 = 35.0;
+    y2 = -95.0;
+    opacity = 0.9;
+    TBox *rect12 = new TBox(x1, y1, x2, y2);
+    rect12->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect12);
+    x1 = 25.0;
+    y1 = 85.0;
+    x2 = 35.0;
+    y2 = 95.0;
+    opacity = 0.9;
+    TBox *rect13 = new TBox(x1, y1, x2, y2);
+    rect13->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect13);
+
+    c34->DrawClone();
+    c34->Print("plots/c34.pdf");
+
+    return c34;
+
+}
+
+
 
 TCanvas* plotC3(){
 
