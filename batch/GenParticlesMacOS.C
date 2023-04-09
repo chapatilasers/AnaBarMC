@@ -17,7 +17,7 @@
 // Functions
 void  InitOutput();
 void  InitInput();
-void  GenerateOneParticle(int fPDGCode, double xvalue);
+void  GenerateOneParticle(int fPDGCode, double xvalue, double zvalue);
 void  GenerateOneSBSParticle(int iEvent, int runNumber, int nEvents);
 void  GenerateOneToyParticle();
 
@@ -69,7 +69,7 @@ Float_t         fIntRatio;
 // ------------------------------------------------------------------------------------------------
 
 void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100, 
-		    int run_number = 2000, double xvalue = 0.0) 
+		    int run_number = 2000, double xvalue = 0.0, double zvalue = 0.0) 
 {
   
   // Initialise random number generator
@@ -128,7 +128,7 @@ void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100,
               if (fPDGCode == -2) {
                 GenerateOneToyParticle();
               } else {
-                GenerateOneParticle(fPDGCode,xvalue);
+                GenerateOneParticle(fPDGCode,xvalue, zvalue);
               }
       }
 
@@ -297,13 +297,13 @@ void GenerateOneToyParticle()
 
 }
 
-void GenerateOneParticle(int fPDGCode, double xvalue)
+void GenerateOneParticle(int fPDGCode, double xvalue, double zvalue)
 {
 
   // Generate vertex position in cm 
   fVx = fRand->Uniform(xvalue , xvalue+0.01 );
   fVy = 25.0;
-  fVz = fRand->Uniform( 0.01 , 0.02 );
+  fVz = fRand->Uniform(zvalue , zvalue+0.01 );
 
   // Sample Momentum Distributions (flat from min to mean, p^-2.7 from mean to max)
   //if( fRand->Uniform(0.,1) < fIntRatio ) 

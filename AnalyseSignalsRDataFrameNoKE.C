@@ -67,6 +67,74 @@ bool getTrigger(int Detector_Nhits, int* Detector_id) {
     return trigger;
 }
 
+int getLayer(int fID) {
+    return fID%NUMPADDLE;
+}
+
+int getBar(int fID) {
+    int iLayer = fID%NUMPADDLE;
+    return ((fID-iLayer)/NUMPADDLE)%NUMBARS;
+}
+
+int getSide(int fID) {
+    int iLayer = fID%NUMPADDLE;
+    int iBar = ((fID-iLayer)/NUMPADDLE)%NUMBARS;
+    return (((fID-iLayer)/NUMPADDLE-iBar)/NUMBARS)%NUMSIDES;
+}
+
+int getModule(int fID) {
+    int iLayer = fID%NUMPADDLE;
+    int iBar = ((fID-iLayer)/NUMPADDLE)%NUMBARS;
+    int iSide = (((fID-iLayer)/NUMPADDLE-iBar)/NUMBARS)%NUMSIDES;
+    return ((((fID-iLayer)/NUMPADDLE-iBar)/NUMBARS)/NUMSIDES)%NUMMODULES;
+}
+
+int getPlane(int fID) {
+    int iLayer = fID%NUMPADDLE;
+    int iBar = ((fID-iLayer)/NUMPADDLE)%NUMBARS;
+    int iSide = (((fID-iLayer)/NUMPADDLE-iBar)/NUMBARS)%NUMSIDES;
+    int iModule =  ((((fID-iLayer)/NUMPADDLE-iBar)/NUMBARS)/NUMSIDES)%NUMMODULES;
+    return (((((fID-iLayer)/NUMPADDLE-iBar)/NUMBARS)/NUMSIDES)/NUMMODULES)%NUMLAYERS;
+}
+
+float getXOffsetFromTime(int fID, float time) {
+
+    float xoffset;
+    int iSide = getSide(fID);
+    int iPlane = getPlane(fID);
+
+    if (iPlane == 0) {
+        double a = -0.00094362480519633;
+        double b = -0.03673192847114299;
+        double c = 8.609456854512016;
+        double xmin = -25.0;
+        double ymin = a*xmin*xmin+b*xmin+c-0.003;
+        if (time<ymin) {
+            xoffset = (-b-sqrt(fabs(b*b-4*a*(c-time))))/(2.0*a);
+        } else {
+            xoffset = -20.0;
+        }
+    } else {
+        double a = -0.0009339487175907869;
+        double b = -0.03579463613239478;
+        double c = 9.59488826868313;
+        double xmin = -25.0;
+        double ymin = a*xmin*xmin+b*xmin+c-0.003;
+        if (time<ymin) {
+            xoffset = (-b-sqrt(fabs(b*b-4*a*(c-time))))/(2.0*a);
+        } else {
+            xoffset = -20.0;
+        }
+    }
+
+    if (iSide == 1) {
+        xoffset = -xoffset;
+    }
+
+    return xoffset;
+
+}
+
 bool getTrigger2(bool trigger, float fNewTheta) {
 
     bool trigger2 = false;
@@ -338,28 +406,115 @@ std::vector<float> getFingerPMTNPhotons(bool trigger, int* PMT_Nphotons) {
     return v;
 }
 
-std::vector<float> getAnaBarPMTTime(bool trigger, int* PMT_Nphotons, float* PMT_Time) {
+std::vector<float> getAnaBarXPMT(bool trigger, int* PMT_Nphotons, float* PMT_Time) {
 
-    std::vector<float> v;
-    TRandom3* fRand = new TRandom3(-1);
     float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
+    std::vector<float> v;
+
+    std::vector<std::vector<float>> spacePoints;
+
     //std::cout << "--------------------" << std::endl;
     if (trigger) {
         for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
+            
+            std::vector<float> hitPoint;
+                
             if (PMT_Nphotons[icount]>Photon_min_cut) {
-                float xdpos, ydpos, zdpos;
+            float xdpos, ydpos, zdpos;
 
                 TVectorD* y = (TVectorD*)myGeometryData->At(icount);
-                xdpos = (*y)[1];
-                ydpos = (*y)[2];
-                zdpos = (*y)[3];
+                xdpos = (*y)[1]/10.0;
+                ydpos = (*y)[2]/10.0;
+                zdpos = (*y)[3]/10.0;
 
                 //std::cout << "detector positions: " <<  xdpos << " " << ydpos << " " << zdpos << std::endl;
                 //std::cout << "getAnaBarPMTTime: " << icount << " " << PMT_Time[icount] << " " << PMT_Nphotons[icount] << std::endl;
+                //std::cout << "iLayer = " << getLayer(icount) << std::endl;
+                //std::cout << "iBar = " << getBar(icount) << std::endl;
+                //std::cout << "iSide = " << getSide(icount) << std::endl;
+                //std::cout << "iModule = " << getModule(icount) << std::endl;
+                //std::cout << "iPlane = " << getPlane(icount) << std::endl;
+                pmttime[icount] = PMT_Time[icount];
+
+                float xoffset = getXOffsetFromTime(icount,pmttime[icount]);
+                //std::cout << "X offset = " << xoffset << std::endl;
+                xdpos = xdpos + xoffset;
+                hitPoint.push_back(xdpos);
+                hitPoint.push_back(ydpos);
+                hitPoint.push_back(zdpos);
+
+                spacePoints.push_back(hitPoint);
+
+                v.push_back(xdpos);
+            }
+
+        }
+
+    }
+    return v;
+}
+
+std::vector<float> getAnaBarZPMT(bool trigger, int* PMT_Nphotons, float* PMT_Time) {
+
+    float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
+    std::vector<float> v;
+
+    std::vector<std::vector<float>> spacePoints;
+
+    //std::cout << "--------------------" << std::endl;
+    if (trigger) {
+        for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
+            
+            std::vector<float> hitPoint;
                 
+            if (PMT_Nphotons[icount]>Photon_min_cut) {
+            float xdpos, ydpos, zdpos;
+
+                TVectorD* y = (TVectorD*)myGeometryData->At(icount);
+                xdpos = (*y)[1]/10.0;
+                ydpos = (*y)[2]/10.0;
+                zdpos = (*y)[3]/10.0;
+
+                //std::cout << "detector positions: " <<  xdpos << " " << ydpos << " " << zdpos << std::endl;
+                //std::cout << "getAnaBarPMTTime: " << icount << " " << PMT_Time[icount] << " " << PMT_Nphotons[icount] << std::endl;
+                //std::cout << "iLayer = " << getLayer(icount) << std::endl;
+                //std::cout << "iBar = " << getBar(icount) << std::endl;
+                //std::cout << "iSide = " << getSide(icount) << std::endl;
+                //std::cout << "iModule = " << getModule(icount) << std::endl;
+                //std::cout << "iPlane = " << getPlane(icount) << std::endl;
+                pmttime[icount] = PMT_Time[icount];
+
+                float xoffset = getXOffsetFromTime(icount,pmttime[icount]);
+                //std::cout << "X offset = " << xoffset << std::endl;
+                xdpos = xdpos + xoffset;
+                hitPoint.push_back(xdpos);
+                hitPoint.push_back(ydpos);
+                hitPoint.push_back(zdpos);
+
+                spacePoints.push_back(hitPoint);
+
+                v.push_back(zdpos);
+            }
+
+        }
+
+    }
+    return v;
+}
+
+std::vector<float> getAnaBarPMTTime(bool trigger, int* PMT_Nphotons, float* PMT_Time) {
+
+    std::vector<float> v;
+    
+    float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
+
+    if (trigger) {
+        for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
+            if (PMT_Nphotons[icount]>Photon_min_cut) {
                 pmttime[icount] = PMT_Time[icount];
                 v.push_back(pmttime[icount]);
             }
+
         }
     }
     return v;
@@ -368,8 +523,9 @@ std::vector<float> getAnaBarPMTTime(bool trigger, int* PMT_Nphotons, float* PMT_
 std::vector<float> getAnaBarPMTTimeTop(bool trigger, int* PMT_Nphotons, float* PMT_Time) {
 
     std::vector<float> v;
-    TRandom3* fRand = new TRandom3(-1);
+
     float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
+    
     if (trigger) {
         for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES;icount++){
             if (PMT_Nphotons[icount]>Photon_min_cut) {
@@ -384,8 +540,9 @@ std::vector<float> getAnaBarPMTTimeTop(bool trigger, int* PMT_Nphotons, float* P
 std::vector<float> getAnaBarPMTTimeBottom(bool trigger, int* PMT_Nphotons, float* PMT_Time) {
 
     std::vector<float> v;
-    TRandom3* fRand = new TRandom3(-1);
+   
     float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
+    
     if (trigger) {
         for (Int_t icount = AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
             if (PMT_Nphotons[icount]>Photon_min_cut) {
@@ -602,6 +759,8 @@ void AnalyseSignalsRDataFrameNoKE(int run_number = 4000) {
                         .Define("fingerPMTID","getFingerPMTID(trigger,&PMT_Nphotons[0])") \
                         .Define("fingerPMTNPhotons","getFingerPMTNPhotons(trigger,&PMT_Nphotons[0])")
        			.Define("anaBarPMTNPhotons","getAnaBarPMTNPhotons(trigger,&PMT_Nphotons[0])")
+       			.Define("anaBarXPMT","getAnaBarXPMT(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
+       			.Define("anaBarZPMT","getAnaBarZPMT(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
        			.Define("anaBarPMTTime","getAnaBarPMTTime(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
        			.Define("anaBarPMTTimeTop","getAnaBarPMTTimeTop(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
        			.Define("anaBarPMTTimeBottom","getAnaBarPMTTimeBottom(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
@@ -682,6 +841,7 @@ TCanvas* plotC2(){
 TCanvas* plotC33(){
 
     auto hAnaBarPMTTime_vs_ID = v[0].Histo2D({"h1", "AnaBar Time vs ID", 100, 0.0, 2500.0,100,0.0,20.0},"anaBarPMTID","anaBarPMTTime");
+    auto hAnaBarXZPMT = v[0].Histo2D({"h1","AnaBar XvsZPMT",100,-100.0,100.0,100,-200,200},"anaBarXPMT","anaBarZPMT");
     auto hAnaBarPMTTime = v[0].Histo1D({"h1","AnaBar Time",100,0.0,20.0},"anaBarPMTTime");
     auto hAnaBarPMTTimeTop = v[0].Histo1D({"h1","AnaBar Time Top",100,0.0,20.0},"anaBarPMTTimeTop");
     auto hAnaBarPMTTimeBottom = v[0].Histo1D({"h1","AnaBar Time Bottom",100,0.0,20.0},"anaBarPMTTimeBottom");
@@ -702,6 +862,109 @@ TCanvas* plotC33(){
     hAnaBarPMTTimeTop->Draw();
     c33->cd(5);
     hAnaBarPMTTimeBottom->Draw();
+    c33->cd(6);
+    hAnaBarXZPMT->Draw("COLZ");
+
+    double opacity=0.2;
+    double x1 = 55.0;
+    double y1 = -50.0;
+    double x2 = -45.0;
+    double y2 = 0.0;
+    TBox *rect1 = new TBox(x1, y1, x2, y2);
+    rect1->SetFillColorAlpha(kRed, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect1);
+    x1 = 55.0;
+    y1 = 0.0;
+    x2 = -45.0;
+    y2 = 50.0;
+    TBox *rect2 = new TBox(x1, y1, x2, y2);
+    rect2->SetFillColorAlpha(kRed, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect2);
+    x1 = 62.5;
+    y1 = -100.0;
+    x2 = -37.5;
+    y2 = -50.0;
+    TBox *rect3 = new TBox(x1, y1, x2, y2);
+    rect3->SetFillColorAlpha(kRed, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect3);
+    x1 = 69.5;
+    y1 = -150.0;
+    x2 = -30.5;
+    y2 = -100.0;
+    TBox *rect4 = new TBox(x1, y1, x2, y2);
+    rect4->SetFillColorAlpha(kRed, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect4);
+    x1 = 62.5;
+    y1 = 50.0;
+    x2 = -37.5;
+    y2 = 100.0;
+    TBox *rect5 = new TBox(x1, y1, x2, y2);
+    rect5->SetFillColorAlpha(kRed, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect5);
+    x1 = 69.5;
+    y1 = 100.0;
+    x2 = -30.5;
+    y2 = 150.0;
+    TBox *rect6 = new TBox(x1, y1, x2, y2);
+    rect6->SetFillColorAlpha(kRed, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect6);
+    
+    x1 = 60.0;
+    y1 = 115.0;
+    x2 = 70.0;
+    y2 = 125.0;
+    opacity = 0.9;
+    TBox *rect7 = new TBox(x1, y1, x2, y2);
+    rect7->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect7);
+    x1 = 60.0;
+    y1 = -115.0;
+    x2 = 70.0;
+    y2 = -125.0;
+    opacity = 0.9;
+    TBox *rect8 = new TBox(x1, y1, x2, y2);
+    rect8->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect8);
+    x1 = -35.0;
+    y1 = -5.0;
+    x2 = -45.0;
+    y2 = 5.0;
+    opacity = 0.9;
+    TBox *rect9 = new TBox(x1, y1, x2, y2);
+    rect9->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect9);
+    x1 = -5.0;
+    y1 = 55.0;
+    x2 = 5.0;
+    y2 = 65.0;
+    opacity = 0.9;
+    TBox *rect10 = new TBox(x1, y1, x2, y2);
+    rect10->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect10);
+    x1 = -5.0;
+    y1 = -55.0;
+    x2 = 5.0;
+    y2 = -65.0;
+    opacity = 0.9;
+    TBox *rect11 = new TBox(x1, y1, x2, y2);
+    rect11->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect11);
+    x1 = 25.0;
+    y1 = -85.0;
+    x2 = 35.0;
+    y2 = -95.0;
+    opacity = 0.9;
+    TBox *rect12 = new TBox(x1, y1, x2, y2);
+    rect12->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect12);
+    x1 = 25.0;
+    y1 = 85.0;
+    x2 = 35.0;
+    y2 = 95.0;
+    opacity = 0.9;
+    TBox *rect13 = new TBox(x1, y1, x2, y2);
+    rect13->SetFillColorAlpha(kGreen, opacity);
+    hAnaBarXZPMT->GetListOfFunctions()->Add(rect13);
 
     c33->DrawClone();
     c33->Print("plots/c33.pdf");
