@@ -1,5 +1,8 @@
 #include <iostream>
 #include <TF1.h>
+#include <TVectorD.h>
+#include <TMatrixD.h>
+#include <TLinearFitter.h>
 
 using namespace std;
 using RNode = ROOT::RDF::RNode;
@@ -406,28 +409,66 @@ std::vector<float> getFingerPMTNPhotons(bool trigger, int* PMT_Nphotons) {
     return v;
 }
 
-std::vector<float> getAnaBarXPMT(bool trigger, int* PMT_Nphotons, float* PMT_Time) {
+std::vector<double> getDirection(std::vector<double> tp, std::vector<double> bp) {
+
+    std::vector<double> dir;
+
+    double dist = sqrt((tp[0]-bp[0])*(tp[0]-bp[0]) + 
+                        (tp[1]-bp[1])*(tp[1]-bp[1]) + 
+                         (tp[2]-bp[2])*(tp[2]-bp[2]));
+    
+    dir.push_back((tp[0]-bp[0])/dist);
+    dir.push_back((tp[1]-bp[1])/dist);
+    dir.push_back((tp[2]-bp[2])/dist);
+    
+    return dir;
+}
+
+std::vector<double> getPosition(std::vector<std::vector<double>>& sp) {
+    //std::cout << "getPosition: " << std::endl;
+   
+    double x=0;
+    double y=0;
+    double z=0;
+    for (int i = 0; i<sp.size(); i++) {
+        std::vector<double> pos = sp[i];
+        x += pos[0];
+        y += pos[1];
+        z += pos[2];
+    }
+    x = x/sp.size();
+    y = y/sp.size();
+    z = z/sp.size();
+    std::vector<double> tp;
+    tp.push_back(x);
+    tp.push_back(y);
+    tp.push_back(z);
+    //cout << tp[0] << " " << tp[1] << " " << tp[2] << std::endl;
+
+    return tp;
+}
+
+std::vector<float> getAnaBarPZPMT(bool trigger, int* PMT_Nphotons, float* PMT_Time) {
 
     float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
     std::vector<float> v;
-
-    std::vector<std::vector<float>> spacePoints;
+    
+    std::vector<std::vector<double>> spacePointsTop;
+    std::vector<std::vector<double>> spacePointsBottom;
 
     //std::cout << "--------------------" << std::endl;
     if (trigger) {
         for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
             
-            std::vector<float> hitPoint;
-                
             if (PMT_Nphotons[icount]>Photon_min_cut) {
-            float xdpos, ydpos, zdpos;
+                float xdpos, ydpos, zdpos;
+                std::vector<double> hitPoint;
 
                 TVectorD* y = (TVectorD*)myGeometryData->At(icount);
                 xdpos = (*y)[1]/10.0;
                 ydpos = (*y)[2]/10.0;
                 zdpos = (*y)[3]/10.0;
 
-                //std::cout << "detector positions: " <<  xdpos << " " << ydpos << " " << zdpos << std::endl;
                 //std::cout << "getAnaBarPMTTime: " << icount << " " << PMT_Time[icount] << " " << PMT_Nphotons[icount] << std::endl;
                 //std::cout << "iLayer = " << getLayer(icount) << std::endl;
                 //std::cout << "iBar = " << getBar(icount) << std::endl;
@@ -442,13 +483,144 @@ std::vector<float> getAnaBarXPMT(bool trigger, int* PMT_Nphotons, float* PMT_Tim
                 hitPoint.push_back(xdpos);
                 hitPoint.push_back(ydpos);
                 hitPoint.push_back(zdpos);
-
-                spacePoints.push_back(hitPoint);
-
-                v.push_back(xdpos);
+                //std::cout << "detector positions: " <<  xdpos << " " << ydpos << " " << zdpos << std::endl;
+                
+                int iPlane = getPlane(icount);
+                if (iPlane == 0) {
+                    spacePointsTop.push_back(hitPoint);
+                } else {
+                    spacePointsBottom.push_back(hitPoint);
+                }
             }
 
         }
+
+        // Fit space points
+        std::vector<double> topPosition = getPosition(spacePointsTop);
+        std::vector<double> bottomPosition = getPosition(spacePointsBottom);
+
+        std::vector<double> direction = getDirection(topPosition,bottomPosition);
+
+        //std::cout << direction[0] << " " << direction[1] << " " << direction[2] << std::endl;
+        
+        v.push_back(-direction[2]);
+
+    }
+    return v;
+}
+
+std::vector<float> getAnaBarPXPMT(bool trigger, int* PMT_Nphotons, float* PMT_Time) {
+
+    float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
+    std::vector<float> v;
+    
+    std::vector<std::vector<double>> spacePointsTop;
+    std::vector<std::vector<double>> spacePointsBottom;
+
+    //std::cout << "--------------------" << std::endl;
+    if (trigger) {
+        for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
+            
+            if (PMT_Nphotons[icount]>Photon_min_cut) {
+                float xdpos, ydpos, zdpos;
+                std::vector<double> hitPoint;
+
+                TVectorD* y = (TVectorD*)myGeometryData->At(icount);
+                xdpos = (*y)[1]/10.0;
+                ydpos = (*y)[2]/10.0;
+                zdpos = (*y)[3]/10.0;
+
+                //std::cout << "getAnaBarPMTTime: " << icount << " " << PMT_Time[icount] << " " << PMT_Nphotons[icount] << std::endl;
+                //std::cout << "iLayer = " << getLayer(icount) << std::endl;
+                //std::cout << "iBar = " << getBar(icount) << std::endl;
+                //std::cout << "iSide = " << getSide(icount) << std::endl;
+                //std::cout << "iModule = " << getModule(icount) << std::endl;
+                //std::cout << "iPlane = " << getPlane(icount) << std::endl;
+                pmttime[icount] = PMT_Time[icount];
+
+                float xoffset = getXOffsetFromTime(icount,pmttime[icount]);
+                //std::cout << "X offset = " << xoffset << std::endl;
+                xdpos = xdpos + xoffset;
+                hitPoint.push_back(xdpos);
+                hitPoint.push_back(ydpos);
+                hitPoint.push_back(zdpos);
+                //std::cout << "detector positions: " <<  xdpos << " " << ydpos << " " << zdpos << std::endl;
+                
+                int iPlane = getPlane(icount);
+                if (iPlane == 0) {
+                    spacePointsTop.push_back(hitPoint);
+                } else {
+                    spacePointsBottom.push_back(hitPoint);
+                }
+            }
+
+        }
+
+        // Fit space points
+        std::vector<double> topPosition = getPosition(spacePointsTop);
+        std::vector<double> bottomPosition = getPosition(spacePointsBottom);
+
+        std::vector<double> direction = getDirection(topPosition,bottomPosition);
+
+        //std::cout << direction[0] << " " << direction[1] << " " << direction[2] << std::endl;
+        
+        v.push_back(direction[0]);
+
+    }
+    return v;
+}
+
+std::vector<float> getAnaBarXPMT(bool trigger, int* PMT_Nphotons, float* PMT_Time) {
+
+    float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
+    std::vector<float> v;
+    
+    std::vector<std::vector<double>> spacePointsTop;
+    std::vector<std::vector<double>> spacePointsBottom;
+
+    //std::cout << "--------------------" << std::endl;
+    if (trigger) {
+        for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
+            
+            if (PMT_Nphotons[icount]>Photon_min_cut) {
+                float xdpos, ydpos, zdpos;
+                std::vector<double> hitPoint;
+
+                TVectorD* y = (TVectorD*)myGeometryData->At(icount);
+                xdpos = (*y)[1]/10.0;
+                ydpos = (*y)[2]/10.0;
+                zdpos = (*y)[3]/10.0;
+
+                //std::cout << "getAnaBarPMTTime: " << icount << " " << PMT_Time[icount] << " " << PMT_Nphotons[icount] << std::endl;
+                //std::cout << "iLayer = " << getLayer(icount) << std::endl;
+                //std::cout << "iBar = " << getBar(icount) << std::endl;
+                //std::cout << "iSide = " << getSide(icount) << std::endl;
+                //std::cout << "iModule = " << getModule(icount) << std::endl;
+                //std::cout << "iPlane = " << getPlane(icount) << std::endl;
+                pmttime[icount] = PMT_Time[icount];
+
+                float xoffset = getXOffsetFromTime(icount,pmttime[icount]);
+                //std::cout << "X offset = " << xoffset << std::endl;
+                xdpos = xdpos + xoffset;
+                hitPoint.push_back(xdpos);
+                hitPoint.push_back(ydpos);
+                hitPoint.push_back(zdpos);
+                //std::cout << "detector positions: " <<  xdpos << " " << ydpos << " " << zdpos << std::endl;
+                
+                int iPlane = getPlane(icount);
+                if (iPlane == 0) {
+                    spacePointsTop.push_back(hitPoint);
+                } else {
+                    spacePointsBottom.push_back(hitPoint);
+                }
+            }
+
+        }
+
+        // Fit space points
+        std::vector<double> topPosition = getPosition(spacePointsTop);
+        
+        v.push_back(topPosition[0]);
 
     }
     return v;
@@ -458,24 +630,23 @@ std::vector<float> getAnaBarZPMT(bool trigger, int* PMT_Nphotons, float* PMT_Tim
 
     float pmttime[NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS];
     std::vector<float> v;
-
-    std::vector<std::vector<float>> spacePoints;
+    
+    std::vector<std::vector<double>> spacePointsTop;
+    std::vector<std::vector<double>> spacePointsBottom;
 
     //std::cout << "--------------------" << std::endl;
     if (trigger) {
         for (Int_t icount = AnaBar_PMT_Offset;icount<AnaBar_PMT_Offset+NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS;icount++){
             
-            std::vector<float> hitPoint;
-                
             if (PMT_Nphotons[icount]>Photon_min_cut) {
-            float xdpos, ydpos, zdpos;
+                float xdpos, ydpos, zdpos;
+                std::vector<double> hitPoint;
 
                 TVectorD* y = (TVectorD*)myGeometryData->At(icount);
                 xdpos = (*y)[1]/10.0;
                 ydpos = (*y)[2]/10.0;
                 zdpos = (*y)[3]/10.0;
 
-                //std::cout << "detector positions: " <<  xdpos << " " << ydpos << " " << zdpos << std::endl;
                 //std::cout << "getAnaBarPMTTime: " << icount << " " << PMT_Time[icount] << " " << PMT_Nphotons[icount] << std::endl;
                 //std::cout << "iLayer = " << getLayer(icount) << std::endl;
                 //std::cout << "iBar = " << getBar(icount) << std::endl;
@@ -490,13 +661,22 @@ std::vector<float> getAnaBarZPMT(bool trigger, int* PMT_Nphotons, float* PMT_Tim
                 hitPoint.push_back(xdpos);
                 hitPoint.push_back(ydpos);
                 hitPoint.push_back(zdpos);
-
-                spacePoints.push_back(hitPoint);
-
-                v.push_back(zdpos);
+                //std::cout << "detector positions: " <<  xdpos << " " << ydpos << " " << zdpos << std::endl;
+                
+                int iPlane = getPlane(icount);
+                if (iPlane == 0) {
+                    spacePointsTop.push_back(hitPoint);
+                } else {
+                    spacePointsBottom.push_back(hitPoint);
+                }
             }
 
         }
+
+        // Fit space points
+        std::vector<double> topPosition = getPosition(spacePointsTop);
+        
+        v.push_back(topPosition[2]);
 
     }
     return v;
@@ -761,6 +941,8 @@ void AnalyseSignalsRDataFrameNoKE(int run_number = 4000) {
        			.Define("anaBarPMTNPhotons","getAnaBarPMTNPhotons(trigger,&PMT_Nphotons[0])")
        			.Define("anaBarXPMT","getAnaBarXPMT(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
        			.Define("anaBarZPMT","getAnaBarZPMT(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
+       			.Define("anaBarPXPMT","getAnaBarPXPMT(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
+       			.Define("anaBarPZPMT","getAnaBarPZPMT(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
        			.Define("anaBarPMTTime","getAnaBarPMTTime(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
        			.Define("anaBarPMTTimeTop","getAnaBarPMTTimeTop(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
        			.Define("anaBarPMTTimeBottom","getAnaBarPMTTimeBottom(trigger,&PMT_Nphotons[0],&PMT_Time[0])")
@@ -1306,3 +1488,36 @@ TCanvas* plotC14(){
 	return c14;
 
 }
+
+TCanvas* plotC15() {
+
+
+	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
+
+	auto hPx_vs_x = v[0].Filter("trigger2").Histo2D({"h33", "Px vs x", 100, -80.0, 80.0, 100, -1.0, 1.0},"anaBarXPMT","anaBarPXPMT");
+	auto hPz_vs_z = v[0].Filter("trigger2").Histo2D({"h34", "Pz vs z", 100, -240.0, 240.0, 100, -1.0, 1.0},"anaBarZPMT","anaBarPZPMT");
+	auto hz_vs_x = v[0].Filter("trigger2").Histo2D({"h35", "z vs x", 100, -80.0, 80.0, 100, -240.0, 240.0},"anaBarXPMT","anaBarZPMT");
+	auto hPrimXZ = v[0].Histo2D({"h99", "z vs z", 100, -80.0, 80.0, 100, -240.0, 240.0},"Prim_X","Prim_Z");
+
+
+
+	TCanvas *c15 = new TCanvas("c15","c15",800,800);
+	c15->Divide(2,2,0.01,0.01,0);
+
+	c15->cd(1);
+	hPx_vs_x->Draw("COLZ");
+	c15->cd(2);
+	hPz_vs_z->Draw("COLZ");
+	c15->cd(3);
+	hz_vs_x->Draw("COLZ");
+	c15->cd(4);
+	hPrimXZ->Draw("COLZ");
+        plotDetector(hPrimXZ);
+
+	c15->DrawClone();
+	c15->Print("plots/c13.pdf");
+
+	return c15;
+
+}
+
