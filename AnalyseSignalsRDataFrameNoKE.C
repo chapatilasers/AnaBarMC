@@ -564,7 +564,7 @@ std::vector<float> getAnaBarPXPMT(bool trigger, int* PMT_Nphotons, float* PMT_Ti
 
         //std::cout << direction[0] << " " << direction[1] << " " << direction[2] << std::endl;
         
-        v.push_back(direction[0]);
+        v.push_back(-direction[0]);
 
     }
     return v;
@@ -1515,9 +1515,35 @@ TCanvas* plotC15() {
         plotDetector(hPrimXZ);
 
 	c15->DrawClone();
-	c15->Print("plots/c13.pdf");
+	c15->Print("plots/c15.pdf");
 
 	return c15;
 
 }
 
+TCanvas* plotC16() {
+
+
+	auto hx_vs_x = v[0].Filter("trigger2").Histo2D({"h33", "X vs XPMT", 100, -80.0, 80.0, 100, -80.0, 80.0},"anaBarXPMT","Prim_X");
+	auto hz_vs_z = v[0].Filter("trigger2").Histo2D({"h34", "Z vs ZPMT", 100, -240.0, 240.0, 100, -240.0, 240.0},"anaBarZPMT","Prim_Z");
+	auto hPx_vs_Px = v[0].Filter("trigger2").Histo2D({"h35", "Px vs PxPMT", 100, -1.0, 1.0, 100, -800.0, 800.0},"anaBarPXPMT","fPx");
+	auto hPz_vs_Pz = v[0].Filter("trigger2").Histo2D({"h99", "Pz vs PzPMT", 100, -0.6, 0.6, 100, -2400.0, 2400.0},"anaBarPZPMT","fPz");
+
+	TCanvas *c16 = new TCanvas("c16","c16",800,800);
+	c16->Divide(2,2,0.01,0.01,0);
+
+	c16->cd(1);
+	hx_vs_x->Draw("COLZ");
+	c16->cd(2);
+	hz_vs_z->Draw("COLZ");
+	c16->cd(3);
+	hPx_vs_Px->Draw("COLZ");
+	c16->cd(4);
+	hPz_vs_Pz->Draw("COLZ");
+
+	c16->DrawClone();
+	c16->Print("plots/c16.pdf");
+
+	return c16;
+
+}
