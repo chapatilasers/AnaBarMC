@@ -105,6 +105,7 @@ float getXOffsetFromTime(int fID, float time) {
     float xoffset;
     int iSide = getSide(fID);
     int iPlane = getPlane(fID);
+    TRandom3* fRand = new TRandom3(0);
 
     if (iPlane == 0) {
         double a = -0.00094362480519633;
@@ -115,7 +116,7 @@ float getXOffsetFromTime(int fID, float time) {
         if (time<ymin) {
             xoffset = (-b-sqrt(fabs(b*b-4*a*(c-time))))/(2.0*a);
         } else {
-            xoffset = -20.0;
+            xoffset = -25.0+fRand->Uniform(0.0,12.0);
         }
     } else {
         double a = -0.0009339487175907869;
@@ -126,7 +127,7 @@ float getXOffsetFromTime(int fID, float time) {
         if (time<ymin) {
             xoffset = (-b-sqrt(fabs(b*b-4*a*(c-time))))/(2.0*a);
         } else {
-            xoffset = -20.0;
+            xoffset = -25.0+fRand->Uniform(0.0,12.0);
         }
     }
 
