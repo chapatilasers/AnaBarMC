@@ -1433,10 +1433,10 @@ TCanvas* plotC13() {
 
 	//RNode fdft = AnalyseSignalsRDataFrameNoKE(global_run_number);
 
-	auto hPx_vs_x = v[0].Filter("trigger2").Histo2D({"h33", "Px vs x", 100, -800.0, 800.0, 100, -800.0, 800.0},"anaBarXVec","fPx");
-	auto hPz_vs_z = v[0].Filter("trigger2").Histo2D({"h34", "Pz vs z", 100, -2400.0, 2400.0, 100, -2400.0, 2400.0},"anaBarZVec","fPz");
-	auto hz_vs_x = v[0].Filter("trigger2").Histo2D({"h35", "z vs x", 100, -800.0, 800.0, 100, -2400.0, 2400.0},"anaBarXVec","anaBarZVec");
-	auto hPrimXZ = v[0].Histo2D({"h99", "z vs z", 100, -80.0, 80.0, 100, -240.0, 240.0},"Prim_X","Prim_Z");
+	auto hPx_vs_x = v[0].Filter("trigger2").Histo2D({"h33", "G4SBS Px vs x", 100, -800.0, 800.0, 100, -800.0, 800.0},"anaBarXVec","fPx");
+	auto hPz_vs_z = v[0].Filter("trigger2").Histo2D({"h34", "G4SBS Pz vs z", 100, -2400.0, 2400.0, 100, -2400.0, 2400.0},"anaBarZVec","fPz");
+	auto hz_vs_x = v[0].Filter("trigger2").Histo2D({"h35", "CDet z vs x", 100, -800.0, 800.0, 100, -2400.0, 2400.0},"anaBarXVec","anaBarZVec");
+	auto hPrimXZ = v[0].Histo2D({"h99", "G4SBS z vs x", 100, -80.0, 80.0, 100, -240.0, 240.0},"Prim_X","Prim_Z");
 
 
 
