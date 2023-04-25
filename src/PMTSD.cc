@@ -98,8 +98,13 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
     G4int current_hit_number = (*fCollection)[fhitID[pmtNumber]]->GetPhotonCount();
 
     G4double current_time = (*fCollection)[fhitID[pmtNumber]]->GetPMTTime();
-    G4double new_time = (current_time*(current_hit_number-1)+pmtTime)/current_hit_number;
-    (*fCollection)[fhitID[pmtNumber]]->SetPMTTime(new_time);
+    //G4double new_time = (current_time*(current_hit_number-1)+pmtTime)/current_hit_number;
+    
+    if (pmtTime < current_time) {
+	    current_time = pmtTime;
+    }
+    //(*fCollection)[fhitID[pmtNumber]]->SetPMTTime(new_time);
+    (*fCollection)[fhitID[pmtNumber]]->SetPMTTime(current_time);
 
       
     //if (pmtNumber<2500)  G4cout << "Not a new hit ... pmtNumber = " << pmtNumber << " hitNumber = " << current_hit_number << " old_time = " << current_time << " new_time " << new_time << " thi_time = " << pmtTime << std::endl; 
