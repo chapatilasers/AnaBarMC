@@ -107,6 +107,7 @@ float getXOffsetFromTime(int fID, float time) {
     int iPlane = getPlane(fID);
     TRandom3* fRand = new TRandom3(0);
 
+    /* Old calibration - average time
     if (iPlane == 0) {
         double a = -0.00094362480519633;
         double b = -0.03673192847114299;
@@ -129,6 +130,29 @@ float getXOffsetFromTime(int fID, float time) {
         } else {
             xoffset = -25.0+fRand->Uniform(0.0,12.0);
         }
+    }
+    */
+    
+    if (iPlane == 0) {
+        double a = -0.00037499653844674384;
+        double b = -0.051184438607694095;
+        double c = 3.5929880196450843;
+	double discriminant = b*b - 4*a*(c-time);
+	if (discriminant >= 0.0) {
+        	xoffset = (-b-sqrt(fabs(b*b-4*a*(c-time))))/(2.0*a);
+	} else {
+		xoffset -25.0;
+	}
+    } else {
+        double a = -0.0004090552401677775;
+        double b = -0.050453362706664166;
+        double c = 4.537007798185197;
+	double discriminant = b*b - 4*a*(c-time);
+	if (discriminant >= 0.0) {
+        	xoffset = (-b-sqrt(fabs(b*b-4*a*(c-time))))/(2.0*a);
+	} else {
+		xoffset -25.0;
+	}
     }
 
     if (iSide == 1) {
