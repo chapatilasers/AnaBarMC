@@ -1475,7 +1475,7 @@ TCanvas* plotC13() {
 	hz_vs_x->Draw("COLZ");
 	c13->cd(4);
 	hPrimXZ->Draw("COLZ");
-        plotDetector(hPrimXZ);
+    plotDetector(hPrimXZ);
 
 	c13->DrawClone();
 	c13->Print("plots/c13.pdf");
