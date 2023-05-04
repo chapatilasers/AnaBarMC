@@ -13,7 +13,7 @@ echo "Generating input ROOT files for given particle ..."
 cd batch
 for (( i=$start ; i<=$end ; i++ ))
 do
-root -b -q 'GenParticles.C('$fPDGVal','$nevents','$i'i,'$xvalue','$zvalue')'
+root -b -q 'GenParticles.C('$fPDGVal','$nevents','$i','$xvalue','$zvalue')'
 done
 cd ..
 echo "Done"
