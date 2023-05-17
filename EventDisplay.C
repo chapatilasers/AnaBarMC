@@ -26,7 +26,7 @@ static const int AnaBar_PMT_Offset = 0;
 static const int Finger_NPhotons_Max = 250;
 static const int AnaBar_NPhotons_Max = 200;
 
-static const const int NUMPADDLE = 14;
+static const int NUMPADDLE = 14;
 static const int NUMBARS = 14;
 static const int NUMMODULES = 3;
 static const int NUMSIDES = 2;
@@ -223,18 +223,18 @@ void EventDisplay(int run_number = 4000){
 					xdpos = (*geo)[1]/10.0;
         				zdpos = (*geo)[3]/10.0;
 					topCalc->SetNextPoint(xdpos + getXOffsetFromTime(i, PMT_Time[i]),zdpos);
-                                        std::cout << "Event: " << i << " ... x = " << xdpos << " ... offset = " << getXOffsetFromTime(i,PMT_Time[i]) << " ... time = " << PMT_Time[i] << std::endl;
+                                        std::cout << "Paddle: " << i << " ... x = " << xdpos << " ... offset = " << getXOffsetFromTime(i,PMT_Time[i]) << " ... time = " << PMT_Time[i] << " ... zdpos = " << zdpos << std::endl;
 				}
 			} else {
 				bot->SetBinContent(i-1175,PMT_Nphotons[i]);
 				
 				//Draw the calculated x position	
-				//if(PMT_Nphotons[i] > Photon_min_cut){ //Only if there are enough photons to justify it
-				//	TVectorD* geo = (TVectorD*)myGeometryData->At(i);
-				//	xdpos = (*geo)[1]/10.0;
-        			//	zdpos = (*geo)[3]/10.0;
-				//	botCalc->SetNextPoint(xdpos + getXOffsetFromTime(i, PMT_Time[i]),zdpos);
-				//}
+				if(PMT_Nphotons[i] > Photon_min_cut){ //Only if there are enough photons to justify it
+					TVectorD* geo = (TVectorD*)myGeometryData->At(i);
+					xdpos = (*geo)[1]/10.0;
+        				zdpos = (*geo)[3]/10.0;
+				        botCalc->SetNextPoint(xdpos + getXOffsetFromTime(i, PMT_Time[i]),zdpos);
+				}
 			}
 		}
 
