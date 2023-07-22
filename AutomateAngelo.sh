@@ -12,7 +12,7 @@ echo "Done"
 
 #Simulation
 echo "Submitting simulation jobs ..."
-cd ~/CDetOptical/batch
+cd ~/CDetMC/batch
 ./sendjobsangelo.sh runlist_test_single
 echo "Done"
 

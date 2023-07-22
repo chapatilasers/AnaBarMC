@@ -2,7 +2,7 @@
 
 export RUN_NUMBER=$1
 export homedir=$HOME
-export repodir=$homedir/CDetOptical
+export repodir=$homedir/CDetMCDetMC
 
 source $homedir/geant4_C8/G4setup_batch.sh
 export G4BINARY=$homedir/geant4_C8/bin/Linux-g++/AnaBarMC

@@ -7,7 +7,7 @@ fi
 
 export runlist=$1
 export homedir=$HOME
-export OUTPUT_DIR=$homedir/CDetOptical/data
+export OUTPUT_DIR=$homedir/CDetMC/data
 
 echo "Reading runs from $runlist"
 

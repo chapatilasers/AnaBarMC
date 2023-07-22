@@ -29,7 +29,7 @@ echo "Done"
 
 #Simulation
 echo "Submitting simulation jobs ..."
-cd ~/CDetOptical/batch
+cd ~/CDetMC/batch
 ./sendjobsubuntu.sh runlist_test
 echo "Done"
 

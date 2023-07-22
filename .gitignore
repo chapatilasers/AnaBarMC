@@ -1,7 +1,7 @@
 GenCosmics_C.d
 GenCosmics_C.so
-CDetOptical.e*
-CDetOptical.o*
+CDetMC.e*
+CDetMC.o*
 data/*.root
 macros/*.root
 plots/*.pdf

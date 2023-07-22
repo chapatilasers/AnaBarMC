@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N CDetOptical
+#PBS -N CDetMC
 #PBS -m n
 #PBS -M root@jlabdaq.cnuadmin.cnu.edu
 #PBS -l walltime=40:00:00
@@ -18,9 +18,9 @@ else
 fi
 
 export nevents=100
-export tempdir=$homedir/CDetOptical/batch
+export tempdir=$homedir/CDetMC/batch
 
-export MACRO_PATH=$homedir/CDetOptical/macros/
+export MACRO_PATH=$homedir/CDetMC/macros/
 export MCMACRO=$tempdir/AnaBarMC_$RUN_NUMBER.mac
 
 echo "/control/macroPath $MACRO_PATH"	 	                         >   $MCMACRO

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export homedir=$HOME
-export datadir=$homedir/CDetOptical/data
+export datadir=$homedir/CDetMC/data
 
 export OUTPUT_FILE_NUMBER=$1
 export START_RUN=$2

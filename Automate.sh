@@ -30,7 +30,7 @@ echo "Done"
 #Simulation
 echo "Submitting simulation jobs ..."
 ssh jlabanalysis << EOF
-cd ~/CDetOptical/batch
+cd ~/CDetMC/batch
 ./sendjobs.sh runlist_test
 #echo "Done"
 EOF
