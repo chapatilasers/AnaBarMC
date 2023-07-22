@@ -19,6 +19,7 @@ AnalysisMessenger::AnalysisMessenger(AnalysisManager* anMana)
   fOutFileCmd->SetGuidance("Set the full name and path of the output ROOT file");
   fOutFileCmd->SetParameterName("choice",true);
   fOutFileCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  
 } 
 
 //---------------------------------------------------------------------------

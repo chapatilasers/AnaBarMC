@@ -1,0 +1,41 @@
+##################################################################
+# Set physics models and interaction opitons
+##################################################################
+
+/AnaBarMC/physics/addPhysics standard_opt3
+/AnaBarMC/physics/optical 1
+/AnaBarMC/physics/hadronic 1
+/AnaBarMC/detector/AnaBarXpos 25.0
+/AnaBarMC/detector/AnaBarYpos 0.0
+/AnaBarMC/detector/AnaBarZpos 150.0
+/AnaBarMC/detector/NumberOfLayers 14
+/AnaBarMC/detector/NumberOfBars 14
+/AnaBarMC/detector/NumberOfSides 2
+/AnaBarMC/detector/NumberOfModules 3
+/AnaBarMC/detector/NumberOfPlanes 2
+/AnaBarMC/physics/setCuts 0.1 mm
+/run/initialize
+
+##################################################################
+# Set input and output options
+##################################################################
+
+/AnaBarMC/generator/Mode 1
+/AnaBarMC/generator/InputFile macros/AnaBarMC_Gen_5.root
+/AnaBarMC/analysis/setOutputFile data/G4_vis_single.root
+
+##################################################################
+# Set visualisation options
+##################################################################
+
+/vis/scene/create
+/vis/open VRML2FILE
+/vis/scene/add/trajectories
+/vis/scene/endOfEventAction accumulate
+/vis/viewer/select viewer-0
+/vis/viewer/rebuild
+
+##################################################################
+
+/run/beamOn 100
+

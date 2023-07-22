@@ -7,7 +7,7 @@ fi
 
 export runlist=$1
 export homedir=$HOME
-export OUTPUT_DIR=$homedir/CDetOptical/data
+export OUTPUT_DIR=$homedir/CDetMC/data
 
 echo "Reading runs from $runlist"
 
@@ -16,7 +16,8 @@ for run in `cat $runlist`
 do
     echo "The next run is $run"
     export RUN_NUMBER=$run
-    qsub AnaBarNeutron.sh 
+    sbatch AnaBarNeutron.sh
+#    qsub AnaBarNeutron.sh 
 #    ./AnaBarNeutron.sh 
     sleep 1
 done

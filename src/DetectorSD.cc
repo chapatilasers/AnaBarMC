@@ -19,7 +19,7 @@ DetectorSD::DetectorSD(G4String name, G4int)
 {
   collectionName.insert(name+G4String("Collection"));
   fCollection = NULL;
-  fNelements  = 10000;
+  fNelements  = 50000;
   fNhits      = 0;
   fhitID      = new G4int[fNelements];
   fHits       = new G4int[fNelements];
@@ -59,7 +59,8 @@ G4bool DetectorSD::ProcessHits( G4Step* aStep,G4TouchableHistory* )
   G4int                 id           = volume->GetCopyNo();
   G4String              ParticleName = aTrack->GetDefinition()->GetParticleName();
   G4double              edep         = aStep->GetTotalEnergyDeposit();
-  
+ 
+  //std::cout << "Copy Number = " << id << std::endl;
   if (ParticleName == "opticalphoton") return false;
   
   DetectorHit* DetHit = new DetectorHit;

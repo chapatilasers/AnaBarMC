@@ -1,5 +1,6 @@
 #include "PMTSD.hh"
 #include "PMTHit.hh"
+#include "AnalysisManager.hh"
 
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
@@ -26,7 +27,8 @@ PMTSD::PMTSD(G4String name, G4int Nelements )
   fhitID      = new G4int[fNelements];
   fHits       = new G4int[fNelements];
   for(G4int i=0; i<fNelements; i++) fhitID[i] = -1;
-  for(G4int i=0; i<fNelements; i++) fHits[i]  = 0; 
+  for(G4int i=0; i<fNelements; i++) fHits[i]  = 0;
+  //TString myHitsFile = fAnaManager->GetHitFilename();
 }
 
 //---------------------------------------------------------------------------
@@ -58,36 +60,56 @@ G4bool PMTSD::ProcessHits_constStep(const G4Step* aStep,
   if(aStep->GetTrack()->GetDefinition() 
      != G4OpticalPhoton::OpticalPhotonDefinition()) return false;
  
-  //std::cout << "Getting PMT number .... " << std::endl;
+  //std::cout << "Getting PMT number and time .... " << std::endl;
   G4int pmtNumber= aStep->GetPostStepPoint()->GetTouchable()
     ->GetVolume()->GetCopyNo();
+  //std::cout << pmtNumber << std::endl;
+
+  G4double pmtTime= aStep->GetPostStepPoint()->GetGlobalTime();
+  //std::cout << pmtTime << std::endl;
+
   
   // Try to get kinetic energy
   G4Track* theTrack = aStep->GetTrack();
-  G4double energy=theTrack->GetKineticEnergy()*1.0E6;
+  //G4double energy=theTrack->GetKineticEnergy()*1.0E6;
   //std::cout << "PMT No. = " << pmtNumber << ", Photon kinetic energy = " << energy << std::endl;
 
-  //for (G4int iii = 0; iii<100; iii++){
+  //for (G4int iii = 0; iii<10000; iii++){
   //	std::cout << " iii = " << iii << "  fhitID[iii] = " << fhitID[iii] << std::endl;
-  //}
+  //} 
  
   // if this PMT hasn't been hit in this event
-  if ( fhitID[pmtNumber] == -1 && energy > 0.1) {
-    //std::cout << "First PMT hit ... pmtNumber = " << pmtNumber << " energy = " << energy << std::endl; 
+  //std::cout << "Accessing fhitID ... " << fhitID[pmtNumber] << " " << energy << std::endl; 
+  //if ( fhitID[pmtNumber] == -1 && energy > 0.1) {
+  if ( fhitID[pmtNumber] == -1 ) {
+    //if (pmtNumber<2500) std::cout << "First PMT hit ... pmtNumber = " << pmtNumber << " time = " << pmtTime << std::endl; 
     PMTHit* OpHit = new PMTHit;
     OpHit->SetPMTNumber(pmtNumber);
-    OpHit->SetPMTKineticEnergy(0,energy);
+    OpHit->SetPMTTime(pmtTime);
+    //OpHit->SetPMTKineticEnergy(0,energy);
     OpHit->IncPhotonCount();
 
     fhitID[pmtNumber] = fCollection->insert(OpHit) - 1;
     fHits[fNhits++] = pmtNumber;
   }
-  else // this is not a new hit
+  //std::cout << "Accessing fhitID through fCollection... " << std::endl; 
+  // this is not a new hit
     (*fCollection)[fhitID[pmtNumber]]->IncPhotonCount();
     G4int current_hit_number = (*fCollection)[fhitID[pmtNumber]]->GetPhotonCount();
-    //std::cout << "Not a new hit ... pmtNumber = " << pmtNumber << " hitNumber = " << current_hit_number << " energy = " << energy << std::endl; 
-    (*fCollection)[fhitID[pmtNumber]]->SetPMTKineticEnergy(current_hit_number-1,energy);
-  
+
+    G4double current_time = (*fCollection)[fhitID[pmtNumber]]->GetPMTTime();
+    //G4double new_time = (current_time*(current_hit_number-1)+pmtTime)/current_hit_number;
+    
+    if (pmtTime < current_time) {
+	    current_time = pmtTime;
+    }
+    //(*fCollection)[fhitID[pmtNumber]]->SetPMTTime(new_time);
+    (*fCollection)[fhitID[pmtNumber]]->SetPMTTime(current_time);
+
+      
+    //if (pmtNumber<2500)  G4cout << "Not a new hit ... pmtNumber = " << pmtNumber << " hitNumber = " << current_hit_number << " old_time = " << current_time << " new_time " << new_time << " thi_time = " << pmtTime << std::endl; 
+    //(*fCollection)[fhitID[pmtNumber]]->SetPMTKineticEnergy(current_hit_number-1,energy);
+    //std::cout << "Returning from PMTSD::ProcessHits_constStep" << std::endl; 
   return true;
 }
 //---------------------------------------------------------------------------

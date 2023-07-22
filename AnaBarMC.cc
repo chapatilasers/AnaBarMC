@@ -28,8 +28,8 @@ int main(int argc, char** argv)
   PhysicsList*  phys       = new PhysicsList();
   runManager->SetUserInitialization(phys);
   
-  AnalysisManager*        anaManager = new AnalysisManager();
   DetectorConstruction*   detCon     = new DetectorConstruction();
+  AnalysisManager*        anaManager = new AnalysisManager(detCon);
   runManager->SetUserInitialization(detCon);
   
   PrimaryGeneratorAction* pga        = new PrimaryGeneratorAction();

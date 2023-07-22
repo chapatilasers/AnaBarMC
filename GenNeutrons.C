@@ -65,7 +65,7 @@ void GenNeutrons( int nevents = 100,
 
   // Initialise output
   TString fname;
-  fname.Form("~/CDetOptical/batch/data/AnaBarMC_Gen_%d.root",run_number);
+  fname.Form("~/CDetMC/batch/data/AnaBarMC_Gen_%d.root",run_number);
   fOutFileName = fname;
   InitOutput();
 

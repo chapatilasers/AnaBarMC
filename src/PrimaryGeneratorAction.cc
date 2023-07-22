@@ -109,8 +109,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       fTp          = fParticleGun->GetParticleTime();
       fPDefinition = fParticleGun->GetParticleDefinition();
 
-    break;
     }
+    break;
   default:
     G4cout << "Unknown mode given to PrimiaryGeneratorAction (0 for gps or 1 for root)" << G4endl;
   }			       

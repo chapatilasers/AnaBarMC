@@ -51,6 +51,11 @@ PhysicsListMessenger::PhysicsListMessenger(PhysicsList* pPhys)
   fOpticalCmd->SetGuidance("Set whether optical processes should be on");
   fOpticalCmd->SetParameterName("Optical",false);
   fOpticalCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  
+  fHadronicCmd = new G4UIcmdWithAnInteger("/AnaBarMC/physics/hadronic",this);
+  fHadronicCmd->SetGuidance("Set whether hadronic processes should be on");
+  fHadronicCmd->SetParameterName("Hadronic",false);
+  fHadronicCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
 }
 
@@ -65,6 +70,7 @@ PhysicsListMessenger::~PhysicsListMessenger()
   delete fAllCutCmd;
   delete fPListCmd;
   delete fOpticalCmd;
+  delete fHadronicCmd;
 }
 
 //---------------------------------------------------------------------------
@@ -94,6 +100,9 @@ void PhysicsListMessenger::SetNewValue(G4UIcommand* command,
 
   if( command == fOpticalCmd )
     { fPPhysicsList->SetOpticalProcesses(fOpticalCmd->GetNewIntValue(newValue)); }
+
+  if( command == fHadronicCmd )
+    { fPPhysicsList->SetHadronicProcesses(fHadronicCmd->GetNewIntValue(newValue)); }
 }
 
 //---------------------------------------------------------------------------
