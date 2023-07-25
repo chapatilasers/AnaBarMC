@@ -17,3 +17,4 @@ macros/.ipynb_checkpoints/*
 __pycache__/
 .idea/
 analysis/plots/*.pdf
+batch/slurm*.out
