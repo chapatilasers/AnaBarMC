@@ -18,3 +18,4 @@ __pycache__/
 .idea/
 analysis/plots/*.pdf
 batch/slurm*.out
+batch/runlist_test
