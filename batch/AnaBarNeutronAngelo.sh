@@ -2,9 +2,9 @@
 export homedir=$HOME
 
 export nevents=100
-export tempdir=$homedir/CDetOptical/batch
+export tempdir=$homedir/CDetMC/batch
 
-export MACRO_PATH=$homedir/CDetOptical/macros/
+export MACRO_PATH=$homedir/CDetMC/macros/
 export MCMACRO=$tempdir/AnaBarMC_$RUN_NUMBER.mac
 
 echo "/control/macroPath $MACRO_PATH"	 	                         >   $MCMACRO

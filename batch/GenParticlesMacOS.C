@@ -83,7 +83,7 @@ void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100,
 
   // Initialize input
   TString inname;
-  inname.Form("~/CDetOptical/macros/gep_12Gev1mil.root");
+  inname.Form("~/CDetMC/macros/gep_12Gev1000.root");
   fInFileName = inname;
   if (fPDGCode == -1) {
 	InitInput();
@@ -91,7 +91,7 @@ void GenParticlesMacOS( int fPDGCode = 13, int nevents = 100,
   
   // Initialise output
   TString fname;
-  fname.Form("~/CDetOptical/batch/data/AnaBarMC_Gen_%d.root",run_number);
+  fname.Form("~/CDetMC/batch/data/AnaBarMC_Gen_%d.root",run_number);
   fOutFileName = fname;
   InitOutput();
 

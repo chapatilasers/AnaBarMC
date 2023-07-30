@@ -83,13 +83,13 @@ void GenParticles( int fPDGCode = 13, int nevents = 100,
 
   // Initialize input
   TString inname;
-  inname.Form("~/CDetOptical/macros/gep_12Gev1000.root");
+  inname.Form("~/CDetMC/macros/gep_12Gev1000.root");
   fInFileName = inname;
   InitInput();
 
   // Initialise output
   TString fname;
-  fname.Form("~/CDetOptical/macros/AnaBarMC_Gen_%d.root",run_number);
+  fname.Form("~/CDetMC/macros/AnaBarMC_Gen_%d.root",run_number);
   fOutFileName = fname;
   InitOutput();
 

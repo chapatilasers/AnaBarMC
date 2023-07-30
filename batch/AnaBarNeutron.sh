@@ -1,16 +1,16 @@
 #!/bin/bash
-#PBS -N CDetOptical
-#PBS -m n
-#PBS -M root@jlabdaq.cnuadmin.cnu.edu
-#PBS -l walltime=40:00:00
-#PBS -V
+#SBATCH --job-name=CDetMC
+#SBATCH --mail-user=root@jlabdaq.cnuadmin.cnu.edu
+#SBATCH --export=ALL
+#SBATCH --ntasks=1
+#SBATCH --threads-per-core=1
 
 export homedir=$HOME
 
 export nevents=100
-export tempdir=$homedir/CDetOptical/batch
+export tempdir=$homedir/CDetMC/batch
 
-export MACRO_PATH=$homedir/CDetOptical/macros/
+export MACRO_PATH=$homedir/CDetMC/macros/
 export MCMACRO=$tempdir/AnaBarMC_$RUN_NUMBER.mac
 
 echo "/control/macroPath $MACRO_PATH"	 	                         >   $MCMACRO
@@ -31,6 +31,7 @@ echo "/AnaBarMC/generator/InputFile $tempdir/data/AnaBarMC_Gen_$RUN_NUMBER.root"
 echo "/AnaBarMC/analysis/setOutputFile $tempdir/rootfiles/AnaBarMC_$RUN_NUMBER.root" >>  $MCMACRO
 
 cd $tempdir
+source ~/.bashrc
 
 export PATH=$ROOTSYS/bin:$PATH
 AnaBarMC $MCMACRO #>& /dev/null

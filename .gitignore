@@ -1,7 +1,7 @@
 GenCosmics_C.d
 GenCosmics_C.so
-CDetOptical.e*
-CDetOptical.o*
+CDetMC.e*
+CDetMC.o*
 data/*.root
 macros/*.root
 plots/*.pdf
@@ -15,3 +15,7 @@ batch/rootfiles/*.root
 .ipynb_checkpoints/*
 macros/.ipynb_checkpoints/*
 __pycache__/
+.idea/
+analysis/plots/*.pdf
+batch/slurm*.out
+batch/runlist_test
