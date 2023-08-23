@@ -228,7 +228,7 @@ public:
     //Get the Photon deposition array
     Int_t PMT_Nphotons[50000];
     Int_t Detector_id[50000];
-    Double_t PMT_Time[5000];
+    Float_t PMT_Time[5000];
     Int_t Detector_Nhits;
     //t->SetBranchAddress ("PMT_Nphotons_Noise", &PMT_Nphotons);
     t->SetBranchAddress ("PMT_Nphotons", &PMT_Nphotons);
@@ -299,7 +299,10 @@ public:
 		zdpos = (*geo)[3] / 10.0;
 		//cout << getXOffsetFromTime(i, PMT_Time[i]);
 		//topCalc->SetNextPoint(xdpos + getXOffsetFromTime(i, PMT_Time[i]) - getXOffsetFromTime(i, PMT_Time[i]),zdpos);
-		topCalc->SetNextPoint (xdpos + 25 +
+		cout << "Top" << endl;
+		cout << i << endl;
+		cout << PMT_Time[i] << endl;
+		topCalc->SetNextPoint (xdpos + 
 				       getXOffsetFromTime (i, PMT_Time[i]),
 				       zdpos);
 	      }
@@ -314,12 +317,15 @@ public:
 		TVectorD *geo = (TVectorD *) myGeometryData->At (i);
 		xdpos = (*geo)[1] / 10.0;
 		zdpos = (*geo)[3] / 10.0;
-		botCalc->SetNextPoint (xdpos + 25 +
-				       getXOffsetFromTime (i,
-							   PMT_Time[i]) -
-				       getXOffsetFromTime (i, PMT_Time[i]),
-				       zdpos);
-		//botCalc->SetNextPoint(xdpos + getXOffsetFromTime(i, PMT_Time[i]),zdpos);
+		cout << "Bottom" << endl;
+		cout << i << endl;
+		cout << PMT_Time[i] << endl;
+		//botCalc->SetNextPoint (xdpos + 
+		//		       getXOffsetFromTime (i,
+		//					   PMT_Time[i]) -
+		//		       getXOffsetFromTime (i, PMT_Time[i]),
+	        //			       zdpos);
+		botCalc->SetNextPoint(xdpos + getXOffsetFromTime(i, PMT_Time[i]),zdpos);
 	      }
 	  }
       }
