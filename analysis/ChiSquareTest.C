@@ -3,6 +3,10 @@
 #include <TVectorD.h>
 #include <TMatrixD.h>
 #include <TLinearFitter.h>
+#include <TRandom3.h>
+#include <TFile.h>
+#include <TTree.h>
+
 
 TList* myGeometryData;
 int global_run_number;
@@ -89,7 +93,7 @@ float getXOffsetFromTime(int fID, float time) {
 	if (discriminant >= 0.0) {
         	xoffset = (-b-sqrt(fabs(b*b-4*a*(c-time))))/(2.0*a);
 	} else {
-		xoffset -25.0;
+		xoffset = -25.0;
 	}
     } else {
         double a = -0.0004090552401677775;
@@ -99,7 +103,7 @@ float getXOffsetFromTime(int fID, float time) {
 	if (discriminant >= 0.0) {
         	xoffset = (-b-sqrt(fabs(b*b-4*a*(c-time))))/(2.0*a);
 	} else {
-		xoffset -25.0;
+		xoffset = -25.0;
 	}
     }
 
@@ -144,9 +148,26 @@ bool getTrigger(int Detector_Nhits, int* Detector_id) {
 }
 
 //Noise removal algorithm
-std::vector<int> RemoveNoise(std::vector<int> layer1, std::vector<int>layer2, float distanceAcceptable = 50.0){
+std::vector<int> RemoveNoise(int event, std::vector<int> layer1, std::vector<int>layer2, float distanceAcceptable = 5.0){
 	std::vector<int> output;
 
+        if (event<5) {
+            cout << "layer1.size() = " << layer1.size() << ", layer2.size() = " << layer2.size() << endl;
+        }   
+                        
+        if (event<5) {
+	  for(int i = 0; i < layer1.size(); i++){
+		for(int j = 0; j < layer2.size(); j++){
+			TVectorD* geo = (TVectorD*)myGeometryData->At(layer1.at(i));
+			TVectorD* geo2 = (TVectorD*)myGeometryData->At(layer2.at(j));
+			float x1 = (*geo)[1]/10.0;
+			float x2 = (*geo2)[1]/10.0;
+        		float z1 = (*geo)[3]/10.0;
+			float z2 = (*geo2)[3]/10.0;
+                        cout << "i = " << i << ", j = " << j << ", x1 = " << x1 << ", x2 = " << x2 << ", z1 = " << z1 << ", z2 = " << z2 << ", dist = " <<  pow(pow((z1-z2),2),0.5) << endl;
+                }
+          }
+        }
 
 	for(int i = 0; i < layer1.size(); i++){
 		for(int j = 0; j < layer2.size(); j++){
@@ -156,7 +177,8 @@ std::vector<int> RemoveNoise(std::vector<int> layer1, std::vector<int>layer2, fl
 			float x2 = (*geo2)[1]/10.0;
         		float z1 = (*geo)[3]/10.0;
 			float z2 = (*geo2)[3]/10.0;
-			if ((pow(x1-x2, 2) + pow(z1-z2, 2)) < distanceAcceptable){
+			//if ((pow(x1-x2, 2) + pow(z1-z2, 2)) < distanceAcceptable){
+			if (pow(pow((z1-z2),2),0.5) < distanceAcceptable){
 				output.push_back(layer1.at(i));
 				break;
 			}
@@ -178,25 +200,27 @@ void ChiSquareTest(int run_number = 4000){
         TTree* t = 0;
 	f->GetObject(treeName,t);
 
-	auto noisefileName = "data/AnaBarMC_"+std::to_string(run_number)+"noise.root";
-	auto noisetreeName = "noise";
+	//auto noisefileName = "data/AnaBarMC_"+std::to_string(run_number)+"noise.root";
+	//auto noisetreeName = "noise";
 
-        TFile* noisef = new TFile((TString)noisefileName,"READ");
-        TTree* noise = 0;
-	noisef->GetObject(noisetreeName,noise);
-	t->AddFriend(noise);
+        //TFile* noisef = new TFile((TString)noisefileName,"READ");
+        //TTree* noise = 0;
+	//noisef->GetObject(noisetreeName,noise);
+	//t->AddFriend(noise);
 
 	//Get the Photon deposition array
 	Int_t PMT_Nphotons[50000];
-	Int_t PMT_Noise_photons[50000];
+	Int_t PMT_Nphotons_Noise[50000];
 	Int_t Detector_id[50000];
-	Double_t PMT_Time[5000];
+	Float_t PMT_Time[5000];
+	Float_t PMT_Time_Noise[5000];
 	Int_t Detector_Nhits;
-	t->SetBranchAddress("PMT_Nphotons_Noise",&PMT_Noise_photons);
 	t->SetBranchAddress("PMT_Nphotons",&PMT_Nphotons);
+	t->SetBranchAddress("PMT_Nphotons_Noise",&PMT_Nphotons_Noise);
 	t->SetBranchAddress("Detector_id",&Detector_id);
 	t->SetBranchAddress("Detector_Nhits",&Detector_Nhits);
 	t->SetBranchAddress("PMT_Time",&PMT_Time);
+	t->SetBranchAddress("PMT_Time_Noise",&PMT_Time_Noise);
 
 	myGeometryData = (TList*)t->GetUserInfo()->FindObject("myGeometryData");
 
@@ -237,7 +261,7 @@ void ChiSquareTest(int run_number = 4000){
 				paddles.push_back(i);
 				//cout << std::to_string(PMT_Nphotons[i]) + " ";
 			}
-			if(PMT_Noise_photons[i] > 0){
+			if(PMT_Nphotons_Noise[i] > 0){
 				noisePaddles.push_back(i);
 			}
 		}
@@ -255,8 +279,14 @@ void ChiSquareTest(int run_number = 4000){
 		}
 
 		//Finish our output values
-		top = RemoveNoise(top,bot);
-		bot = RemoveNoise(bot,top);
+                if (event<5) {
+                    cout << "top/bottom" << endl;
+                }
+		top = RemoveNoise(event, top,bot);
+                if (event<5) {
+                    cout << "bottom/top" << endl;
+                }
+		bot = RemoveNoise(event, bot,top);
 		outPaddles.insert(outPaddles.end(),top.begin(),top.end());
 		outPaddles.insert(outPaddles.end(),bot.begin(),bot.end());
 
@@ -289,8 +319,10 @@ void ChiSquareTest(int run_number = 4000){
 
 		unIdentified = totalNoise - correctNoise;	
 
-		/*cout << "For Event " + std::to_string(event) + " - Total noise: " + std::to_string(totalNoise) + ", Indentified Noise: " + std::to_string(identifiedNoise.size()) + ", Correctly indentified: " + std::to_string(correctNoise) + ", Misindentified: " + std::to_string(wrongNoise) + ", Unindentified: " + std::to_string(unIdentified) + "\n";*/ 		
-		
+                if (event  < 5) {
+		cout << "For Event " + std::to_string(event) + " - Total noise: " + std::to_string(totalNoise) + ", Indentified Noise: " + std::to_string(identifiedNoise.size()) + ", Correctly indentified: " + std::to_string(correctNoise) + ", Misindentified: " + std::to_string(wrongNoise) + ", Unindentified: " + std::to_string(unIdentified) + "\n"; 		
+		}
+
 		sumTotalNoise+= totalNoise;
 		sumUnidentifiedNoise+=unIdentified;
 		sumMisidentified+=wrongNoise;

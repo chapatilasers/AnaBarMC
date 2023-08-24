@@ -4,6 +4,28 @@
 #include <TMatrixD.h>
 #include <TRandom.h>
 #include <TLinearFitter.h>
+#include <TFile.h>
+#include <TTree.h>
+#include <TBranch.h>
+#include <TList.h>
+#include <TMath.h>
+#include <TString.h>
+#include <TCanvas.h>
+#include <TGraph.h>
+#include <TGraphErrors.h>
+#include <TMultiGraph.h>
+#include <TStyle.h>
+#include <TAxis.h>
+#include <TLine.h>
+#include <TROOT.h>
+#include <TSystem.h>
+#include <TApplication.h>
+#include <TChain.h>
+#include <TTreeReader.h>
+#include <TTreeReaderValue.h>
+#include <TTreeReaderArray.h>
+#include <TGraph2D.h>
+#include <TGraph2DErrors.h>
 
 class noiseMachine{
 public:
