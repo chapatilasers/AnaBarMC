@@ -142,6 +142,7 @@ public:
 	xoffset = -xoffset;
       }
 
+    cout << "event = " << event << endl;
     cout << "xoffset = " << xoffset << endl;
     cout << "time = " << time << endl;
     cout << "iPlane = " << iPlane << endl;
@@ -289,16 +290,17 @@ public:
       {
 	if (i < 1176)
 	  {
-	    top->SetBinContent (i, PMT_Nphotons[i]);
 
 	    //Draw the calculated x position        
 	    if (PMT_Nphotons[i] > Photon_min_cut)
 	      {			//Only if there are enough photons to justify it
+	        top->SetBinContent (i, PMT_Nphotons[i]);
 		TVectorD *geo = (TVectorD *) myGeometryData->At (i);
 		xdpos = (*geo)[1] / 10.0;
 		zdpos = (*geo)[3] / 10.0;
 		//cout << getXOffsetFromTime(i, PMT_Time[i]);
 		//topCalc->SetNextPoint(xdpos + getXOffsetFromTime(i, PMT_Time[i]) - getXOffsetFromTime(i, PMT_Time[i]),zdpos);
+    		cout << "=========================" << endl; 
 		cout << "Top" << endl;
 		cout << i << endl;
 		cout << PMT_Time[i] << endl;
@@ -309,14 +311,15 @@ public:
 	  }
 	else
 	  {
-	    bot->SetBinContent (i - 1175, PMT_Nphotons[i]);
 
 	    //Draw the calculated x position        
 	    if (PMT_Nphotons[i] > Photon_min_cut)
 	      {			//Only if there are enough photons to justify it
+	        bot->SetBinContent (i - 1175, PMT_Nphotons[i]);
 		TVectorD *geo = (TVectorD *) myGeometryData->At (i);
 		xdpos = (*geo)[1] / 10.0;
 		zdpos = (*geo)[3] / 10.0;
+    		cout << "=========================" << endl; 
 		cout << "Bottom" << endl;
 		cout << i << endl;
 		cout << PMT_Time[i] << endl;

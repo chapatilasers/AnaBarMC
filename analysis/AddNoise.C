@@ -45,7 +45,7 @@ void NoiseMaker(Int_t event, Int_t Photons[], Float_t Time[], int noiseAmount = 
 		//Choose a random paddle
 		int i = (int)((gRandom->Rndm())*(AnaBar_PMT_Offset+(NUMPADDLE*NUMBARS*NUMMODULES*NUMSIDES*NUMLAYERS)));
 		Photons[i] = gRandom->Integer(40)+75;
-		Time[i] = gRandom->Uniform (0.0, 10.0);
+		Time[i] = gRandom->Uniform (3.0, 5.0);
 	}
 	/*
 	if(event<10) {
