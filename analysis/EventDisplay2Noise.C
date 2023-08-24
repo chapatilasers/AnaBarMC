@@ -214,13 +214,13 @@ public:
     TTree *t = 0;
     f->GetObject (treeName, t);
 
-    //auto noisefileName =
-    //  "data/AnaBarMC_" + std::to_string (run_number) + "noise.root";
-    //auto noisetreeName = "noise";
+    auto noisefileName =
+      "data/AnaBarMC_" + std::to_string (run_number) + "noise.root";
+    auto noisetreeName = "noise";
 
-    //TFile *noisef = new TFile ((TString) noisefileName, "READ");
-    //TTree *noise = 0;
-    //noisef->GetObject (noisetreeName, noise);
+    TFile *noisef = new TFile ((TString) noisefileName, "READ");
+    TTree *noise = 0;
+    noisef->GetObject (noisetreeName, noise);
     //t->AddFriend (noise); 
     //t->Print();
     myGeometryData = (TList *) t->GetUserInfo ()->FindObject ("myGeometryData");
@@ -231,10 +231,10 @@ public:
     Float_t PMT_Time[5000];
     Int_t Detector_Nhits;
     //t->SetBranchAddress ("PMT_Nphotons_Noise", &PMT_Nphotons);
-    t->SetBranchAddress ("PMT_Nphotons", &PMT_Nphotons);
+    t->SetBranchAddress ("PMT_Nphotons_Noise", &PMT_Nphotons);
     t->SetBranchAddress ("Detector_id", &Detector_id);
     t->SetBranchAddress ("Detector_Nhits", &Detector_Nhits);
-    t->SetBranchAddress ("PMT_Time", &PMT_Time);
+    t->SetBranchAddress ("PMT_Time_Noise", &PMT_Time);
 
     Double_t padLen = 50.2;	//Length of one paddle
     Double_t padWid = 0.54;	//Width of one paddle
@@ -290,6 +290,7 @@ public:
 	if (i < 1176)
 	  {
 	    top->SetBinContent (i, PMT_Nphotons[i]);
+	    
 
 	    //Draw the calculated x position        
 	    if (PMT_Nphotons[i] > Photon_min_cut)
@@ -358,7 +359,7 @@ public:
     eDisplay->cd();
     eDisplay->Update(); 
     f->Close ();
-    //noisef->Close ();
+    noisef->Close ();
     cout << "banana";
   }
 
@@ -413,7 +414,7 @@ public:
 };
 
 void
-EventDisplay2 (int run_number = 4000, int event = 0)
+EventDisplay2Noise (int run_number = 4000, int event = 0)
 {
   EventDisplay *viewer = new EventDisplay(run_number,event);
   //viewer.main(run_number,event);
