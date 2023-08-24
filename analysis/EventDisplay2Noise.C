@@ -20,7 +20,7 @@ public:
   int Analyse_Secondaries = 1;
   float Theta_min_cut = 2.524;
   float ThetaVerticalCut = 3.02;
-  int Photon_min_cut = 75;
+  int Photon_min_cut = 0;
 
   int MaxPMTNo = 50000;
   int MaxPMTHits = 1000;

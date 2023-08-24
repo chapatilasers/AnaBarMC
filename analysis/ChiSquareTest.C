@@ -7,6 +7,15 @@
 #include <TFile.h>
 #include <TTree.h>
 
+void print(std::string name, std::vector <int> const &a) {
+   std::cout << "The elements of " << name << " are : ";
+
+   for(int i=0; i < a.size(); i++)
+   std::cout << a.at(i) << ' ';
+
+   std::cout << '\n';
+}
+
 
 TList* myGeometryData;
 int global_run_number;
@@ -14,6 +23,7 @@ int Analyse_Secondaries = 1;
 float Theta_min_cut = 2.524;
 float ThetaVerticalCut = 3.02;
 int Photon_min_cut = 75;
+int events_to_see = 0;
 
 int MaxPMTNo = 50000;
 int MaxPMTHits = 1000;
@@ -151,11 +161,11 @@ bool getTrigger(int Detector_Nhits, int* Detector_id) {
 std::vector<int> RemoveNoise(int event, std::vector<int> layer1, std::vector<int>layer2, float distanceAcceptable = 5.0){
 	std::vector<int> output;
 
-        if (event<5) {
+        if (event<events_to_see) {
             cout << "layer1.size() = " << layer1.size() << ", layer2.size() = " << layer2.size() << endl;
         }   
                         
-        if (event<5) {
+        if (event<events_to_see) {
 	  for(int i = 0; i < layer1.size(); i++){
 		for(int j = 0; j < layer2.size(); j++){
 			TVectorD* geo = (TVectorD*)myGeometryData->At(layer1.at(i));
@@ -178,7 +188,11 @@ std::vector<int> RemoveNoise(int event, std::vector<int> layer1, std::vector<int
         		float z1 = (*geo)[3]/10.0;
 			float z2 = (*geo2)[3]/10.0;
 			//if ((pow(x1-x2, 2) + pow(z1-z2, 2)) < distanceAcceptable){
+
 			if (pow(pow((z1-z2),2),0.5) < distanceAcceptable){
+				if (event < events_to_see) {
+					cout << "Pushing back i = " << i << " at x1 = " << x1 << ", z1 = " << z1 << endl;
+				}
 				output.push_back(layer1.at(i));
 				break;
 			}
@@ -279,11 +293,11 @@ void ChiSquareTest(int run_number = 4000){
 		}
 
 		//Finish our output values
-                if (event<5) {
+                if (event<events_to_see) {
                     cout << "top/bottom" << endl;
                 }
 		top = RemoveNoise(event, top,bot);
-                if (event<5) {
+                if (event<events_to_see) {
                     cout << "bottom/top" << endl;
                 }
 		bot = RemoveNoise(event, bot,top);
@@ -300,16 +314,26 @@ void ChiSquareTest(int run_number = 4000){
 		//std::vector<int> unIdentifiedNoise;
 
 		//Sort for ease
+		if (event < events_to_see) {
+			print("paddles",paddles);
+			print("noisePaddles",noisePaddles);
+			print("outPaddles",outPaddles);
+		}
 		std::sort(paddles.begin(),paddles.end());
 		std::sort(noisePaddles.begin(),noisePaddles.end());
 		std::sort(outPaddles.begin(),outPaddles.end()); 
 
 		std::set_difference(noisePaddles.begin(), noisePaddles.end(), outPaddles.begin(), outPaddles.end(), std::inserter(identifiedNoise, std::end(identifiedNoise)));
 		//std::set_difference(outPaddles.begin(),outPaddles.end(),paddles.begin(),paddles.end(),unIdentifiedNoise.begin());
-		
+		if (event < events_to_see) {
+			print("identified noise",identifiedNoise);
+		}
 		totalNoise = (noisePaddles.size()-paddles.size());	
 	
 		for(int i = 0; i < identifiedNoise.size(); i++){
+			if (event < events_to_see) {
+				cout << "PMT_Nphotons[identifiedNoise.at(i)] " << PMT_Nphotons[identifiedNoise.at(i)] << endl;
+			}
 			if(PMT_Nphotons[identifiedNoise.at(i)] == 0){
 				correctNoise++;
 			} else {
@@ -319,7 +343,7 @@ void ChiSquareTest(int run_number = 4000){
 
 		unIdentified = totalNoise - correctNoise;	
 
-                if (event  < 5) {
+                if (event  < events_to_see) {
 		cout << "For Event " + std::to_string(event) + " - Total noise: " + std::to_string(totalNoise) + ", Indentified Noise: " + std::to_string(identifiedNoise.size()) + ", Correctly indentified: " + std::to_string(correctNoise) + ", Misindentified: " + std::to_string(wrongNoise) + ", Unindentified: " + std::to_string(unIdentified) + "\n"; 		
 		}
 
