@@ -262,7 +262,7 @@ public:
     //Set Palettes
     //gStyle->SetPalette(kBeach);
     TExec *ex1 = new TExec("ex1"," gStyle->SetPalette(kSolar);");
-    TExec *ex2 = new TExec("ex2"," gStyle->SetPalette(kCool);");
+    TExec *ex2 = new TExec("ex2"," gStyle->SetPalette(kBeach);");
     TExec *ex3 = new TExec("ex3"," gStyle->SetPalette(kBird);");
     eDisplay->cd(1);
     //eDisplay->cd(1)->SetFrameLineColor(0);
